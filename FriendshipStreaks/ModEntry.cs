@@ -23,6 +23,7 @@ namespace FriendshipStreaks
 
             Helper.Events.GameLoop.Saved += OnSaved;
             Helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
+            Helper.Events.GameLoop.DayStarted += OnDayStarted;
 
             instance = this;
             gameCursors = Helper.GameContent.Load<Texture2D>("LooseSprites/Cursors");
@@ -32,6 +33,13 @@ namespace FriendshipStreaks
                 original: AccessTools.Method(typeof(SocialPage), "drawNPCSlot"),
                 postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_drawNPCSlot))
                 );
+        }
+        private void OnDayStarted(object sender, DayStartedEventArgs e)
+        {
+            foreach (KeyValuePair<NPC, FriendshipStreak> kvp in streaks)
+            {
+                kvp.Value.ResetStreaksIfMissed();
+            }
         }
         private void OnSaved(object sender, SavedEventArgs e)
         {
