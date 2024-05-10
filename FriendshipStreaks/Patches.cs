@@ -19,15 +19,27 @@ namespace FriendshipStreaks
             ClickableTextureComponent sprite = sprites[i];
             SocialEntry entry = __instance.GetSocialEntry(i);
 
+            FriendshipStreak streak = ModEntry.streaks[(NPC)entry.Character];
+
             //Talking Streak
-            Vector2 textPosition = new Vector2(sprite.bounds.Left + 90, sprite.bounds.Top - 10);
+            Vector2 textPosition = new Vector2(sprite.bounds.Left + 60, sprite.bounds.Top - 10);
             float speechBubbleScale = 2.5f;
             b.Draw(ModEntry.gameCursors,new Vector2(textPosition.X + 40, textPosition.Y + 5), new Rectangle(66, 4, 14, 12), Color.White, 0f, Vector2.Zero, speechBubbleScale, SpriteEffects.None, 333f);
-            b.DrawString(Game1.dialogueFont, "10", textPosition, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
+            b.DrawString(Game1.dialogueFont, streak.CurrentTalkingStreak.ToString(), textPosition, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
 
             //Gift Streak
             textPosition = textPosition + new Vector2(100, 0);
-            b.DrawString(Game1.dialogueFont, "1", textPosition, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
+            float giftIconScale = 2.5f;
+            b.Draw(ModEntry.gameCursors, new Vector2(textPosition.X + 40, textPosition.Y + 5), new Rectangle(229, 410, 14, 14), Color.White, 0f, Vector2.Zero, giftIconScale, SpriteEffects.None, 333f);
+            b.DrawString(Game1.dialogueFont, streak.CurrentGiftStreak.ToString(), textPosition, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
+        }
+
+        public static void Postfix_receiveGift(NPC __instance)
+        {
+            if (!__instance.CanReceiveGifts())
+                return;
+
+            ModEntry.streaks[__instance].UpdateGiftStreak();
         }
     }
 }
