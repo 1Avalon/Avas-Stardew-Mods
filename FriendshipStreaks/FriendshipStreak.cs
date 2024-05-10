@@ -21,9 +21,9 @@ namespace FriendshipStreaks
 
         public float Multiplier = 1f;
 
-        public int lastDayTalked = 0;
+        public int LastDayTalked = 0;
 
-        public int lastWeekTalked = 0;
+        public int LastWeekGiftGiven = 0;
 
         public FriendshipStreak(string npcName, int currentTalkingStreak, int currentGiftStreak, int highestTalkingStreak, int highestGiftStreak)
         {
@@ -37,6 +37,16 @@ namespace FriendshipStreaks
         public void ResetStreaksIfMissed()
         {
             int day = Game1.Date.DayOfMonth;
+            int week = day / 7 + 1;
+            if (day - 1 < LastDayTalked)
+            {
+                CurrentTalkingStreak = 0;
+            }
+
+            if (week - 1 < LastWeekGiftGiven)
+            {
+                CurrentGiftStreak = 0;
+            }
         }
 
         public void UpdateGiftStreak()
