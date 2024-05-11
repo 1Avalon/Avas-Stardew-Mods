@@ -41,7 +41,7 @@ namespace FriendshipStreaks
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(NPC), nameof(NPC.grantConversationFriendship)),
-                postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_grantConversationFriendship))
+                prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_grantConversationFriendship))
                 );
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
