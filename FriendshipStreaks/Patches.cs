@@ -2,11 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Menus;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static StardewValley.Menus.SocialPage;
 
 namespace FriendshipStreaks
@@ -19,7 +14,9 @@ namespace FriendshipStreaks
             ClickableTextureComponent sprite = sprites[i];
             SocialEntry entry = __instance.GetSocialEntry(i);
 
-            FriendshipStreak streak = ModEntry.streaks[(NPC)entry.Character];
+
+            NPC npc = entry.Character as NPC;
+            FriendshipStreak streak = ModEntry.streaks[npc.Name];
 
             //Talking Streak
             Vector2 textPosition = new Vector2(sprite.bounds.Left + 60, sprite.bounds.Top - 10);
@@ -39,7 +36,16 @@ namespace FriendshipStreaks
             if (!__instance.CanReceiveGifts())
                 return;
 
-            ModEntry.streaks[__instance].UpdateGiftStreak();
+            ModEntry.instance.Monitor.Log($"Adding +1 to {__instance.Name}'s gift streak");
+            ModEntry.streaks[__instance.Name].UpdateGiftStreak();
+        }
+
+        public static bool Prefix_grantConversationFriendship(NPC __instance, Farmer who,  int amount)
+        {
+            if (!who.hasPlayerTalkedToNPC(__instance.Name))
+                ModEntry.streaks[__instance.Name].UpdateTalkingStreak();
+
+            return true;
         }
     }
 }
