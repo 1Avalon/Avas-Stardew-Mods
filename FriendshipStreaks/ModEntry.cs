@@ -17,7 +17,7 @@ namespace FriendshipStreaks
 
         public static Texture2D gameCursors;
 
-        public static Dictionary<NPC, FriendshipStreak> streaks = new Dictionary<NPC, FriendshipStreak>();
+        public static Dictionary<string, FriendshipStreak> streaks = new Dictionary<string, FriendshipStreak>();
         public override void Entry(IModHelper helper)
         {
 
@@ -33,20 +33,30 @@ namespace FriendshipStreaks
                 original: AccessTools.Method(typeof(SocialPage), "drawNPCSlot"),
                 postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_drawNPCSlot))
                 );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(NPC), nameof(NPC.receiveGift)),
+                postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_receiveGift))
+                );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(NPC), nameof(NPC.grantConversationFriendship)),
+                postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_grantConversationFriendship))
+                );
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            foreach (KeyValuePair<NPC, FriendshipStreak> kvp in streaks)
+            foreach (KeyValuePair<string, FriendshipStreak> kvp in streaks)
             {
                 kvp.Value.ResetStreaksIfMissed();
             }
         }
         private void OnSaved(object sender, SavedEventArgs e)
         {
-            foreach (KeyValuePair<NPC, FriendshipStreak> kvp in streaks)
+            foreach (KeyValuePair<string, FriendshipStreak> kvp in streaks)
             {
-                Helper.Data.WriteSaveData(kvp.Key.Name, kvp.Value);
-                Monitor.Log($"Saved Streak data for {kvp.Key.Name}");
+                Helper.Data.WriteSaveData(kvp.Key, kvp.Value);
+                Monitor.Log($"Saved Streak data for {kvp.Key}");
             }
         }
 
@@ -67,7 +77,7 @@ namespace FriendshipStreaks
                         Monitor.Log($"No streak found for {npc.Name}. Initialising new one...");
                         streak = new FriendshipStreak(npc.Name, 0, 0, 0, 0);
                     }
-                    streaks.Add(npc, streak);
+                    streaks.Add(npc.Name, streak);
                 }
             }
         }
