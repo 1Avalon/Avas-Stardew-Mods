@@ -40,6 +40,11 @@ namespace FriendshipStreaks
                 );
 
             harmony.Patch(
+                original: AccessTools.Method(typeof(ProfileMenu), nameof(ProfileMenu.draw), new Type[] { typeof(SpriteBatch)}),
+                postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_drawProfileMenu))
+                );
+
+            harmony.Patch(
                 original: AccessTools.Method(typeof(NPC), nameof(NPC.grantConversationFriendship)),
                 prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_grantConversationFriendship))
                 );
