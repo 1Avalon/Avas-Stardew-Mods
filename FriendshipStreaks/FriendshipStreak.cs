@@ -38,12 +38,12 @@ namespace FriendshipStreaks
         {
             int day = Game1.Date.DayOfMonth;
             int week = day / 7 + 1;
-            if (day - 1 < LastDayTalked)
+            if (day - 1 > LastDayTalked)
             {
                 CurrentTalkingStreak = 0;
             }
 
-            if (week - 1 < LastWeekGiftGiven)
+            if (week - 1 > LastWeekGiftGiven)
             {
                 CurrentGiftStreak = 0;
             }
@@ -52,12 +52,16 @@ namespace FriendshipStreaks
         public void UpdateGiftStreak()
         {
             CurrentGiftStreak++;
+            int day = Game1.Date.DayOfMonth;
+            int week = day / 7 + 1;
+            LastDayTalked = week;
             if (CurrentGiftStreak > HighestGiftStreak)
                 HighestGiftStreak = CurrentGiftStreak;
         }
         public void UpdateTalkingStreak()
         {
             CurrentTalkingStreak++;
+            LastDayTalked = Game1.dayOfMonth;
             if (CurrentTalkingStreak > HighestTalkingStreak)
             {
                 HighestTalkingStreak = CurrentTalkingStreak;
