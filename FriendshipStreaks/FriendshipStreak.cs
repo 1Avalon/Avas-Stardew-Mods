@@ -67,5 +67,11 @@ namespace FriendshipStreaks
                 HighestTalkingStreak = CurrentTalkingStreak;
             }
         }
+        public float EvaluateFriendshipBonus()
+        {
+            float result = 0.2f * CurrentTalkingStreak + 0.35f * CurrentGiftStreak;
+            Multiplier = result;
+            return result;
+        }
     }
 }
