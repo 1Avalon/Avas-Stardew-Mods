@@ -67,6 +67,7 @@ namespace FriendshipStreaks
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
+            streaks.Clear();
             List<string> npcNames = new List<string>();
             foreach (NPC npc in Utility.getAllVillagers())
             {
