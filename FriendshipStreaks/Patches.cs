@@ -24,14 +24,16 @@ namespace FriendshipStreaks
             //Talking Streak
             Vector2 textPosition = new Vector2(sprite.bounds.Left + 60, sprite.bounds.Top - 10);
             float speechBubbleScale = 2.5f;
+            string currentTalkingStreak = streak.CurrentTalkingStreak.ToString();
             b.Draw(ModEntry.gameCursors,new Vector2(textPosition.X + 40, textPosition.Y + 5), new Rectangle(66, 4, 14, 12), Color.White, 0f, Vector2.Zero, speechBubbleScale, SpriteEffects.None, 333f);
-            b.DrawString(Game1.dialogueFont, streak.CurrentTalkingStreak.ToString(), textPosition, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
+            b.DrawString(Game1.dialogueFont, currentTalkingStreak, textPosition + new Vector2(10f - Game1.dialogueFont.MeasureString(currentTalkingStreak).X / 2 * 0.8f, 0), Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
 
             //Gift Streak
             textPosition = textPosition + new Vector2(100, 0);
             float giftIconScale = 2.5f;
+            string currentGiftStreak = streak.CurrentGiftStreak.ToString();
             b.Draw(ModEntry.gameCursors, new Vector2(textPosition.X + 40, textPosition.Y + 5), new Rectangle(229, 410, 14, 14), Color.White, 0f, Vector2.Zero, giftIconScale, SpriteEffects.None, 333f);
-            b.DrawString(Game1.dialogueFont, streak.CurrentGiftStreak.ToString(), textPosition, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
+            b.DrawString(Game1.dialogueFont, currentGiftStreak, textPosition + new Vector2(10f - Game1.dialogueFont.MeasureString(currentGiftStreak).X / 2 * 0.8f, 0), Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
         }
 
         public static void Postfix_receiveGift(NPC __instance)
