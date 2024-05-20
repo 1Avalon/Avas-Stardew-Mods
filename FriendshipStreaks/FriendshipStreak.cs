@@ -70,7 +70,7 @@ namespace FriendshipStreaks
         public float EvaluateFriendshipBonus()
         {
             float result = 0.2f * CurrentTalkingStreak + 0.35f * CurrentGiftStreak;
-            Multiplier = result;
+            Multiplier = (float) Math.Round(result, 2);
             return result;
         }
     }
