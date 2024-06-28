@@ -7,6 +7,7 @@ using StardewValley;
 using HarmonyLib;
 using StardewValley.Menus;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq.Expressions;
 
 namespace FriendshipStreaks
 {
@@ -24,6 +25,8 @@ namespace FriendshipStreaks
             Helper.Events.GameLoop.Saved += OnSaved;
             Helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             Helper.Events.GameLoop.DayStarted += OnDayStarted;
+
+            Helper.ConsoleCommands.Add("set_streak", "Sets the streak for an NPC to the given value.\nUsage: set_streak <type> <NPC name> <value>\n- type - must be either 'gift' or 'talking'\n- NPC name - the name of your target\n- value - amount of the desired streak.", this.SetStreak);
 
             instance = this;
             gameCursors = Helper.GameContent.Load<Texture2D>("LooseSprites/Cursors");
@@ -67,6 +70,34 @@ namespace FriendshipStreaks
             {
                 Helper.Data.WriteSaveData(kvp.Key, kvp.Value);
                 Monitor.Log($"Saved Streak data for {kvp.Key}");
+            }
+        }
+
+        private void SetStreak(string command, string[] args)
+        {
+
+            if (args.Length < 3)
+                return;
+
+            string type = args[0].ToLower();
+            string npcName = args[1];
+            int value = int.Parse(args[2]);
+            
+            switch(type)
+            {
+                case "gift":
+                    streaks[npcName].CurrentGiftStreak = value;
+                    Monitor.Log("Success", LogLevel.Info);
+                    break;
+
+                case "talking":
+                    streaks[npcName].CurrentTalkingStreak = value;
+                    Monitor.Log("Success", LogLevel.Info);
+                    break;
+
+                default:
+                    Monitor.Log("First argument must be 'gift' or 'talking'", LogLevel.Error);
+                    break;
             }
         }
 
