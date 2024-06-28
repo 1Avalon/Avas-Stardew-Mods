@@ -48,6 +48,11 @@ namespace FriendshipStreaks
                 original: AccessTools.Method(typeof(NPC), nameof(NPC.grantConversationFriendship)),
                 prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_grantConversationFriendship))
                 );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Farmer), nameof(Farmer.changeFriendship)),
+                prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_changeFriendship))
+                );
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {

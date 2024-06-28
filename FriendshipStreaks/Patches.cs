@@ -53,6 +53,15 @@ namespace FriendshipStreaks
             return true;
         }
 
+        public static bool Prefix_changeFriendship(Farmer __instance, ref int amount, NPC n)
+        {
+            FriendshipStreak streak = ModEntry.streaks[n.Name];
+            float bonus = streak.EvaluateFriendshipBonus();
+            int _amount = amount + (int)(amount * bonus / 100);
+            amount = _amount;
+            return true;
+        }
+
         public static void Postfix_drawProfileMenu(ProfileMenu __instance, SpriteBatch b)
         {
             //Gift
