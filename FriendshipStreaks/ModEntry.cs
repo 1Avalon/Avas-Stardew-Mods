@@ -34,7 +34,8 @@ namespace FriendshipStreaks
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(SocialPage), "drawNPCSlot"),
-                postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_drawNPCSlot))
+                postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_drawNPCSlot)),
+                transpiler: new HarmonyMethod(typeof(Patches), nameof(Patches.Transpiler))
                 );
 
             harmony.Patch(

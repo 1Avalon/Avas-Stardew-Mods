@@ -1,3 +1,4 @@
+﻿using HarmonyLib;
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -5,12 +6,44 @@ using StardewValley.BellsAndWhistles;
 using StardewValley.Menus;
 using StardewValley.Network;
 using System.IO;
+using System.Reflection;
+using System.Reflection.Emit;
 using static StardewValley.Menus.SocialPage;
 
 namespace FriendshipStreaks
 {
     public static class Patches
     {
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var code = new List<CodeInstruction>(instructions);
+
+            // Obtain the necessary property information for Rectangle::Bottom
+            PropertyInfo bottomProperty = typeof(Rectangle).GetProperty("Bottom");
+            MethodInfo bottomGetter = bottomProperty?.GetGetMethod(true);
+
+            if (bottomGetter == null)
+            {
+                // Log a warning if the Bottom property is not found, and return the original instructions
+                ModEntry.instance.Monitor.Log("Warning: Could not find the Bottom property on the Rectangle type.", StardewModdingAPI.LogLevel.Warn);
+                return code;
+            }
+
+            for (int i = 0; i < code.Count; i++)
+            {
+                if (code[i].opcode == OpCodes.Ldflda && code[i + 1].opcode == OpCodes.Ldfld && code[i + 2].opcode == OpCodes.Conv_R4 && code[i + 3].opcode == OpCodes.Newobj && code[i + 4].opcode == OpCodes.Ldsfld)
+                {
+                    FieldInfo yField = typeof(Rectangle).GetField("Y");
+                    if (code[i + 1].operand == yField)
+                    {
+                        code.Insert(i + 2, new CodeInstruction(OpCodes.Ldc_I4, 50)); // Load constant 50
+                        code.Insert(i + 3, new CodeInstruction(OpCodes.Add)); // Add 50 to the Y value
+                    }
+                }
+            }
+            return code;
+        }
+
         public static void Postfix_drawNPCSlot(SocialPage __instance, SpriteBatch b, int i)
         {
             List<ClickableTextureComponent> sprites = ModEntry.instance.Helper.Reflection.GetField<List<ClickableTextureComponent>>(__instance, "sprites").GetValue();
