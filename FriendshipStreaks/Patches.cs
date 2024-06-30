@@ -90,7 +90,7 @@ namespace FriendshipStreaks
 
         public static bool Prefix_changeFriendship(Farmer __instance, ref int amount, NPC n)
         {
-            if (!ModEntry.streaks.TryGetValue(n.Name, out FriendshipStreak streak) || amount < 0)
+            if (!ModEntry.streaks.TryGetValue(n.Name, out FriendshipStreak streak) || amount < 0 || !ModEntry.Config.enableBonus)
                 return true;
             float bonus = streak.EvaluateFriendshipBonus();
             int _amount = amount + (int)(amount * bonus / 100);
@@ -110,8 +110,12 @@ namespace FriendshipStreaks
             string multiplierText = "Multiplier";
             string multiplier = $"+{streak.Multiplier}%";
             //b.DrawString(Game1.dialogueFont, multiplier, positionMaxGiftStreak + new Vector2(17 - SpriteText.getWidthOfString(multiplier) / 2, 170), Color.Black, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 1f);
-            b.DrawString(Game1.dialogueFont, multiplier, positionMaxGiftStreak + new Vector2(11f - Game1.dialogueFont.MeasureString(multiplier).X * 0.6f / 2, 170), Color.Black, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 1f);            b.DrawString(Game1.dialogueFont, "Max", positionMaxGiftStreak, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
-            b.DrawString(Game1.dialogueFont, multiplierText, positionMaxGiftStreak + new Vector2(70 - SpriteText.getWidthOfString(multiplierText) / 2, 140), Color.Black, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 1f);
+            b.DrawString(Game1.dialogueFont, "Max", positionMaxGiftStreak, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
+            if (ModEntry.Config.enableBonus)
+            {
+                b.DrawString(Game1.dialogueFont, multiplier, positionMaxGiftStreak + new Vector2(11f - Game1.dialogueFont.MeasureString(multiplier).X * 0.6f / 2, 170), Color.Black, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 1f);
+                b.DrawString(Game1.dialogueFont, multiplierText, positionMaxGiftStreak + new Vector2(70 - SpriteText.getWidthOfString(multiplierText) / 2, 140), Color.Black, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 1f);
+            }
             b.DrawString(Game1.dialogueFont, highestStreak, positionMaxGiftStreak + new Vector2(20 - SpriteText.getWidthOfString(highestStreak) / 2 * 0.8f, 40), Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
             b.Draw(ModEntry.gameCursors, new Vector2(positionMaxGiftStreak.X - 40, positionMaxGiftStreak.Y), new Rectangle(229, 410, 14, 14), Color.White, 0f, Vector2.Zero, giftIconScale, SpriteEffects.None, 333f);
 
