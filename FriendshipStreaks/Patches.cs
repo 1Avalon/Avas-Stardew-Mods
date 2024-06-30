@@ -90,7 +90,7 @@ namespace FriendshipStreaks
 
         public static bool Prefix_changeFriendship(Farmer __instance, ref int amount, NPC n)
         {
-            if (!ModEntry.streaks.TryGetValue(n.Name, out FriendshipStreak streak))
+            if (!ModEntry.streaks.TryGetValue(n.Name, out FriendshipStreak streak) || amount < 0)
                 return true;
             float bonus = streak.EvaluateFriendshipBonus();
             int _amount = amount + (int)(amount * bonus / 100);
