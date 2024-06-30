@@ -8,6 +8,7 @@ using HarmonyLib;
 using StardewValley.Menus;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq.Expressions;
+using System.IO;
 
 namespace FriendshipStreaks
 {
@@ -22,7 +23,7 @@ namespace FriendshipStreaks
         public override void Entry(IModHelper helper)
         {
 
-            Helper.Events.GameLoop.Saved += OnSaved;
+            Helper.Events.GameLoop.Saving += OnSaving;
             Helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             Helper.Events.GameLoop.DayStarted += OnDayStarted;
 
@@ -65,7 +66,7 @@ namespace FriendshipStreaks
                 kvp.Value.ResetStreaksIfMissed();
             }
         }
-        private void OnSaved(object sender, SavedEventArgs e)
+        private void OnSaving(object sender, SavingEventArgs e)
         {
             foreach (KeyValuePair<string, FriendshipStreak> kvp in streaks)
             {
