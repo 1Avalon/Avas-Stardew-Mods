@@ -36,7 +36,7 @@ namespace FriendshipStreaks
                     FieldInfo yField = typeof(Rectangle).GetField("Y");
                     if (code[i + 1].operand == yField)
                     {
-                        code.Insert(i + 2, new CodeInstruction(OpCodes.Ldc_I4, 50)); // Load constant 50
+                        code.Insert(i + 2, new CodeInstruction(OpCodes.Ldc_I4, 64)); // Load constant 50
                         code.Insert(i + 3, new CodeInstruction(OpCodes.Add)); // Add 50 to the Y value
                     }
                 }
