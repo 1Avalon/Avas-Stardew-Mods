@@ -19,7 +19,7 @@ namespace FriendshipStreaks
 
         public int HighestGiftStreak;
 
-        public float Multiplier = 1f;
+        public float Multiplier = 0f;
 
         public int LastDayTalked = 0;
 
