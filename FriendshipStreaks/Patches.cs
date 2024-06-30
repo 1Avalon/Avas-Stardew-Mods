@@ -107,10 +107,10 @@ namespace FriendshipStreaks
             FriendshipStreak streak = ModEntry.streaks[characterName];
             streak.EvaluateFriendshipBonus();
             string highestStreak = streak.HighestGiftStreak.ToString();
-            string multiplierText = "Multiplier";
+            string multiplierText = I18n.Multiplier();
             string multiplier = $"+{streak.Multiplier}%";
             //b.DrawString(Game1.dialogueFont, multiplier, positionMaxGiftStreak + new Vector2(17 - SpriteText.getWidthOfString(multiplier) / 2, 170), Color.Black, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 1f);
-            b.DrawString(Game1.dialogueFont, "Max", positionMaxGiftStreak, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
+            b.DrawString(Game1.dialogueFont, I18n.Max(), positionMaxGiftStreak, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
             if (ModEntry.Config.enableBonus)
             {
                 b.DrawString(Game1.dialogueFont, multiplier, positionMaxGiftStreak + new Vector2(11f - Game1.dialogueFont.MeasureString(multiplier).X * 0.6f / 2, 170), Color.Black, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 1f);
@@ -124,7 +124,7 @@ namespace FriendshipStreaks
             Vector2 positionMaxTalkingStreak = __instance.previousCharacterButton.getVector2() + new Vector2(15, -90);
             float speechBubbleScale = 2.5f;
             highestStreak = streak.HighestTalkingStreak.ToString();
-            b.DrawString(Game1.dialogueFont, "Max", positionMaxTalkingStreak, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
+            b.DrawString(Game1.dialogueFont, I18n.Max(), positionMaxTalkingStreak, Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
             b.DrawString(Game1.dialogueFont, highestStreak, positionMaxTalkingStreak + new Vector2(15f - Game1.dialogueFont.MeasureString(highestStreak).X / 2 * 0.8f, 40), Color.Black, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 1f);
             b.Draw(ModEntry.gameCursors, new Vector2(positionMaxTalkingStreak.X - 40, positionMaxTalkingStreak.Y), new Rectangle(66, 4, 14, 12), Color.White, 0f, Vector2.Zero, speechBubbleScale, SpriteEffects.None, 333f);
         }
