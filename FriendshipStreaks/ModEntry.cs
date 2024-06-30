@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Linq.Expressions;
 using System.IO;
 using System.Threading;
+using GenericModConfigMenu;
 
 namespace FriendshipStreaks
 {
@@ -24,6 +25,8 @@ namespace FriendshipStreaks
 
         public static NetworkDataManager networkDataManager;
 
+        public static ModConfig Config;
+
         public bool skipResettingStreaks = true; //Only for farmhands
         public override void Entry(IModHelper helper)
         {
@@ -33,6 +36,9 @@ namespace FriendshipStreaks
             Helper.Events.GameLoop.DayStarted += OnDayStarted;
             Helper.Events.Multiplayer.ModMessageReceived += OnModMessageReceived;
             Helper.Events.Multiplayer.PeerConnected += OnPeerConnected;
+            Helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+
+            Config = Helper.ReadConfig<ModConfig>();
 
             Helper.ConsoleCommands.Add("set_streak", "Sets the streak for an NPC to the given value.\nUsage: set_streak <type> <NPC name> <value>\n- type - must be either 'gift' or 'talking'\n- NPC name - the name of your target\n- value - amount of the desired streak.", this.SetStreak);
 
@@ -65,6 +71,27 @@ namespace FriendshipStreaks
                 original: AccessTools.Method(typeof(Farmer), nameof(Farmer.changeFriendship)),
                 prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_changeFriendship))
                 );
+        }
+
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            var configMenu = this.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+            if (configMenu is null)
+                return;
+
+            configMenu.Register(
+                mod: this.ModManifest,
+                reset: () => Config = new ModConfig(),
+                save: () => this.Helper.WriteConfig(Config)
+            );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Enable bonus",
+                tooltip: () => "Toggles the friendship multiplier depending on the streak level",
+                getValue: () => Config.enableBonus,
+                setValue: value => Config.enableBonus = value
+            );
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
