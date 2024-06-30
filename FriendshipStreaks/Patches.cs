@@ -106,7 +106,7 @@ namespace FriendshipStreaks
             string characterName = __instance.Current.Character.Name;
             FriendshipStreak streak = ModEntry.streaks[characterName];
             streak.EvaluateFriendshipBonus();
-            string highestStreak = streak.HighestTalkingStreak.ToString();
+            string highestStreak = streak.HighestGiftStreak.ToString();
             string multiplierText = "Multiplier";
             string multiplier = $"+{streak.Multiplier}%";
             //b.DrawString(Game1.dialogueFont, multiplier, positionMaxGiftStreak + new Vector2(17 - SpriteText.getWidthOfString(multiplier) / 2, 170), Color.Black, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 1f);
