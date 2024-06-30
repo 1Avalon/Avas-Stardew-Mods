@@ -30,7 +30,7 @@ namespace FriendshipStreaks
         public bool skipResettingStreaks = true; //Only for farmhands
         public override void Entry(IModHelper helper)
         {
-
+            I18n.Init(Helper.Translation);
             Helper.Events.GameLoop.Saving += OnSaving;
             Helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             Helper.Events.GameLoop.DayStarted += OnDayStarted;
