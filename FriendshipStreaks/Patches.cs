@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.BellsAndWhistles;
@@ -52,7 +52,9 @@ namespace FriendshipStreaks
 
 
             NPC npc = entry.Character as NPC;
-            FriendshipStreak streak = ModEntry.streaks[npc.Name];
+
+            if (!ModEntry.streaks.TryGetValue(npc.Name, out FriendshipStreak streak))
+                return;
 
             //Talking Streak
             Vector2 textPosition = new Vector2(sprite.bounds.Left + 60, sprite.bounds.Top - 10);
@@ -88,7 +90,8 @@ namespace FriendshipStreaks
 
         public static bool Prefix_changeFriendship(Farmer __instance, ref int amount, NPC n)
         {
-            FriendshipStreak streak = ModEntry.streaks[n.Name];
+            if (!ModEntry.streaks.TryGetValue(n.Name, out FriendshipStreak streak))
+                return true;
             float bonus = streak.EvaluateFriendshipBonus();
             int _amount = amount + (int)(amount * bonus / 100);
             amount = _amount;
