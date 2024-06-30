@@ -87,8 +87,8 @@ namespace FriendshipStreaks
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Enable bonus",
-                tooltip: () => "Toggles the friendship multiplier depending on the streak level",
+                name: () => I18n.Config_EnableBonus(),
+                tooltip: () => I18n.Config_EnableBonusDescription(),
                 getValue: () => Config.enableBonus,
                 setValue: value => Config.enableBonus = value
             );
