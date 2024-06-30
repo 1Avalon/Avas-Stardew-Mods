@@ -7,9 +7,6 @@ using StardewValley;
 using HarmonyLib;
 using StardewValley.Menus;
 using Microsoft.Xna.Framework.Graphics;
-using System.Linq.Expressions;
-using System.IO;
-using System.Threading;
 using GenericModConfigMenu;
 
 namespace FriendshipStreaks
@@ -37,6 +34,7 @@ namespace FriendshipStreaks
             Helper.Events.Multiplayer.ModMessageReceived += OnModMessageReceived;
             Helper.Events.Multiplayer.PeerConnected += OnPeerConnected;
             Helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            Helper.Events.Player.Warped += OnWarped;
 
             Config = Helper.ReadConfig<ModConfig>();
 
@@ -127,7 +125,18 @@ namespace FriendshipStreaks
                 }
             }
         }
-
+        private void OnWarped(object sender, WarpedEventArgs e)
+        {
+            foreach (NPC npc in Utility.getAllVillagers())
+            {
+                if (!streaks.ContainsKey(npc.Name) && npc.CanSocialize)
+                {
+                    Monitor.Log($"New villager {npc.Name}found. Initialising streak for them...");
+                    FriendshipStreak streak = new FriendshipStreak(npc.Name, 0, 0, 0, 0);
+                    streaks.Add(npc.Name, streak);
+                }
+            }
+        }
         private void OnModMessageReceived(object sender, ModMessageReceivedEventArgs e)
         {
             if (networkDataManager == null)
