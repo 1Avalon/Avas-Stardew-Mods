@@ -28,6 +28,11 @@ namespace DynamicNPCPaintings.UI
 
         public Picture picture = Picture.GetDefaultPicture();
 
+        private OffsetWheel npcOffsetWheel;
+
+        private OffsetWheel backgroundOffsetWheel;
+
+
         public Customiser() 
         {
             int width = 960;
@@ -51,6 +56,9 @@ namespace DynamicNPCPaintings.UI
 
             backgroundList.SetPosition(npcListButton.bounds.X - (backgroundList.width - npcListButton.width), npcListButton.bounds.Y + 100);
 
+            npcOffsetWheel = new OffsetWheel(xPositionOnScreen + 100, yPositionOnScreen + 500, "NPC", 20, 3);
+            backgroundOffsetWheel = new OffsetWheel(npcOffsetWheel.positionX + 250, npcOffsetWheel.positionY, "Background", 20, 3);
+
             int arrowScale = 4;
             increaseFrameArrow = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + 50, yPositionOnScreen + 350, 12 * arrowScale, 11 * arrowScale), looseSprites, new Rectangle(352, 495, 12, 11), arrowScale);
         }
@@ -69,6 +77,8 @@ namespace DynamicNPCPaintings.UI
             {
                 picture.npcFrame++;
             }
+            npcOffsetWheel.click(x, y, ref picture.npcOffsetX, ref picture.npcOffsetY);
+            backgroundOffsetWheel.click(x, y, ref picture.background.offsetX, ref picture.background.offsetY);
             preview.texture = picture.GetTexture();
         }
 
@@ -82,6 +92,8 @@ namespace DynamicNPCPaintings.UI
             backgroundList.draw(b);
             increaseFrameArrow.draw(b);
             preview.draw(b);
+            npcOffsetWheel.draw(b);
+            backgroundOffsetWheel.draw(b);
             drawMouse(b);
         }
     }
