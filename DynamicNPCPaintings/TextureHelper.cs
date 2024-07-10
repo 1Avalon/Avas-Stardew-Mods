@@ -100,16 +100,10 @@ namespace DynamicNPCPaintings
         public static Texture2D BackgroundWithFrame(Frame frame, Background background)
         {
             GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
-            // Berechne die maximal zulässigen Offsets
-            if (background.offsetX > background.backgroundImage.Width - (frame.endX - frame.startX))
-            {
-                background.offsetX = background.backgroundImage.Width - (frame.endX - frame.startX);
-            }
 
-            if (background.offsetY > background.backgroundImage.Height - (frame.endY - frame.startY))
-            {
-                background.offsetY = background.backgroundImage.Height - (frame.endY - frame.startY);
-            }
+            // Berechne die maximal zulässigen Offsets und stelle sicher, dass sie nicht kleiner als null sind
+            background.offsetX = Math.Max(0, Math.Min(background.offsetX, background.backgroundImage.Width - (frame.endX - frame.startX)));
+            background.offsetY = Math.Max(0, Math.Min(background.offsetY, background.backgroundImage.Height - (frame.endY - frame.startY)));
 
             // Erstelle eine neue Texture2D mit der gleichen Größe wie der Rahmen
             Texture2D resultTexture = new Texture2D(graphicsDevice, frame.frameTexture.Width, frame.frameTexture.Height);
