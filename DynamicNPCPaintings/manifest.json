@@ -1,0 +1,10 @@
+{
+  "Name": "Dynamic NPC Paintings",
+  "Author": "AvalonMFX",
+  "Version": "1.0.0",
+  "Description": "Allows you to easily create Paintings of an NPC",
+  "UniqueID": "AvalonMFX.DynamicNPCPaintings",
+  "EntryDll": "DynamicNPCPaintings.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
