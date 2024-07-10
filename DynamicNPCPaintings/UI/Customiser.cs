@@ -51,7 +51,7 @@ namespace DynamicNPCPaintings.UI
             npcListButton.SetPosition(xPositionOnScreen + width - npcListButton.width - 64, yPositionOnScreen + 150);
             backgroundList = new Button("Open Background List", delegate
             {
-                Game1.activeClickableMenu = new SelectNPCMenu(this);
+                Game1.activeClickableMenu = new SelectBackgroundUI(this);
             });
 
             backgroundList.SetPosition(npcListButton.bounds.X - (backgroundList.width - npcListButton.width), npcListButton.bounds.Y + 100);
