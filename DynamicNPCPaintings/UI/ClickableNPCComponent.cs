@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using Microsoft.Xna.Framework.Graphics;
-using WeddingPhoto;
 
 namespace DynamicNPCPaintings.UI
 {
