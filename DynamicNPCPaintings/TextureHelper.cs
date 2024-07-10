@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DynamicNPCPaintings.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using System;
@@ -7,8 +8,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Background = DynamicNPCPaintings.Framework.Background;
 
-namespace WeddingPhoto
+namespace DynamicNPCPaintings
 {
     public static class TextureHelper
     {
@@ -43,8 +45,9 @@ namespace WeddingPhoto
 
             return croppedTexture;
         }
-        public static Texture2D DrawCharacterOnBackground(GraphicsDevice graphicsDevice, Texture2D backgroundTexture, Texture2D characterTexture, Vector2 characterPosition, int minimumX, int minimumY, int maximumX, int maximumY)
+        public static Texture2D DrawCharacterOnBackground(Texture2D backgroundTexture, Texture2D characterTexture, Vector2 characterPosition, int minimumX, int minimumY, int maximumX, int maximumY)
         {
+            GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
             // Erstellen des Ziel-Texturen-Speichers mit der Größe des Hintergrunds
             Texture2D resultTexture = new Texture2D(graphicsDevice, backgroundTexture.Width, backgroundTexture.Height);
 
@@ -93,57 +96,58 @@ namespace WeddingPhoto
             resultTexture.SetData(resultPixels);
 
             return resultTexture;
-        }
-        public static Texture2D BackgroundWithFrame(Texture2D frameTexture, Texture2D backgroundTexture, int startX, int startY, int endX, int endY, int offsetX, int offsetY, GraphicsDevice graphicsDevice)
+        }// Texture2D frameTexture, Texture2D backgroundTexture, int startX, int startY, int endX, int endY, int offsetX, int offsetY
+        public static Texture2D BackgroundWithFrame(Frame frame, Background background)
         {
+            GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
             // Berechne die maximal zulässigen Offsets
-            if (offsetX > backgroundTexture.Width - (endX - startX))
+            if (background.offsetX > background.backgroundImage.Width - (frame.endX - frame.startX))
             {
-                offsetX = backgroundTexture.Width - (endX - startX);
+                background.offsetX = background.backgroundImage.Width - (frame.endX - frame.startX);
             }
 
-            if (offsetY > backgroundTexture.Height - (endY - startY))
+            if (background.offsetY > background.backgroundImage.Height - (frame.endY - frame.startY))
             {
-                offsetY = backgroundTexture.Height - (endY - startY);
+                background.offsetY = background.backgroundImage.Height - (frame.endY - frame.startY);
             }
 
             // Erstelle eine neue Texture2D mit der gleichen Größe wie der Rahmen
-            Texture2D resultTexture = new Texture2D(graphicsDevice, frameTexture.Width, frameTexture.Height);
+            Texture2D resultTexture = new Texture2D(graphicsDevice, frame.frameTexture.Width, frame.frameTexture.Height);
 
             // Lade die Pixel-Daten des Rahmens
-            Color[] frameData = new Color[frameTexture.Width * frameTexture.Height];
-            frameTexture.GetData(frameData);
+            Color[] frameData = new Color[frame.frameTexture.Width * frame.frameTexture.Height];
+            frame.frameTexture.GetData(frameData);
 
             // Lade die Pixel-Daten des Hintergrunds
-            Color[] backgroundData = new Color[backgroundTexture.Width * backgroundTexture.Height];
-            backgroundTexture.GetData(backgroundData);
+            Color[] backgroundData = new Color[background.backgroundImage.Width * background.backgroundImage.Height];
+            background.backgroundImage.GetData(backgroundData);
 
             // Erstelle ein Array für die Pixel-Daten des Ergebnisses
-            Color[] resultData = new Color[frameTexture.Width * frameTexture.Height];
+            Color[] resultData = new Color[frame.frameTexture.Width * frame.frameTexture.Height];
 
             // Kopiere den Rahmen in das Ergebnis
-            for (int y = 0; y < frameTexture.Height; y++)
+            for (int y = 0; y < frame.frameTexture.Height; y++)
             {
-                for (int x = 0; x < frameTexture.Width; x++)
+                for (int x = 0; x < frame.frameTexture.Width; x++)
                 {
-                    resultData[y * frameTexture.Width + x] = frameData[y * frameTexture.Width + x];
+                    resultData[y * frame.frameTexture.Width + x] = frameData[y * frame.frameTexture.Width + x];
                 }
             }
 
             // Zeichne den Hintergrund innerhalb des Rahmens
-            for (int y = startY; y < endY && y < frameTexture.Height; y++)
+            for (int y = frame.startY; y < frame.endY && y < frame.frameTexture.Height; y++)
             {
-                for (int x = startX; x < endX && x < frameTexture.Width; x++)
+                for (int x = frame.startX; x < frame.endX && x < frame.frameTexture.Width; x++)
                 {
                     // Berechne die Position im Hintergrundbild unter Berücksichtigung des Offsets
-                    int backgroundX = x - startX + offsetX;
-                    int backgroundY = y - startY + offsetY;
+                    int backgroundX = x - frame.startX + background.offsetX;
+                    int backgroundY = y - frame.startY + background.offsetY;
 
                     // Nur zeichnen, wenn die Hintergrundkoordinaten im gültigen Bereich liegen
-                    if (backgroundX >= 0 && backgroundX < backgroundTexture.Width && backgroundY >= 0 && backgroundY < backgroundTexture.Height)
+                    if (backgroundX >= 0 && backgroundX < background.backgroundImage.Width && backgroundY >= 0 && backgroundY < background.backgroundImage.Height)
                     {
                         // Setze das Pixel in den Ergebnisdaten
-                        resultData[y * frameTexture.Width + x] = backgroundData[backgroundY * backgroundTexture.Width + backgroundX];
+                        resultData[y * frame.frameTexture.Width + x] = backgroundData[backgroundY * background.backgroundImage.Width + backgroundX];
                     }
                 }
             }
