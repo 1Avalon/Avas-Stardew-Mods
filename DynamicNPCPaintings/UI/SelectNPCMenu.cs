@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WeddingPhoto;
 
 namespace DynamicNPCPaintings.UI
 {
@@ -65,12 +64,9 @@ namespace DynamicNPCPaintings.UI
             {
                 if (component.containsPoint(x, y))
                 {
-                    customiser.target = component.npc;
-                    customiser.previewTexture = TextureHelper.DrawCharacterOnBackground(
-                        Game1.graphics.GraphicsDevice,
-                        customiser.backgroundTexture,
-                        TextureHelper.GetCharacterFrame(component.npc.Sprite.Texture, customiser.currentNPCFrame), new Vector2(customiser.backgroundTexture.Width / 2, 3), 4, 5, 25, 45);
-                    customiser.preview.texture = customiser.previewTexture;
+                    customiser.picture.target = component.npc;
+                    customiser.picture.npcFrame = 0;
+                    customiser.UpdatePreview();
                     Game1.activeClickableMenu = customiser;
                     return;
                 }
