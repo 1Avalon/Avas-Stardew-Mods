@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DynamicNPCPaintings.UI.UIElements;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Menus;
