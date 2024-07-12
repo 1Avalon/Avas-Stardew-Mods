@@ -14,11 +14,13 @@ namespace DynamicNPCPaintings.UI
 
         public Button npcListButton;
 
-        public Button backgroundList;
+        public Button backgroundListButton;
 
         public Button frameListButton;
 
         public Button exportButton;
+
+        public List<Button> buttons;
 
         public Texture2D previewTexture;
 
@@ -53,19 +55,19 @@ namespace DynamicNPCPaintings.UI
             });
             npcListButton.SetPosition(xPositionOnScreen + width - npcListButton.width - 64, yPositionOnScreen + 150);
 
-            backgroundList = new Button("Open Background List", delegate
+            backgroundListButton = new Button("Open Background List", delegate
             {
                 Game1.playSound("dwoop");
                 Game1.activeClickableMenu = new SelectBackgroundUI(this);
             });
-            backgroundList.SetPosition(npcListButton.bounds.X - (backgroundList.width - npcListButton.width), npcListButton.bounds.Y + 100);
+            backgroundListButton.SetPosition(npcListButton.bounds.X - (backgroundListButton.width - npcListButton.width), npcListButton.bounds.Y + 100);
 
             frameListButton = new Button("Open Frame List", delegate
             {
                 Game1.playSound("dwoop");
                 Game1.activeClickableMenu = new SelectFrameMenu(this);
             });
-            frameListButton.SetPosition(backgroundList.bounds.X - (frameListButton.width - backgroundList.width), backgroundList.bounds.Y + 100);
+            frameListButton.SetPosition(backgroundListButton.bounds.X - (frameListButton.width - backgroundListButton.width), backgroundListButton.bounds.Y + 100);
 
             exportButton = new Button("Export", delegate
             {
@@ -74,7 +76,8 @@ namespace DynamicNPCPaintings.UI
             });
             exportButton.SetPosition(frameListButton.bounds.X - (exportButton.width - frameListButton.width), frameListButton.bounds.Y + 100);
 
-
+            buttons = new List<Button>()
+            { exportButton, frameListButton,  backgroundListButton, npcListButton};
 
             npcOffsetWheel = new OffsetWheel(xPositionOnScreen + 100, yPositionOnScreen + 500, "NPC", 20, 3);
             backgroundOffsetWheel = new OffsetWheel(npcOffsetWheel.positionX + 250, npcOffsetWheel.positionY, "Background", 20, 3);
@@ -91,8 +94,8 @@ namespace DynamicNPCPaintings.UI
             if (npcListButton.containsPoint(x, y))
                 npcListButton.CallEvent();
 
-            else if (backgroundList.containsPoint(x, y))
-                backgroundList.CallEvent();
+            else if (backgroundListButton.containsPoint(x, y))
+                backgroundListButton.CallEvent();
 
             else if (frameListButton.containsPoint(x, y))
                 frameListButton.CallEvent();
@@ -109,6 +112,18 @@ namespace DynamicNPCPaintings.UI
             preview.texture = picture.GetTexture();
         }
 
+        public override void performHoverAction(int x, int y)
+        {
+            foreach (Button button in buttons)
+            {
+                if (button.containsPoint(x, y))
+                    button.textColor = Color.White;
+                else
+                {
+                    button.textColor = Game1.textColor;
+                }
+            }
+        }
         public override void draw(SpriteBatch b)
         {
             b.Draw(Game1.fadeToBlackRect, Game1.graphics.GraphicsDevice.Viewport.Bounds, Color.Black * 0.75f);
@@ -116,7 +131,7 @@ namespace DynamicNPCPaintings.UI
             Utility.drawTextWithShadow(b, $"Tile Size: {picture.frame.frameTexture.Width / 16}x{picture.frame.frameTexture.Height / 16}", Game1.smallFont, new Vector2(preview.bounds.X + 16, preview.bounds.Bottom + 150), Game1.textColor, 0.8f);
             Utility.drawTextWithShadow(b, "Frame", Game1.smallFont, new Vector2(increaseFrameArrow.bounds.X + 100, increaseFrameArrow.bounds.Y), Game1.textColor, 1.5f);
             npcListButton.draw(b);
-            backgroundList.draw(b);
+            backgroundListButton.draw(b);
             frameListButton.draw(b);
             exportButton.draw(b);
             increaseFrameArrow.draw(b);
