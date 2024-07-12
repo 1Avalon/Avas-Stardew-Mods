@@ -22,6 +22,8 @@ namespace DynamicNPCPaintings.UI
 
         public List<Button> buttons;
 
+        public Checkbox flipCheckbox;
+
         public Texture2D previewTexture;
 
         public Texture2D backgroundTexture;
@@ -79,11 +81,13 @@ namespace DynamicNPCPaintings.UI
             buttons = new List<Button>()
             { exportButton, frameListButton,  backgroundListButton, npcListButton};
 
-            npcOffsetWheel = new OffsetWheel(xPositionOnScreen + 100, yPositionOnScreen + 500, "NPC", 20, 3);
+            npcOffsetWheel = new OffsetWheel(xPositionOnScreen + 100, yPositionOnScreen + 550, "NPC", 20, 3);
             backgroundOffsetWheel = new OffsetWheel(npcOffsetWheel.positionX + 250, npcOffsetWheel.positionY, "Background", 20, 3);
 
             int arrowScale = 4;
             increaseFrameArrow = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + 50, yPositionOnScreen + 350, 12 * arrowScale, 11 * arrowScale), looseSprites, new Rectangle(352, 495, 12, 11), arrowScale);
+
+            flipCheckbox = new Checkbox("Flip", new Rectangle(increaseFrameArrow.bounds.X + 8, increaseFrameArrow.bounds.Y + 80, 36, 36), "Flip NPC");
         }
         public void UpdatePreview()
         {
@@ -107,6 +111,8 @@ namespace DynamicNPCPaintings.UI
             {
                 picture.npcFrame++;
             }
+
+            flipCheckbox.click(x, y, ref picture.npcFlipped);
             npcOffsetWheel.click(x, y, ref picture.npcOffsetX, ref picture.npcOffsetY);
             backgroundOffsetWheel.click(x, y, ref picture.background.offsetX, ref picture.background.offsetY);
             preview.texture = picture.GetTexture();
@@ -138,6 +144,7 @@ namespace DynamicNPCPaintings.UI
             preview.draw(b);
             npcOffsetWheel.draw(b);
             backgroundOffsetWheel.draw(b);
+            flipCheckbox.draw(b);
             drawMouse(b);
         }
     }
