@@ -24,7 +24,7 @@ namespace DynamicNPCPaintings.Framework
 
         public static Background GetDefaultBackground()
         {
-            return new Background(0, 5, ModEntry.background);
+            return new Background(0, 5, ModEntry.backgroundImages["forest"]);
         }
     }
 }
