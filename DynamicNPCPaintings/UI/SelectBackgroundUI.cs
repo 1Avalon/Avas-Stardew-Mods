@@ -32,7 +32,8 @@ namespace DynamicNPCPaintings.UI
             {
                 ClickableTextureComponent component = new ClickableTextureComponent(new Rectangle(startPositionX, startPositionY, 32 * backgroundScale, 48 * backgroundScale), kvp.Value, new Rectangle(0, 0, kvp.Value.Width, kvp.Value.Height), backgroundScale);
                 component.name = kvp.Key;
-                validBackgrounds.Add(component);
+                if (kvp.Value.Width >= customiser.picture.frame.spaceWidth && kvp.Value.Height >= customiser.picture.frame.spaceHeight) 
+                    validBackgrounds.Add(component);
                 startPositionX += 48 * backgroundScale + 10;
                 if (startPositionX > xPositionOnScreen + this.width - 16 * backgroundScale)
                 {
@@ -40,6 +41,7 @@ namespace DynamicNPCPaintings.UI
                     startPositionY += 32 * backgroundScale + 5;
                 }
             }
+            exitFunction = () => { Game1.activeClickableMenu = customiser; };
         }
 
         public override void receiveLeftClick(int x, int y, bool playSound = true)
