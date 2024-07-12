@@ -20,6 +20,8 @@ namespace DynamicNPCPaintings.UI
         public int width;
 
         public int height;
+
+        public Color textColor = Game1.textColor;
         public Button(string label, Action action) : base(Rectangle.Empty, null, Rectangle.Empty, 1f)
         {
             Label = label;
@@ -43,7 +45,7 @@ namespace DynamicNPCPaintings.UI
             Vector2 string_center = Game1.dialogueFont.MeasureString(Label) / 2f;
             string_center.X = (int)(string_center.X / 4f) * 4;
             string_center.Y = (int)(string_center.Y / 4f) * 4;
-            Utility.drawTextWithShadow(b, Label, Game1.dialogueFont, new Vector2(bounds.Center.X, bounds.Center.Y) - string_center, Game1.textColor, 1f, draw_layer + 1E-06f, -1, -1, 0f);
+            Utility.drawTextWithShadow(b, Label, Game1.dialogueFont, new Vector2(bounds.Center.X, bounds.Center.Y) - string_center, textColor, 1f, draw_layer + 1E-06f, -1, -1, 0f);
         }
     }
 }
