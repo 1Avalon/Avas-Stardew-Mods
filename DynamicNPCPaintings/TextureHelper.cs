@@ -8,7 +8,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StardewModdingAPI;
 using Background = DynamicNPCPaintings.Framework.Background;
+using StardewValley.Menus;
+using StardewValley.ItemTypeDefinitions;
+using StardewValley.Objects;
 
 namespace DynamicNPCPaintings
 {
@@ -150,6 +154,47 @@ namespace DynamicNPCPaintings
             resultTexture.SetData(resultData);
 
             return resultTexture;
+        }
+
+        public static void ExportToPainting(Picture picture)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>();
+
+            if (!Directory.Exists(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName)))
+                Directory.CreateDirectory(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName));
+
+            int number = 1;
+            var file = Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName, $"Picture_{number}.png");
+            while (File.Exists(file))
+            {
+                file = Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName, $"Picture_{++number}.png");
+            }
+
+
+            Stream stream = File.Create(file);
+
+            picture.GetTexture().SaveAsPng(stream, picture.frame.frameTexture.Width, picture.frame.frameTexture.Height);
+            stream.Close();
+
+            Game1.addHUDMessage(new HUDMessage("Successfully saved the painting", 1));
+
+
+            string uniqueID = $"AvalonMFX.DynamicNPCPaintings.Picture_{number}";
+
+            if (!ModEntry.PaintingsData.ContainsKey(uniqueID))
+            {
+                string uniqueTextureName = $"{uniqueID}_IMG";
+                ModEntry.PaintingsData.Add(uniqueID, $"AvalonMFX.Picture_{number}/painting/{picture.tileWidth} {picture.tileHeight}/{picture.tileWidth} {picture.tileHeight}/1/0/-1/Picture/0/{uniqueTextureName}");
+                ModEntry.TextureData.Add(uniqueTextureName, file);
+            }
+            ModEntry.instance.Helper.GameContent.InvalidateCache("Data/Furniture");
+            Item obj = new StardewValley.Object(uniqueID, 1);
+            Furniture furniture = new Furniture(uniqueID, Vector2.Zero);
+            List<Item> items = new List<Item>()
+            {
+                furniture
+            };
+            Game1.activeClickableMenu = new ItemGrabMenu(items);
         }
         public static Texture2D DrawTextureOnTexture(GraphicsDevice graphicsDevice, Texture2D backgroundTexture, Texture2D overlayTexture, Vector2 position)
         {
