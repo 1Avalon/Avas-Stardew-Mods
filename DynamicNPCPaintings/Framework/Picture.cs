@@ -18,6 +18,10 @@ namespace DynamicNPCPaintings.Framework
 
         public int npcOffsetY;
 
+        public int tileWidth { get => frame.frameTexture.Width / 16; }
+
+        public int tileHeight {  get => frame.frameTexture.Height / 16; }
+
         public Picture(Frame frame, Background background, NPC target, int npcFrame)
         {
             this.frame = frame;
