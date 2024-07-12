@@ -48,6 +48,7 @@ namespace DynamicNPCPaintings.UI
                     startPositionY += 32 * frameScale + 5;
                 }
             }
+            exitFunction = () => { Game1.activeClickableMenu = this.customiser; };
         }
 
         public override void receiveLeftClick(int x, int y, bool playSound = true)

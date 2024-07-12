@@ -44,6 +44,7 @@ namespace DynamicNPCPaintings.UI
             }
 
             this.customiser = customiser;
+            exitFunction = () => { Game1.activeClickableMenu = this.customiser; };
         }
         public override void performHoverAction(int x, int y)
         {
