@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DynamicNPCPaintings.UI
+namespace DynamicNPCPaintings.UI.UIElements
 {
     public class OffsetWheel
     {
@@ -82,13 +82,13 @@ namespace DynamicNPCPaintings.UI
                         case 0:
                             offsetX--;
                             break;
-                        case 1: 
+                        case 1:
                             offsetY--;
                             break;
                         case 2:
                             offsetX++;
                             break;
-                        case 3: 
+                        case 3:
                             offsetY++;
                             break;
                     }

@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewValley.Minigames;
 using StardewValley;
 
-namespace DynamicNPCPaintings.UI
+namespace DynamicNPCPaintings.UI.UIElements
 {
     public class Button : ClickableTextureComponent
     {
@@ -40,7 +40,7 @@ namespace DynamicNPCPaintings.UI
         }
         public override void draw(SpriteBatch b)
         {
-            float draw_layer = 0.8f - (float)(bounds.X + bounds.Y) * 1E-06f;
+            float draw_layer = 0.8f - (bounds.X + bounds.Y) * 1E-06f;
             IClickableMenu.drawTextureBox(b, Game1.mouseCursors, new Rectangle(432, 439, 9, 9), bounds.X, bounds.Y, bounds.Width, bounds.Height, Color.White, 4f, drawShadow: true, draw_layer);
             Vector2 string_center = Game1.dialogueFont.MeasureString(Label) / 2f;
             string_center.X = (int)(string_center.X / 4f) * 4;

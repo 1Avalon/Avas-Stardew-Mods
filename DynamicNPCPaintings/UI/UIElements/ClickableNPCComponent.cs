@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DynamicNPCPaintings.UI
+namespace DynamicNPCPaintings.UI.UIElements
 {
     public class ClickableNPCComponent : ClickableTextureComponent
     {

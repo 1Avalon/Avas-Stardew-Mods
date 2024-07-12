@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using StardewValley;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DynamicNPCPaintings.UI
+namespace DynamicNPCPaintings.UI.UIElements
 {
     public class Checkbox : ClickableTextureComponent
     {
@@ -19,16 +19,16 @@ namespace DynamicNPCPaintings.UI
 
         public void click(int x, int y, ref bool value)
         {
-            if (this.containsPoint(x, y)) 
+            if (containsPoint(x, y))
             {
                 value = !value;
-                this.sourceRect.X = ((this.sourceRect.X == 227) ? 236 : 227);
+                sourceRect.X = sourceRect.X == 227 ? 236 : 227;
             }
         }
         public override void draw(SpriteBatch b)
         {
             b.Draw(texture, bounds, sourceRect, Color.White);
-            Utility.drawTextWithShadow(b, label, Game1.smallFont, new Vector2(this.bounds.X + this.bounds.Width + 8, this.bounds.Y + 8), Game1.textColor, 1);
+            Utility.drawTextWithShadow(b, label, Game1.smallFont, new Vector2(bounds.X + bounds.Width + 8, bounds.Y + 8), Game1.textColor, 1);
         }
     }
 }
