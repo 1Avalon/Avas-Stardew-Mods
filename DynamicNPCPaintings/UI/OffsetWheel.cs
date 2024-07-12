@@ -76,7 +76,8 @@ namespace DynamicNPCPaintings.UI
             {
                 if (component.containsPoint(x, y))
                 {
-                    switch(i)
+                    Game1.playSound("smallSelect");
+                    switch (i)
                     {
                         case 0:
                             offsetX--;
