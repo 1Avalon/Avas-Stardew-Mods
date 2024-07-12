@@ -30,11 +30,18 @@ namespace DynamicNPCPaintings.UI
 
             foreach (var kvp in ModEntry.backgroundImages)
             {
-                ClickableTextureComponent component = new ClickableTextureComponent(new Rectangle(startPositionX, startPositionY, 32 * backgroundScale, 48 * backgroundScale), kvp.Value, new Rectangle(0, 0, kvp.Value.Width, kvp.Value.Height), backgroundScale);
+                int bgWidth = kvp.Value.Width;
+                int bgHeight = kvp.Value.Height;
+
+                ClickableTextureComponent component = new ClickableTextureComponent(new Rectangle(startPositionX, startPositionY, bgWidth * backgroundScale, bgHeight * backgroundScale), kvp.Value, new Rectangle(0, 0, kvp.Value.Width, kvp.Value.Height), backgroundScale);
                 component.name = kvp.Key;
-                if (kvp.Value.Width >= customiser.picture.frame.spaceWidth && kvp.Value.Height >= customiser.picture.frame.spaceHeight) 
-                    validBackgrounds.Add(component);
-                startPositionX += 48 * backgroundScale + 10;
+
+                if (kvp.Value.Width < customiser.picture.frame.spaceWidth || kvp.Value.Height < customiser.picture.frame.spaceHeight)
+                    continue;
+                
+                validBackgrounds.Add(component);
+
+                startPositionX += bgWidth * backgroundScale + 5;
                 if (startPositionX > xPositionOnScreen + this.width - 16 * backgroundScale)
                 {
                     startPositionX = xPositionOnScreen + 30;
