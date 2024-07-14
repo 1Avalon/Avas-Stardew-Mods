@@ -51,28 +51,28 @@ namespace DynamicNPCPaintings.UI
 
             npcListButton = new Button("Open NPC List", delegate
             {
-                Game1.playSound("dwoop");
+                Game1.playSound("dwop");
                 Game1.activeClickableMenu = new SelectNPCMenu(this);
             });
             npcListButton.SetPosition(xPositionOnScreen + width - npcListButton.width - 64, yPositionOnScreen + 150);
 
             backgroundListButton = new Button("Open Background List", delegate
             {
-                Game1.playSound("dwoop");
+                Game1.playSound("dwop");
                 Game1.activeClickableMenu = new SelectBackgroundUI(this);
             });
             backgroundListButton.SetPosition(npcListButton.bounds.X - (backgroundListButton.width - npcListButton.width), npcListButton.bounds.Y + 100);
 
             frameListButton = new Button("Open Frame List", delegate
             {
-                Game1.playSound("dwoop");
+                Game1.playSound("dwop");
                 Game1.activeClickableMenu = new SelectFrameMenu(this);
             });
             frameListButton.SetPosition(backgroundListButton.bounds.X - (frameListButton.width - backgroundListButton.width), backgroundListButton.bounds.Y + 100);
 
             exportButton = new Button("Export", delegate
             {
-                Game1.playSound("dwoop");
+                Game1.playSound("dwop");
                 TextureHelper.ExportToPainting(picture);
             });
             exportButton.SetPosition(frameListButton.bounds.X - (exportButton.width - frameListButton.width), frameListButton.bounds.Y + 100);
