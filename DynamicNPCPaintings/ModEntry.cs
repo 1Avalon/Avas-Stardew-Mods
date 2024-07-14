@@ -48,6 +48,16 @@ namespace DynamicNPCPaintings
             backgroundImages.Add("Sunset", sunset);
             backgroundImages.Add("Night Sky", Helper.ModContent.Load<Texture2D>("assets/backgrounds/night_sky.png"));
             backgroundImages.Add("Green Hill", Helper.ModContent.Load<Texture2D>("assets/backgrounds/Green_Hill.png"));
+            backgroundImages.Add("Blue Night Sky", Helper.ModContent.Load<Texture2D>("assets/backgrounds/blue_night_sky.png"));
+            backgroundImages.Add("Castle", Helper.ModContent.Load<Texture2D>("assets/backgrounds/castle.png"));
+            */
+            foreach (string path in Directory.GetFiles(Path.Combine(Helper.DirectoryPath, "assets", "backgrounds"), "*.png"))
+            {
+                string fileName = Path.GetFileName(path);
+                Monitor.Log($"Found Background {fileName}");
+                backgroundImages.Add(fileName.Replace(".png", ""), Helper.ModContent.Load<Texture2D>($"assets/backgrounds/{fileName}"));
+            }
+
             frame = Helper.ModContent.Load<Texture2D>("assets/frames/frame1.png");
             instance = this;
         }
