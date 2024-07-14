@@ -3,12 +3,15 @@ using System.IO.Enumeration;
 using System.Security.Cryptography.X509Certificates;
 using DynamicNPCPaintings.Framework;
 using DynamicNPCPaintings.UI;
+using DynamicNPCPaintings.UI.UIElements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
+using StardewValley.Inventories;
+using StardewValley.Menus;
 
 namespace DynamicNPCPaintings
 {
@@ -37,6 +40,8 @@ namespace DynamicNPCPaintings
 
         public static IModHelper modHelper;
 
+        private Button button;
+
         public override void Entry(IModHelper helper)
         {
             modHelper = helper;
@@ -45,6 +50,8 @@ namespace DynamicNPCPaintings
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             helper.Events.Content.AssetRequested += OnAssetRequested;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.Display.Rendered += OnRendered;
+            helper.Events.Display.MenuChanged += OnMenuChanged;
             /*
             background = Helper.ModContent.Load<Texture2D>("assets/backgrounds/forest.png");
             Texture2D sunset = Helper.ModContent.Load<Texture2D>("assets/backgrounds/sunset.png");
@@ -113,20 +120,54 @@ namespace DynamicNPCPaintings
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
         /// 
+        private void OnRendered(object sender, RenderedEventArgs e)
+        {
+            if (Game1.activeClickableMenu is ShopMenu menu && menu.ShopId == "Catalogue")
+            {
+                if (button.bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
+                    button.textColor = Color.White;
+                else
+                    button.textColor = Game1.textColor;
+
+                    button.draw(e.SpriteBatch);
+                e.SpriteBatch.Draw(Game1.mouseCursors, new Vector2(Game1.getMouseX(), Game1.getMouseY()), Game1.getSourceRectForStandardTileSheet(Game1.mouseCursors, 0, 16, 16), Color.White, 0f, Vector2.Zero, 4f + Game1.dialogueButtonScale / 150f, SpriteEffects.None, 1f);
+            }
+
+        }
+
+        private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (Game1.activeClickableMenu is ShopMenu menu && menu.ShopId == "Catalogue")
+            {
+                if (button.bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
+                    button.CallEvent();
+                    
+            }
+        }
+        private void OnMenuChanged(object sender, MenuChangedEventArgs e)
+        {
+            if (e.NewMenu is ShopMenu menu && menu.ShopId == "Catalogue")
+            {
+                button.active = true;
+                button.setPosition(menu.inventory.xPositionOnScreen - button.width - 30, menu.yPositionOnScreen + menu.height - menu.inventory.height - 12 + 80);
+            }
+            else if (e.OldMenu is ShopMenu oldMenu && oldMenu.ShopId == "Catalogue")
+            {
+                button.active = false;
+            }
+        }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
+            button = new Button("NPC Paintings", delegate
+            {
+                Game1.playSound("dwop");
+                Game1.activeClickableMenu = new Customiser();
+            });
+            button.active = false;
+
             frames = Helper.GameContent.Load<Dictionary<string, Frame>>(FRAME_KEY);
             Monitor.Log($"Found {frames.Count} frames");
-        }
-        private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-            // ignore if player hasn't loaded a save yet
-            if (!Context.IsWorldReady)
-                return;
-            if (e.Button == SButton.M)
-                Game1.activeClickableMenu = new Customiser();
-            // print button presses to the console window
         }
     }
 }
