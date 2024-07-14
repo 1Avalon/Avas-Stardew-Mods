@@ -18,7 +18,34 @@ namespace DynamicNPCPaintings
 {
     public static class TextureHelper
     {
-        public static Texture2D GetCharacterFrame(Texture2D spritesheet, int frame)
+        public static Texture2D FlipTextureHorizontally(Texture2D originalTexture)
+        {
+            int width = originalTexture.Width;
+            int height = originalTexture.Height;
+
+            // Lade die Pixel-Daten des Originals
+            Color[] originalData = new Color[width * height];
+            originalTexture.GetData(originalData);
+
+            // Erstelle ein Array für die Pixel-Daten der geflippten Textur
+            Color[] flippedData = new Color[width * height];
+
+            // Horizontales Flippen der Pixel
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    flippedData[y * width + (width - 1 - x)] = originalData[y * width + x];
+                }
+            }
+
+            // Erstelle eine neue Texture2D und setze die geflippten Pixel-Daten
+            Texture2D flippedTexture = new Texture2D(Game1.graphics.GraphicsDevice, width, height);
+            flippedTexture.SetData(flippedData);
+
+            return flippedTexture;
+        }
+        public static Texture2D GetCharacterFrame(Texture2D spritesheet, int frame, bool flipped = false)
         {
             int xOffset = (frame % 4) * 16;
             int yOffset = frame / 4 * 32;
@@ -30,7 +57,7 @@ namespace DynamicNPCPaintings
             spritesheet.GetData(0, newBounds, data, 0, newBounds.Width * newBounds.Height);
             croppedTexture.SetData(data);
             Debug.WriteLine(croppedTexture.Bounds.Size);
-            return croppedTexture;
+            return flipped ? FlipTextureHorizontally(croppedTexture) : croppedTexture;
         }
 
         public static Texture2D CropTexture(Texture2D texture, Rectangle cropArea)
@@ -181,11 +208,11 @@ namespace DynamicNPCPaintings
 
             string uniqueID = $"AvalonMFX.DynamicNPCPaintings.Picture_{number}";
 
-            if (!ModEntry.PaintingsData.ContainsKey(uniqueID))
+            if (!ModEntry.dataManager.FurnitureData.ContainsKey(uniqueID))
             {
                 string uniqueTextureName = $"{uniqueID}_IMG";
-                ModEntry.PaintingsData.Add(uniqueID, $"AvalonMFX.Picture_{number}/painting/{picture.tileWidth} {picture.tileHeight}/{picture.tileWidth} {picture.tileHeight}/1/0/-1/Picture/0/{uniqueTextureName}");
-                ModEntry.TextureData.Add(uniqueTextureName, file);
+                ModEntry.dataManager.FurnitureData.Add(uniqueID, $"AvalonMFX.Picture_{number}/painting/{picture.tileWidth} {picture.tileHeight}/{picture.tileWidth} {picture.tileHeight}/1/0/-1/Picture/0/{uniqueTextureName}");
+                ModEntry.dataManager.TextureData.Add(uniqueTextureName, file);
             }
             ModEntry.instance.Helper.GameContent.InvalidateCache("Data/Furniture");
             Item obj = new StardewValley.Object(uniqueID, 1);
