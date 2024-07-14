@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Enumeration;
 using System.Security.Cryptography.X509Certificates;
 using DynamicNPCPaintings.Framework;
 using DynamicNPCPaintings.UI;
@@ -32,16 +33,19 @@ namespace DynamicNPCPaintings
 
         public static readonly string FRAME_KEY = "AvaloNMFX.DynamicNPCPaintings/Frames";
 
-        public static Dictionary<string, string> PaintingsData = new Dictionary<string, string>();
+        public static SavedDataManager dataManager;
 
-        public static Dictionary<string, string> TextureData = new Dictionary<string, string>(); //key = unique name of texture ; value = path to the img
+        public static IModHelper modHelper;
 
         public override void Entry(IModHelper helper)
         {
+            modHelper = helper;
+            dataManager = new();
+
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             helper.Events.Content.AssetRequested += OnAssetRequested;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
-            helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
+            /*
             background = Helper.ModContent.Load<Texture2D>("assets/backgrounds/forest.png");
             Texture2D sunset = Helper.ModContent.Load<Texture2D>("assets/backgrounds/sunset.png");
             backgroundImages.Add("Forest", background);
@@ -62,17 +66,8 @@ namespace DynamicNPCPaintings
             instance = this;
         }
 
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
-        {
-            PaintingsData.Clear();
-            TextureData.Clear();
-        }
-
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            Monitor.Log($"Locale Name: {e.NameWithoutLocale.Name}");
-            Monitor.Log("AvalonMFX.DynamicNPCPaintings.Picture_1_IMG");
-            Monitor.Log((e.NameWithoutLocale.Name == "AvalonMFX.DynamicNPCPaintings.Picture_1_IMG").ToString());
             if (e.NameWithoutLocale.IsEquivalentTo(FRAME_KEY))
             {
                 e.LoadFrom(() => new Dictionary<string, Frame>(), AssetLoadPriority.Exclusive);
@@ -82,7 +77,7 @@ namespace DynamicNPCPaintings
                 e.Edit((IAssetData asset) =>
                 {
                     var data = asset.AsDictionary<string, string>().Data;
-                    foreach (var kvp in PaintingsData)
+                    foreach (var kvp in dataManager.FurnitureData)
                     {
                         data.Add(kvp.Key, kvp.Value);
                     }
@@ -92,11 +87,11 @@ namespace DynamicNPCPaintings
 
             else if (e.NameWithoutLocale.Name.StartsWith("AvalonMFX.DynamicNPCPaintings.Picture_"))
             {
-                foreach(var kvp in TextureData)
+                foreach(var kvp in dataManager.TextureData)
                 {
                     if (e.NameWithoutLocale.IsEquivalentTo(kvp.Key))
                     {
-                        var file = TextureData[e.NameWithoutLocale.Name];
+                        var file = dataManager.TextureData[e.NameWithoutLocale.Name];
                         var tex = Texture2D.FromFile(Game1.graphics.GraphicsDevice, file);
                         e.LoadFrom(() => tex, AssetLoadPriority.Exclusive);
                         break;
