@@ -4,6 +4,7 @@ using StardewValley.Menus;
 using Microsoft.Xna.Framework;
 using DynamicNPCPaintings.Framework;
 using Background = DynamicNPCPaintings.Framework.Background;
+using DynamicNPCPaintings.UI.UIElements;
 
 namespace DynamicNPCPaintings.UI
 {
@@ -30,15 +31,13 @@ namespace DynamicNPCPaintings.UI
 
         private Texture2D looseSprites = Game1.content.Load<Texture2D>("LooseSprites/Cursors");
 
-        public ClickableTextureComponent increaseFrameArrow;
-
-        public ClickableTextureComponent decreaseFrameArrow;
-
         public Picture picture = Picture.GetDefaultPicture();
 
         private OffsetWheel npcOffsetWheel;
 
         private OffsetWheel backgroundOffsetWheel;
+
+        public FrameSwitcher switcher;
 
 
         public Customiser() 
@@ -85,9 +84,10 @@ namespace DynamicNPCPaintings.UI
             backgroundOffsetWheel = new OffsetWheel(npcOffsetWheel.positionX + 250, npcOffsetWheel.positionY, "Background", 20, 3);
 
             int arrowScale = 4;
-            increaseFrameArrow = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + 50, yPositionOnScreen + 350, 12 * arrowScale, 11 * arrowScale), looseSprites, new Rectangle(352, 495, 12, 11), arrowScale);
 
-            flipCheckbox = new Checkbox("Flip", new Rectangle(increaseFrameArrow.bounds.X + 8, increaseFrameArrow.bounds.Y + 80, 36, 36), "Flip NPC");
+            switcher = new FrameSwitcher("NPC Frame", xPositionOnScreen + 50 + 20, yPositionOnScreen + 350, 20, 4);
+
+            flipCheckbox = new Checkbox("Flip", new Rectangle(switcher.positionX + 8, switcher.positionY + 80, 36, 36), "Flip NPC");
         }
         public void UpdatePreview()
         {
@@ -107,14 +107,10 @@ namespace DynamicNPCPaintings.UI
             else if (exportButton.containsPoint(x, y))
                 exportButton.CallEvent();
 
-            else if (increaseFrameArrow.containsPoint(x, y))
-            {
-                picture.npcFrame++;
-            }
-
             flipCheckbox.click(x, y, ref picture.npcFlipped);
             npcOffsetWheel.click(x, y, ref picture.npcOffsetX, ref picture.npcOffsetY);
             backgroundOffsetWheel.click(x, y, ref picture.background.offsetX, ref picture.background.offsetY);
+            switcher.click(x, y, ref picture);
             preview.texture = picture.GetTexture();
         }
 
@@ -135,16 +131,19 @@ namespace DynamicNPCPaintings.UI
             b.Draw(Game1.fadeToBlackRect, Game1.graphics.GraphicsDevice.Viewport.Bounds, Color.Black * 0.75f);
             Game1.drawDialogueBox(xPositionOnScreen, yPositionOnScreen, width, height, false, true);
             Utility.drawTextWithShadow(b, $"Tile Size: {picture.frame.frameTexture.Width / 16}x{picture.frame.frameTexture.Height / 16}", Game1.smallFont, new Vector2(preview.bounds.X + 16, preview.bounds.Bottom + 150), Game1.textColor, 0.8f);
-            Utility.drawTextWithShadow(b, "Frame", Game1.smallFont, new Vector2(increaseFrameArrow.bounds.X + 100, increaseFrameArrow.bounds.Y), Game1.textColor, 1.5f);
+            string frameText = $"{picture.npcFrame + 1}/{picture.npcFrameAmount}";
+            Utility.drawTextWithShadow(b, frameText, Game1.smallFont, new Vector2((switcher.positionX + switcher.width / 2 - Game1.smallFont.MeasureString(frameText).X), switcher.positionY + 40), Game1.textColor, 0.8f);
+            //Utility.drawTextWithShadow(b, "Frame", Game1.smallFont, new Vector2(increaseFrameArrow.bounds.X + 100, increaseFrameArrow.bounds.Y), Game1.textColor, 1.5f);
             npcListButton.draw(b);
             backgroundListButton.draw(b);
             frameListButton.draw(b);
             exportButton.draw(b);
-            increaseFrameArrow.draw(b);
+            //increaseFrameArrow.draw(b);
             preview.draw(b);
             npcOffsetWheel.draw(b);
             backgroundOffsetWheel.draw(b);
             flipCheckbox.draw(b);
+            switcher.draw(b);
             drawMouse(b);
         }
     }
