@@ -24,6 +24,8 @@ namespace DynamicNPCPaintings.Framework
 
         public int tileHeight {  get => frame.frameTexture.Height / 16; }
 
+        public int npcFrameAmount { get => target.Sprite.Texture.Height / 8; }
+
         public Picture(Frame frame, Background background, NPC target, int npcFrame)
         {
             this.frame = frame;
