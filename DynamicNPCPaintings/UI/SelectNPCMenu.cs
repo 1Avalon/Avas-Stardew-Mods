@@ -32,6 +32,8 @@ namespace DynamicNPCPaintings.UI
             int startPositionY = yPositionOnScreen + 110;
             int npcScale = 4;
 
+            upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
+
             foreach (var npc in validNPCs)
             {
                 ClickableNPCComponent component = new ClickableNPCComponent(new Rectangle(startPositionX, startPositionY, 16 * npcScale, 16 * npcScale), npc, new Rectangle(0, 5, 16, 16), npcScale);
@@ -62,15 +64,20 @@ namespace DynamicNPCPaintings.UI
 
         public override void receiveLeftClick(int x, int y, bool playSound = true)
         {
-            foreach(ClickableNPCComponent component in NPCComponents)
+            if (upperRightCloseButton.containsPoint(x, y))
+                Game1.activeClickableMenu = customiser;
+            else
             {
-                if (component.containsPoint(x, y))
+                foreach (ClickableNPCComponent component in NPCComponents)
                 {
-                    customiser.picture.target = component.npc;
-                    customiser.picture.npcFrame = 0;
-                    customiser.UpdatePreview();
-                    Game1.activeClickableMenu = customiser;
-                    return;
+                    if (component.containsPoint(x, y))
+                    {
+                        customiser.picture.target = component.npc;
+                        customiser.picture.npcFrame = 0;
+                        customiser.UpdatePreview();
+                        Game1.activeClickableMenu = customiser;
+                        return;
+                    }
                 }
             }
         }
@@ -81,6 +88,7 @@ namespace DynamicNPCPaintings.UI
             foreach(ClickableNPCComponent component in NPCComponents)
                 component.draw(b);
 
+            upperRightCloseButton.draw(b);
             drawHoverText(b, hoverText, Game1.smallFont);
             drawMouse(b);
         }

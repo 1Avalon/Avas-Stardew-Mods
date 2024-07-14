@@ -88,6 +88,8 @@ namespace DynamicNPCPaintings.UI
             switcher = new FrameSwitcher("NPC Frame", xPositionOnScreen + 50 + 20, yPositionOnScreen + 350, 20, 4);
 
             flipCheckbox = new Checkbox("Flip", new Rectangle(switcher.positionX + 8, switcher.positionY + 80, 36, 36), "Flip NPC");
+
+            upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
         }
         public void UpdatePreview()
         {
@@ -106,6 +108,8 @@ namespace DynamicNPCPaintings.UI
 
             else if (exportButton.containsPoint(x, y))
                 exportButton.CallEvent();
+            else if (upperRightCloseButton.containsPoint(x, y))
+                exitThisMenu();
 
             flipCheckbox.click(x, y, ref picture.npcFlipped);
             npcOffsetWheel.click(x, y, ref picture.npcOffsetX, ref picture.npcOffsetY);
@@ -144,6 +148,7 @@ namespace DynamicNPCPaintings.UI
             backgroundOffsetWheel.draw(b);
             flipCheckbox.draw(b);
             switcher.draw(b);
+            upperRightCloseButton.draw(b);
             drawMouse(b);
         }
     }

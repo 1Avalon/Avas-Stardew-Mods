@@ -34,6 +34,8 @@ namespace DynamicNPCPaintings.UI
 
             frames = ModEntry.instance.Helper.GameContent.Load<Dictionary<string, Frame>>(ModEntry.FRAME_KEY);
 
+            upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
+
             foreach (var kvp in frames)
             {
                 int bgWidth = kvp.Value.frameTexture.Width;
@@ -51,16 +53,34 @@ namespace DynamicNPCPaintings.UI
             exitFunction = () => { Game1.activeClickableMenu = this.customiser; };
         }
 
-        public override void receiveLeftClick(int x, int y, bool playSound = true)
+        public override void performHoverAction(int x, int y)
         {
+            base.performHoverAction(x, y);
+            hoverText = "";
             foreach (ClickableTextureComponent component in components)
             {
                 if (component.containsPoint(x, y))
                 {
-                    customiser.picture.frame = frames[component.name];
-                    customiser.picture.npcOffsetX = frames[component.name].spaceWidth / 2 - 4;
-                    customiser.UpdatePreview();
-                    Game1.activeClickableMenu = customiser;
+                    hoverText = component.name;
+                }
+            }
+        }
+
+        public override void receiveLeftClick(int x, int y, bool playSound = true)
+        {
+            if (upperRightCloseButton.containsPoint(x, y))
+                Game1.activeClickableMenu = customiser;
+            else
+            {
+                foreach (ClickableTextureComponent component in components)
+                {
+                    if (component.containsPoint(x, y))
+                    {
+                        customiser.picture.frame = frames[component.name];
+                        customiser.picture.npcOffsetX = frames[component.name].spaceWidth / 2 - 4;
+                        customiser.UpdatePreview();
+                        Game1.activeClickableMenu = customiser;
+                    }
                 }
             }
         }
@@ -71,6 +91,7 @@ namespace DynamicNPCPaintings.UI
             foreach (ClickableTextureComponent component in components)
                 component.draw(b);
 
+            upperRightCloseButton.draw(b);
             drawHoverText(b, hoverText, Game1.smallFont);
             drawMouse(b);
         }

@@ -28,6 +28,8 @@ namespace DynamicNPCPaintings.UI
             int startPositionY = yPositionOnScreen + 110;
             int backgroundScale = 4;
 
+            upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
+
             foreach (var kvp in ModEntry.backgroundImages)
             {
                 int bgWidth = kvp.Value.Width;
@@ -53,13 +55,18 @@ namespace DynamicNPCPaintings.UI
 
         public override void receiveLeftClick(int x, int y, bool playSound = true)
         {
-            foreach(ClickableTextureComponent component in validBackgrounds)
+            if (upperRightCloseButton.containsPoint(x, y))
+                Game1.activeClickableMenu = customiser;
+            else
             {
-                if (component.containsPoint(x, y))
+                foreach (ClickableTextureComponent component in validBackgrounds)
                 {
-                    customiser.picture.background = new Framework.Background(0, 0, component.texture);
-                    customiser.UpdatePreview();
-                    Game1.activeClickableMenu = customiser;
+                    if (component.containsPoint(x, y))
+                    {
+                        customiser.picture.background = new Framework.Background(0, 0, component.texture);
+                        customiser.UpdatePreview();
+                        Game1.activeClickableMenu = customiser;
+                    }
                 }
             }
         }
@@ -83,6 +90,7 @@ namespace DynamicNPCPaintings.UI
             foreach (ClickableTextureComponent component in validBackgrounds)
                 component.draw(b);
 
+            upperRightCloseButton.draw(b);
             drawHoverText(b, hoverText, Game1.smallFont);
             drawMouse(b);
         }
