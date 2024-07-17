@@ -36,7 +36,8 @@ namespace DynamicNPCPaintings.UI
 
             foreach (var npc in validNPCs)
             {
-                ClickableNPCComponent component = new ClickableNPCComponent(new Rectangle(startPositionX, startPositionY, 16 * npcScale, 16 * npcScale), npc, new Rectangle(0, 5, 16, 16), npcScale);
+                int yOffset = TextureHelper.FindFirstNonTransparentPixelY(npc.Sprite.Texture);
+                ClickableNPCComponent component = new ClickableNPCComponent(new Rectangle(startPositionX, startPositionY, 16 * npcScale, 16 * npcScale), npc, new Rectangle(0, yOffset, 16, 16), npcScale);
                 NPCComponents.Add(component);
                 startPositionX += 16 * npcScale;
                 if (startPositionX > xPositionOnScreen + this.width - 16 * npcScale)
