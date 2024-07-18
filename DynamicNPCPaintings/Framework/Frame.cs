@@ -42,26 +42,26 @@ namespace DynamicNPCPaintings.Framework
         {
             this.startX = startX;
             this.startY = startY;
-            this.endX = endX;
-            this.endY = endY;
+            this.endX = endX + 1;
+            this.endY = endY + 1;
             _frameTexture = frameTexture;
-            spaceWidth = endX - startX; 
-            spaceHeight = endY - startY;
+            spaceWidth = this.endX - startX; 
+            spaceHeight = this.endY - startY;
         }
         public Frame(int startX, int startY, int endX, int endY, string textureName)
         {
             this.startX = startX;
             this.startY = startY;
-            this.endX = endX;
-            this.endY = endY;
+            this.endX = endX + 1;
+            this.endY = endY + 1;
             this.textureName = textureName;
-            spaceWidth = endX - startX;
-            spaceHeight = endY - startY;
+            spaceWidth = this.endX - startX;
+            spaceHeight = this.endY - startY;
         }
 
         public static Frame GetDefaultFrame()
         {
-            return new Frame(4, 5, 45, 25, ModEntry.frame);
+            return new Frame(4, 5, 44, 24, ModEntry.frame);
         }
     }
 }
