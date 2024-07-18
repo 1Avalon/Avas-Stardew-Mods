@@ -76,8 +76,10 @@ namespace DynamicNPCPaintings.UI
                 {
                     if (component.containsPoint(x, y))
                     {
+                        if (customiser.picture.frame.spaceWidth != frames[component.name].spaceWidth)
+                            customiser.picture.npcOffsetX = frames[component.name].spaceWidth / 2 - 4;
+
                         customiser.picture.frame = frames[component.name];
-                        customiser.picture.npcOffsetX = frames[component.name].spaceWidth / 2 - 4;
                         customiser.UpdatePreview();
                         Game1.activeClickableMenu = customiser;
                     }
