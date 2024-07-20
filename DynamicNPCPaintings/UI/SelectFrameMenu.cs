@@ -44,9 +44,9 @@ namespace DynamicNPCPaintings.UI
                 component.name = kvp.Key;
                 components.Add(component);
                 startPositionX += bgWidth * frameScale + 10;
-                if (startPositionX > xPositionOnScreen + this.width - 16 * frameScale)
+                if (startPositionX + bgHeight * frameScale > xPositionOnScreen + this.width - 32)
                 {
-                    startPositionX = xPositionOnScreen + 30;
+                    startPositionX = xPositionOnScreen + 50;
                     startPositionY += 32 * frameScale + 5;
                 }
             }
