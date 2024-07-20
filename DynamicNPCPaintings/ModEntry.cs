@@ -36,6 +36,8 @@ namespace DynamicNPCPaintings
 
         public static readonly string FRAME_KEY = "AvaloNMFX.DynamicNPCPaintings/Frames";
 
+        public static readonly string BACKGROUND_KEY = "AvalonMFX.DynamicNPCPaintings/Backgrounds";
+
         public static SavedDataManager dataManager;
 
         public static IModHelper modHelper;
@@ -79,6 +81,10 @@ namespace DynamicNPCPaintings
             {
                 e.LoadFrom(() => new Dictionary<string, Frame>(), AssetLoadPriority.Exclusive);
             }
+            else if (e.NameWithoutLocale.IsEquivalentTo(BACKGROUND_KEY))
+            {
+                e.LoadFrom(() => new Dictionary<string, Framework.Background>(), AssetLoadPriority.Exclusive);
+            }
             else if (e.NameWithoutLocale.IsEquivalentTo("Data/Furniture"))
             {
                 e.Edit((IAssetData asset) =>
@@ -104,13 +110,6 @@ namespace DynamicNPCPaintings
                         break;
                     }
                 }
-            }
-            else if (e.NameWithoutLocale.IsEquivalentTo("DynamicNPCPaintings.Pictures"))
-            {
-                var file = Path.Combine(ModEntry.instance.Helper.DirectoryPath, "paintings", Constants.SaveFolderName, "Lol.png");
-                string name = Path.GetFileNameWithoutExtension(file);
-                var tex = Texture2D.FromFile(Game1.graphics.GraphicsDevice, file);
-                e.LoadFrom(() => tex, AssetLoadPriority.Exclusive);
             }
         }
         /*********
