@@ -94,6 +94,7 @@ namespace DynamicNPCPaintings.UI
         public void UpdatePreview()
         {
             preview.texture = picture.GetTexture();
+            preview.sourceRect = new Rectangle(0, 0, picture.frame.frameTexture.Width, picture.frame.frameTexture.Height);
         }
         public override void receiveLeftClick(int x, int y, bool playSound = true)
         {
