@@ -80,6 +80,10 @@ namespace DynamicNPCPaintings.UI
                             customiser.picture.npcOffsetX = frames[component.name].spaceWidth / 2 - 4;
 
                         customiser.picture.frame = frames[component.name];
+
+                        if (!customiser.picture.background.FitsInFrame(customiser.picture.frame))
+                            customiser.picture.background = Framework.Background.GetDefaultBackground();
+
                         customiser.UpdatePreview();
                         Game1.activeClickableMenu = customiser;
                     }
