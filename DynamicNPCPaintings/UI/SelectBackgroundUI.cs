@@ -84,53 +84,82 @@ namespace DynamicNPCPaintings.UI
             currentIndex = 0;
             UpdateBackgroundList(0);
         }
-        private void UpdateBackgroundList(int indexOffset) // I have no f ing idea what im doing but it works lol
+        private void UpdateBackgroundList(int indexOffset)
         {
-            int elementCounter = 0;
-            int index = 0;
             currentIndex += indexOffset;
             if (currentIndex < 0)
                 currentIndex = 0;
+
             validBackgroundComponents.Clear();
             startPositionX = xPositionOnScreen + 50;
             startPositionY = yPositionOnScreen + 110;
+
             bool keepAddingToComponents = true;
+            int elementCounter = 0;
+            int addedElements = 0;
+            int maxBackgroundHeight = 0;
+
             foreach (var kvp in backgroundData)
             {
                 int bgWidth = kvp.Value.Width;
                 int bgHeight = kvp.Value.Height;
 
-                ClickableTextureComponent component = new ClickableTextureComponent(new Rectangle(startPositionX, startPositionY, bgWidth * backgroundScale, bgHeight * backgroundScale), kvp.Value, new Rectangle(0, 0, kvp.Value.Width, kvp.Value.Height), backgroundScale);
-                component.name = kvp.Key;
+                if (bgHeight > maxBackgroundHeight)
+                    maxBackgroundHeight = bgHeight;
 
-                if (kvp.Value.Width < customiser.picture.frame.spaceWidth || kvp.Value.Height < customiser.picture.frame.spaceHeight)
+                // Skip backgrounds that are too small
+                if (bgWidth < customiser.picture.frame.spaceWidth || bgHeight < customiser.picture.frame.spaceHeight)
                     continue;
 
-                index++;
-                if (index <= currentIndex)
-                    continue;
+                // Calculate the position of the current component
+                int currentX = startPositionX + bgWidth * backgroundScale + 5;
+                int currentY = startPositionY + bgHeight * backgroundScale + 5;
 
-                elementCounter++;
-                if (keepAddingToComponents)
-                    validBackgroundComponents.Add(component);
-
-                startPositionX += bgWidth * backgroundScale + 5;
-                if (startPositionX + bgWidth * backgroundScale > xPositionOnScreen + this.width - 32)
+                // Check if the next component would exceed the width of the screen
+                if (currentX > xPositionOnScreen + this.width - 32)
                 {
                     startPositionX = xPositionOnScreen + 50;
-                    startPositionY += 32 * backgroundScale + 5;
+                    startPositionY += maxBackgroundHeight * backgroundScale + 5;  // Update the Y position based on the current component's height
+
+                    // Recalculate the position for the current component after wrapping to the next line
+                    currentX = startPositionX + bgWidth * backgroundScale + 5;
+                    currentY = startPositionY + bgHeight * backgroundScale + 5;
+
                     if (keepAddingToElementsInRow)
-                        elementsInRows.Add(elementCounter);
-                    elementCounter = 0;
+                        elementsInRows.Add(addedElements);
+
+                    addedElements = 0;
                 }
-                if (startPositionY + bgHeight * backgroundScale > yPositionOnScreen + this.height + 5)
+
+                // Check if the next component would exceed the height of the screen
+                if (currentY > yPositionOnScreen + this.height - 32)
                 {
                     keepAddingToComponents = false;
                     canScrollDown = true;
+                    break; // Exit the loop if we can't add more components
                 }
+
+                ClickableTextureComponent component = new ClickableTextureComponent(
+                    new Rectangle(startPositionX, startPositionY, bgWidth * backgroundScale, bgHeight * backgroundScale),
+                    kvp.Value, new Rectangle(0, 0, bgWidth, bgHeight), backgroundScale)
+                {
+                    name = kvp.Key
+                };
+
+                // Skip elements until reaching the current index
+                elementCounter++;
+                if (elementCounter <= currentIndex)
+                    continue;
+
+                if (keepAddingToComponents)
+                    validBackgroundComponents.Add(component);
+
+                addedElements++;
+                startPositionX += bgWidth * backgroundScale + 5;
             }
+
             if (keepAddingToElementsInRow)
-                elementsInRows.Add(elementCounter);
+                elementsInRows.Add(addedElements);
 
             if (keepAddingToComponents)
                 canScrollDown = false;
