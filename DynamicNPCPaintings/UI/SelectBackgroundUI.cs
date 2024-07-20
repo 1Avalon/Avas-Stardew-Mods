@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DynamicNPCPaintings.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Menus;
@@ -185,7 +186,8 @@ namespace DynamicNPCPaintings.UI
                 {
                     if (component.containsPoint(x, y))
                     {
-                        customiser.picture.background = new Framework.Background(0, 0, component.texture);
+
+                        customiser.picture.background = Framework.Background.Of(0, 0, component.texture);
                         customiser.UpdatePreview();
                         Game1.activeClickableMenu = customiser;
                     }
