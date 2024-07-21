@@ -251,6 +251,7 @@ namespace DynamicNPCPaintings.UI
             drawHoverText(b, hoverText, Game1.smallFont);
             upArrow.draw(b);
             downArrow.draw(b);
+            drawTextureBox(b, Game1.mouseCursors, new Rectangle(403, 383, 6, 6), scrollBarRunner.X, scrollBarRunner.Y, scrollBarRunner.Width, scrollBarRunner.Height, Color.White, 4f);
             scrollBar.draw(b);
             drawMouse(b);
         }
