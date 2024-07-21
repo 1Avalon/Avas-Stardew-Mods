@@ -172,12 +172,14 @@ namespace DynamicNPCPaintings.UI
             if (rowIndex == maxScrollIndex)
                 return;
 
+            Game1.playSound("shiny4");
             UpdateBackgroundList(elementsInRows[rowIndex]);
             rowIndex++;
         }
 
         private void upArrowClick()
         {
+            Game1.playSound("shiny4");
             rowIndex = Math.Max(0, --rowIndex);
             UpdateBackgroundList(-elementsInRows[rowIndex]);
         }
@@ -246,8 +248,8 @@ namespace DynamicNPCPaintings.UI
             upperRightCloseButton.draw(b);
             upArrow.draw(b);
             downArrow.draw(b);
-            scrollBar.draw(b);
             drawTextureBox(b, Game1.mouseCursors, new Rectangle(403, 383, 6, 6), scrollBarRunner.X, scrollBarRunner.Y, scrollBarRunner.Width, scrollBarRunner.Height, Color.White, 4f);
+            scrollBar.draw(b);
             drawHoverText(b, hoverText, Game1.smallFont);
             drawMouse(b);
         }
