@@ -34,9 +34,9 @@ namespace DynamicNPCPaintings
 
         public static Dictionary<string, Frame> frames = new Dictionary<string, Frame>();
 
-        public static readonly string FRAME_KEY = "AvaloNMFX.DynamicNPCPaintings/Frames";
+        public static readonly string FRAME_KEY = "AvalonMFX.CustomNPCPaintings/Frames";
 
-        public static readonly string BACKGROUND_KEY = "AvalonMFX.DynamicNPCPaintings/Backgrounds";
+        public static readonly string BACKGROUND_KEY = "AvalonMFX.CustomNPCPaintings/Backgrounds";
 
         public static SavedDataManager dataManager;
 
@@ -98,7 +98,7 @@ namespace DynamicNPCPaintings
                 });
             }
 
-            else if (e.NameWithoutLocale.Name.StartsWith("AvalonMFX.DynamicNPCPaintings.Picture_"))
+            else if (e.NameWithoutLocale.Name.StartsWith("AvalonMFX.CustomNPCPaintings.Picture_"))
             {
                 foreach(var kvp in dataManager.TextureData)
                 {

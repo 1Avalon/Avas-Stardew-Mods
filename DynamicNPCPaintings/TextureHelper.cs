@@ -232,7 +232,7 @@ namespace DynamicNPCPaintings
             Game1.addHUDMessage(new HUDMessage("Successfully saved the painting", 1));
 
 
-            string uniqueID = $"AvalonMFX.DynamicNPCPaintings.Picture_{number}";
+            string uniqueID = $"AvalonMFX.CustomNPCPaintings.Picture_{number}";
 
             if (!ModEntry.dataManager.FurnitureData.ContainsKey(uniqueID))
             {
