@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Background = DynamicNPCPaintings.Framework.Background;
 
 namespace DynamicNPCPaintings.UI
 {
@@ -19,7 +20,7 @@ namespace DynamicNPCPaintings.UI
 
         private string hoverText = "";
 
-        private Dictionary<string, Texture2D> backgroundData;
+        private Dictionary<string, Background> backgroundData; //TODO make this list since key was supposed to be displayname and now its a property
 
         private ClickableTextureComponent upArrow;
 
@@ -101,8 +102,8 @@ namespace DynamicNPCPaintings.UI
 
             foreach (var kvp in backgroundData)
             {
-                int bgWidth = kvp.Value.Width;
-                int bgHeight = kvp.Value.Height;
+                int bgWidth = kvp.Value.backgroundImage.Width;
+                int bgHeight = kvp.Value.backgroundImage.Height;
 
                 if (bgHeight > maxBackgroundHeight)
                     maxBackgroundHeight = bgHeight;
@@ -141,9 +142,9 @@ namespace DynamicNPCPaintings.UI
 
                 ClickableTextureComponent component = new ClickableTextureComponent(
                     new Rectangle(startPositionX, startPositionY, bgWidth * backgroundScale, bgHeight * backgroundScale),
-                    kvp.Value, new Rectangle(0, 0, bgWidth, bgHeight), backgroundScale)
+                    kvp.Value.backgroundImage, new Rectangle(0, 0, bgWidth, bgHeight), backgroundScale)
                 {
-                    name = kvp.Key
+                    name = kvp.Value.displayName
                 };
 
                 // Skip elements until reaching the current index
@@ -194,13 +195,13 @@ namespace DynamicNPCPaintings.UI
         }
         private void InitBackgroundData()
         {
-            backgroundData = new Dictionary<string, Texture2D>();
+            backgroundData = new Dictionary<string, Background>();
 
             foreach (var kvp in ModEntry.backgroundImages)
                 backgroundData.Add(kvp.Key, kvp.Value);
 
             foreach (var kvp in ModEntry.instance.Helper.GameContent.Load<Dictionary<string, Framework.Background>>(ModEntry.BACKGROUND_KEY))
-                backgroundData.Add(kvp.Key, kvp.Value.backgroundImage);
+                backgroundData.Add(kvp.Key, kvp.Value);
         }
         public override void receiveLeftClick(int x, int y, bool playSound = true)
         {
@@ -218,7 +219,7 @@ namespace DynamicNPCPaintings.UI
                     if (component.containsPoint(x, y))
                     {
 
-                        customiser.picture.background = Framework.Background.Of(0, 0, component.texture);
+                        customiser.picture.background = Framework.Background.Of(component.name, 0, 0, component.texture);
                         customiser.UpdatePreview();
                         Game1.activeClickableMenu = customiser;
                     }
