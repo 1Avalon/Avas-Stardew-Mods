@@ -20,6 +20,8 @@ namespace DynamicNPCPaintings.UI
 
         public List<ClickableTextureComponent> components = new List<ClickableTextureComponent>();
 
+        public Dictionary<ClickableTextureComponent, string> componentUniqueKeys = new Dictionary<ClickableTextureComponent, string>();
+
         private Customiser customiser;
 
         private ClickableTextureComponent upArrow;
@@ -139,12 +141,15 @@ namespace DynamicNPCPaintings.UI
                     new Rectangle(startPositionX, startPositionY, frameWidth * frameScale, frameHeight * frameScale),
                     kvp.Value.frameTexture, new Rectangle(0, 0, frameWidth, frameHeight), frameScale)
                 {
-                    name = kvp.Key
+                    name = kvp.Value.displayName
                 };
 
-                if (keepAddingToComponents)
-                    components.Add(component);
 
+                if (keepAddingToComponents)
+                {
+                    components.Add(component);
+                    componentUniqueKeys.Add(component, kvp.Key);
+                }
                 addedElements++;
                 startPositionX += frameWidth * frameScale + 10; // Update the X position for the next component
             }
@@ -226,10 +231,15 @@ namespace DynamicNPCPaintings.UI
                 {
                     if (component.containsPoint(x, y))
                     {
-                        if (customiser.picture.frame.spaceWidth != frames[component.name].spaceWidth)
-                            customiser.picture.npcOffsetX = frames[component.name].spaceWidth / 2 - 4;
 
-                        customiser.picture.frame = frames[component.name];
+                        string uniqueKey = componentUniqueKeys[component];
+
+                        Frame targetFrame = frames[uniqueKey];
+
+                        if (customiser.picture.frame.spaceWidth != targetFrame.spaceWidth)
+                            customiser.picture.npcOffsetX = targetFrame.spaceWidth / 2 - 4;
+
+                        customiser.picture.frame = targetFrame;
 
                         if (!customiser.picture.background.FitsInFrame(customiser.picture.frame))
                             customiser.picture.background = Framework.Background.GetDefaultBackground();
@@ -248,11 +258,11 @@ namespace DynamicNPCPaintings.UI
                 component.draw(b);
 
             upperRightCloseButton.draw(b);
-            drawHoverText(b, hoverText, Game1.smallFont);
             upArrow.draw(b);
             downArrow.draw(b);
             drawTextureBox(b, Game1.mouseCursors, new Rectangle(403, 383, 6, 6), scrollBarRunner.X, scrollBarRunner.Y, scrollBarRunner.Width, scrollBarRunner.Height, Color.White, 4f);
             scrollBar.draw(b);
+            drawHoverText(b, hoverText, Game1.smallFont);
             drawMouse(b);
         }
     }
