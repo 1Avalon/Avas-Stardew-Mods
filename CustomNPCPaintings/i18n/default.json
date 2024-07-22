@@ -30,6 +30,7 @@
   "Menu.Background": "Background",
   "Menu.NPCFrame": "NPC Frame",
   "Menu.TileSize": "Tile Size",
+  "Menu.NPCPaintings": "NPC Paintings",
 
   "Menu.Export.Painting": "Painting"
 }
