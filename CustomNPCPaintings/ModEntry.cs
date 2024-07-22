@@ -77,6 +77,8 @@ namespace DynamicNPCPaintings
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
+            translatedBackgroundImageNames.Clear();
+            backgroundImages.Clear();
             foreach (var translation in Helper.Translation.GetTranslations())
             {
                 translatedBackgroundImageNames.Add(translation.Key, translation.ToString());
