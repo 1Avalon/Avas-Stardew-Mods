@@ -4,7 +4,7 @@
   "Version": "1.0.0",
   "Description": "Adds Frames and Backgrounds",
   "UniqueID": "AvalonMFX.CPCustomNPCPaintings",
-  "UpdateKeys": [  ], // when you release the mod, see https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Update_checks
+  "UpdateKeys": [ "Nexus:26228" ],
   "ContentPackFor": {
     "UniqueID": "Pathoschild.ContentPatcher"
   },
