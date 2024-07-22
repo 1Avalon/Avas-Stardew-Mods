@@ -121,6 +121,9 @@ namespace DynamicNPCPaintings
                     var data = asset.AsDictionary<string, string>().Data;
                     foreach (var kvp in dataManager.FurnitureData)
                     {
+                        if (data.ContainsKey(kvp.Key))
+                            data.Remove(kvp.Key);
+
                         data.Add(kvp.Key, kvp.Value);
                     }
                     Monitor.Log(data.Count.ToString());
