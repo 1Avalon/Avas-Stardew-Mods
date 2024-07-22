@@ -130,7 +130,7 @@ namespace DynamicNPCPaintings
                 });
             }
 
-            else if (e.NameWithoutLocale.Name.StartsWith("AvalonMFX.CustomNPCPaintings.Picture_"))
+            else if (e.NameWithoutLocale.Name.StartsWith($"{Constants.SaveFolderName}.AvalonMFX.CustomNPCPaintings.Picture_"))
             {
                 foreach(var kvp in dataManager.TextureData)
                 {
