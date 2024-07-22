@@ -13,6 +13,7 @@ using Background = DynamicNPCPaintings.Framework.Background;
 using StardewValley.Menus;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
+using CustomNPCPaintings;
 
 namespace DynamicNPCPaintings
 {
@@ -237,7 +238,7 @@ namespace DynamicNPCPaintings
             if (!ModEntry.dataManager.FurnitureData.ContainsKey(uniqueID))
             {
                 string uniqueTextureName = $"{uniqueID}_IMG";
-                ModEntry.dataManager.FurnitureData.Add(uniqueID, $"AvalonMFX.Picture_{number}/painting/{picture.tileWidth} {picture.tileHeight}/{picture.tileWidth} {picture.tileHeight}/1/0/-1/Picture/0/{uniqueTextureName}");
+                ModEntry.dataManager.FurnitureData.Add(uniqueID, $"AvalonMFX.Picture_{number}/painting/{picture.tileWidth} {picture.tileHeight}/{picture.tileWidth} {picture.tileHeight}/1/0/-1/{I18n.Menu_Export_Painting()}/0/{uniqueTextureName}");
                 ModEntry.dataManager.TextureData.Add(uniqueTextureName, file);
             }
             ModEntry.instance.Helper.GameContent.InvalidateCache("Data/Furniture");

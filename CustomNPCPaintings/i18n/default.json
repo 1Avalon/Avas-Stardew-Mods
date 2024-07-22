@@ -1,0 +1,30 @@
+{
+  "DefaultImg.Autumn": "Autumn",
+  "DefaultImg.Forest": "Forest",
+  "DefaultImg.Castle": "Castle",
+  "DefaultImg.Cold Winter Night": "Cold Winter Night",
+  "DefaultImg.Foragables": "Foragables",
+  "DefaultImg.Green Hill": "Green Hill",
+  "DefaultImg.Gus' Kegs": "Gus' Kegs",
+  "DefaultImg.Holly": "Holly",
+  "DefaultImg.Night Sky": "Night Sky",
+  "DefaultImg.Palm Trees": "Exotic Palm Trees",
+  "DefaultImg.Puzzle": "Puzzle",
+  "DefaultImg.Snow Hill": "Snow Hill",
+  "DefaultImg.Sunset": "Sunset",
+  "DefaultImg.The Beach": "The Beach",
+  "DefaultImg.The Boat": "The Boat",
+  "DefaultImg.The Fields": "The Fields",
+
+  "Menu.OpenNPCList": "Open NPC List",
+  "Menu.OpenBackgroundList": "Open Background List",
+  "Menu.OpenFrameList": "Open Frame List",
+  "Menu.Export": "Export",
+  "Menu.FlipNPC": "Flip NPC Sprite",
+  "Menu.NPC": "NPC",
+  "Menu.Background": "Background",
+  "Menu.NPCFrame": "NPC Frame",
+  "Menu.TileSize": "Tile Size",
+
+  "Menu.Export.Painting": "Painting"
+}

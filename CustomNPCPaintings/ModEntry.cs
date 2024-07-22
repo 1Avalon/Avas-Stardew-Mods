@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO.Enumeration;
 using System.Security.Cryptography.X509Certificates;
+using CustomNPCPaintings;
 using DynamicNPCPaintings.Framework;
 using DynamicNPCPaintings.UI;
 using DynamicNPCPaintings.UI.UIElements;
@@ -12,6 +13,7 @@ using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Inventories;
 using StardewValley.Menus;
+using Background = DynamicNPCPaintings.Framework.Background;
 
 namespace DynamicNPCPaintings
 {
@@ -30,7 +32,7 @@ namespace DynamicNPCPaintings
 
         public static ModEntry instance;
 
-        public static Dictionary<string, Texture2D> backgroundImages = new Dictionary<string, Texture2D>();
+        public static Dictionary<string, Background> backgroundImages = new Dictionary<string, Background>();
 
         public static Dictionary<string, Frame> frames = new Dictionary<string, Frame>();
 
@@ -44,10 +46,14 @@ namespace DynamicNPCPaintings
 
         private Button button;
 
+        private Dictionary<string, string> translatedBackgroundImageNames = new Dictionary<string, string>();
+
         public override void Entry(IModHelper helper)
         {
             modHelper = helper;
             dataManager = new();
+
+            I18n.Init(helper.Translation);
 
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             helper.Events.Content.AssetRequested += OnAssetRequested;
@@ -64,11 +70,24 @@ namespace DynamicNPCPaintings
             backgroundImages.Add("Blue Night Sky", Helper.ModContent.Load<Texture2D>("assets/backgrounds/blue_night_sky.png"));
             backgroundImages.Add("Castle", Helper.ModContent.Load<Texture2D>("assets/backgrounds/castle.png"));
             */
+
+            foreach(var translation in helper.Translation.GetTranslations())
+            {
+                translatedBackgroundImageNames.Add(translation.Key, translation.ToString());
+            }
+
             foreach (string path in Directory.GetFiles(Path.Combine(Helper.DirectoryPath, "assets", "backgrounds"), "*.png"))
             {
                 string fileName = Path.GetFileName(path);
                 Monitor.Log($"Found Background {fileName}");
-                backgroundImages.Add(fileName.Replace(".png", ""), Helper.ModContent.Load<Texture2D>($"assets/backgrounds/{fileName}"));
+
+                string translatioNKey = "DefaultImg." + fileName.Replace(".png", "");
+                Texture2D tex = Helper.ModContent.Load<Texture2D>($"assets/backgrounds/{fileName}");
+
+                if (translatedBackgroundImageNames.TryGetValue(translatioNKey, out string translation))
+                    backgroundImages.Add(translatioNKey, Background.Of(translation, 0, 0, tex));
+                else
+                    backgroundImages.Add(fileName, Background.Of(fileName.Replace(".png", ""), 0, 0, tex));
             }
 
             frame = Helper.ModContent.Load<Texture2D>("assets/frames/frame1.png");
