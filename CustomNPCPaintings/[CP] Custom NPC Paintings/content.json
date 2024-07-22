@@ -1,0 +1,145 @@
+{
+  "Format": "2.0.0",
+  "Changes": [
+    {
+      "LogName": "[CP] Dynamic NPC Pantings Frames",
+      "Action": "EditData",
+      "Target": "AvalonMFX.CustomNPCPaintings/Frames",
+      "Entries": {
+        "{{ModId}}_DarkFrame": { //Name of your frame
+          "startX": 4,
+          "startY": 4,
+          "endX": 27,
+          "endY": 23,
+          "textureName": "Frames/Dark_Frame",
+          "displayName": "{{i18n: frames.darK_frame}}"
+        },
+        "{{ModId}}_Canvas": { //Name of your frame
+          "startX": 1,
+          "startY": 6,
+          "endX": 30,
+          "endY": 27,
+          "textureName": "Frames/Canvas",
+          "displayName": "{{i18n: frames.canvas}}"
+        },
+        "{{ModId}}_Long_Wooden_Frame": {
+          "startX": 4,
+          "startY": 5,
+          "endX": 44,
+          "endY": 24,
+          "textureName": "Frames/Long_Wooden_Frame",
+          "displayName": "{{i18n: frames.long_wooden_frame}}"
+        },
+        "{{ModId}}_Wooden_Frame": {
+          "startX": 4,
+          "startY": 6,
+          "endX": 27,
+          "endY": 25,
+          "textureName": "Frames/Wooden_Frame",
+          "displayName": "{{i18n: frames.wooden_frame}}"
+        },
+        "{{ModId}}_Long_Dark_Frame": {
+          "startX": 4,
+          "startY": 5,
+          "endX": 44,
+          "endY": 24,
+          "textureName": "Frames/Long_Dark_Frame",
+          "displayName": "{{i18n: frames.long_darK_frame}}"
+        },
+        "{{ModId}}_Silver_Frame": {
+          "startX": 3,
+          "startY": 5,
+          "endX": 28,
+          "endY": 25,
+          "textureName": "Frames/Silver_Frame",
+          "displayName": "{{i18n: frames.silver_frame}}"
+        },
+        "{{ModId}}_Old_Wooden_Frame": {
+          "startX": 2,
+          "startY": 9,
+          "endX": 29,
+          "endY": 21,
+          "textureName": "Frames/Old_Wooden_Frame",
+          "displayName": "{{i18n: frames.old_wooden_frame}}"
+        },
+        "{{ModId}}_Vertical_Wooden_Frame": {
+          "startX": 3,
+          "startY": 4,
+          "endX": 12,
+          "endY": 25,
+          "textureName": "Frames/Vertical_Wooden_Frame",
+          "displayName": "{{i18n: frames.vertical_wooden_frame}}"
+        },
+        "{{ModId}}_Vertical_Dark_Frame": {
+          "startX": 3,
+          "startY": 4,
+          "endX": 12,
+          "endY": 25,
+          "textureName": "Frames/Vertical_Dark_Frame",
+          "displayName": "{{i18n: frames.vertical_darK_frame}}"
+        }
+      }
+    },
+    {
+      "LogName": "[CP] Dynamic NPC Pantings Backgrounds",
+      "Action": "EditData",
+      "Target": "AvalonMFX.CustomNPCPaintings/Backgrounds",
+      "Entries": {
+        "{{ModId}}_CloudySky": { //Unique Key of your Background to avoid collisions
+          "textureName": "Backgrounds/Cloudy_Sky",
+          "displayName": "{{i18n: backgrounds.cloudy_sky}}"
+        }
+      }
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Dark_Frame",
+      "FromFile": "assets/Dark_Frame.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Long_Wooden_Frame",
+      "FromFile": "assets/long_wooden_frame.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Wooden_Frame",
+      "FromFile": "assets/Wooden_Frame.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Long_Dark_Frame",
+      "FromFile": "assets/Long_Dark_Frame.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Backgrounds/Cloudy_Sky",
+      "FromFile": "assets/Cloudy_Sky.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Canvas",
+      "FromFile": "assets/Canvas.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Silver_Frame",
+      "FromFile": "assets/Silver_Frame.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Old_Wooden_Frame",
+      "FromFile": "assets/Old_Wooden_Frame.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Vertical_Wooden_Frame",
+      "FromFile": "assets/Vertical_Wooden_Frame.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Vertical_Dark_Frame",
+      "FromFile": "assets/Vertical_Dark_Frame.png"
+    }
+  ]
+}

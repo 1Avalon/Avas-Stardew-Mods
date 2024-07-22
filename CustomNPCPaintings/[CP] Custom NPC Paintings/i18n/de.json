@@ -1,0 +1,13 @@
+{
+    "frames.wooden_frame": "Holzrahmen",
+    "frames.darK_frame": "Dunkler Rahmen",
+    "frames.canvas": "Leinwand",
+    "frames.long_wooden_frame": "Langer Holzrahmen",
+    "frames.long_dark_frame": "Langer dunkler Rahmen",
+    "frames.silver_frame": "Silberner Rahmen",
+    "frames.old_wooden_frame": "Alter Holzrahmen",
+    "frames.vertical_wooden_frame": "Vertikaler Holzrahmen",
+    "frames.vertical_dark_frame": "Vertikaler dunkler Rahmen",
+
+    "backgrounds.cloudy_sky": "Wolkiger Himmel"
+}
