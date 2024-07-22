@@ -72,16 +72,16 @@ namespace DynamicNPCPaintings
             // Wenn kein nicht-transparenter Pixel gefunden wird, gib -1 zurück
             return -1;
         }
-        public static Texture2D GetCharacterFrame(Texture2D spritesheet, int frame, bool flipped = false)
+        public static Texture2D GetCharacterFrame(NPC npc, int frame, bool flipped = false)
         {
-            int xOffset = (frame % 4) * 16;
-            int yOffset = frame / 4 * 32;
+            int xOffset = (frame % 4) * npc.Sprite.SpriteWidth;
+            int yOffset = frame / 4 * npc.Sprite.SpriteHeight;
 
-            Rectangle newBounds = new Rectangle(xOffset, yOffset, 16, 32);
+            Rectangle newBounds = new Rectangle(xOffset, yOffset, npc.Sprite.SpriteWidth, npc.Sprite.SpriteHeight);
 
             Texture2D croppedTexture = new Texture2D(Game1.graphics.GraphicsDevice, newBounds.Width, newBounds.Height);
             Color[] data = new Color[newBounds.Width * newBounds.Height];
-            spritesheet.GetData(0, newBounds, data, 0, newBounds.Width * newBounds.Height);
+            npc.Sprite.Texture.GetData(0, newBounds, data, 0, newBounds.Width * newBounds.Height);
             croppedTexture.SetData(data);
             Debug.WriteLine(croppedTexture.Bounds.Size);
             return flipped ? FlipTextureHorizontally(croppedTexture) : croppedTexture;

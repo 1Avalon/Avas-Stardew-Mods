@@ -18,7 +18,7 @@ namespace DynamicNPCPaintings.UI.UIElements
         public ClickableNPCComponent(Rectangle bounds, NPC npc, Rectangle sourceRect, float scale) : base(bounds, null, sourceRect, scale)
         {
             this.npc = npc;
-            texture = TextureHelper.GetCharacterFrame(npc.Sprite.Texture, 1);
+            texture = TextureHelper.GetCharacterFrame(npc, 1);
         }
 
         public void CropTexture(Rectangle cropArea)

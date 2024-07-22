@@ -24,7 +24,7 @@ namespace DynamicNPCPaintings.Framework
 
         public int tileHeight {  get => frame.frameTexture.Height / 16; }
 
-        public int npcFrameAmount { get => target.Sprite.Texture.Height / 8; }
+        public int npcFrameAmount { get => (target.Sprite.Texture.Width / target.Sprite.SpriteWidth) * (target.Sprite.Texture.Height / target.Sprite.SpriteHeight); }
 
         public Picture(Frame frame, Background background, NPC target, int npcFrame)
         {
@@ -43,7 +43,7 @@ namespace DynamicNPCPaintings.Framework
         public Texture2D GetTexture()
         {
             Texture2D frameAndBackground = TextureHelper.BackgroundWithFrame(frame, background);
-            Texture2D characterTexture = TextureHelper.GetCharacterFrame(target.Sprite.Texture, npcFrame, npcFlipped);
+            Texture2D characterTexture = TextureHelper.GetCharacterFrame(target, npcFrame, npcFlipped);
             return TextureHelper.DrawCharacterOnBackground(frameAndBackground, characterTexture, new Vector2(npcOffsetX, npcOffsetY), frame.startX, frame.startY, frame.endX, frame.endY);
         }
     }
