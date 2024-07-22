@@ -60,6 +60,7 @@ namespace DynamicNPCPaintings
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.Display.Rendered += OnRendered;
             helper.Events.Display.MenuChanged += OnMenuChanged;
+            helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             /*
             background = Helper.ModContent.Load<Texture2D>("assets/backgrounds/forest.png");
             Texture2D sunset = Helper.ModContent.Load<Texture2D>("assets/backgrounds/sunset.png");
@@ -71,7 +72,12 @@ namespace DynamicNPCPaintings
             backgroundImages.Add("Castle", Helper.ModContent.Load<Texture2D>("assets/backgrounds/castle.png"));
             */
 
-            foreach(var translation in helper.Translation.GetTranslations())
+            frame = Helper.ModContent.Load<Texture2D>("assets/frames/frame1.png");
+            instance = this;
+        }
+        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        {
+            foreach (var translation in Helper.Translation.GetTranslations())
             {
                 translatedBackgroundImageNames.Add(translation.Key, translation.ToString());
             }
@@ -89,11 +95,7 @@ namespace DynamicNPCPaintings
                 else
                     backgroundImages.Add(fileName, Background.Of(fileName.Replace(".png", ""), 0, 0, tex));
             }
-
-            frame = Helper.ModContent.Load<Texture2D>("assets/frames/frame1.png");
-            instance = this;
         }
-
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
             if (e.NameWithoutLocale.IsEquivalentTo(FRAME_KEY))
