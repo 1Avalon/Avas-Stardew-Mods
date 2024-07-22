@@ -1,0 +1,35 @@
+{
+  "DefaultImg.Autumn": "Herbst",
+  "DefaultImg.Forest": "Wald",
+  "DefaultImg.Castle": "Schloss",
+  "DefaultImg.Cold Winter Night": "Kalte Winternacht",
+  "DefaultImg.Foragables": "Futtermittel",
+  "DefaultImg.Green Hill": "Grüner Berg",
+  "DefaultImg.Gus' Kegs": "Gus's Fässer'",
+  "DefaultImg.Holly": "Adventskranz",
+  "DefaultImg.Night Sky": "Nachthimmel",
+  "DefaultImg.Palm Trees": "Exotische Palmen",
+  "DefaultImg.Puzzle": "Puzzle",
+  "DefaultImg.Snow Hill": "Schneeberg",
+  "DefaultImg.Sunset": "Sonnenuntergang",
+  "DefaultImg.The Beach": "Der Strand",
+  "DefaultImg.The Boat": "Das Boot",
+  "DefaultImg.The Fields": "Die Felder",
+  "DefaultImg.Into The Trees": "In den Bäumen",
+  "DefaultImg.Ginger Island Volcano": "Ingwerinsel-Vulkan",
+  "DefaultImg.Moonrise": "Mondaufgang",
+
+  "DefaultFrame.WoodenFrame": "Holzrahmen",
+
+  "Menu.OpenNPCList": "NPC Liste öffnen",
+  "Menu.OpenBackgroundList": "Hintergründe öffnen",
+  "Menu.OpenFrameList": "Rahmenliste öffnen",
+  "Menu.Export": "Exportieren",
+  "Menu.FlipNPC": "NPC-Sprite drehen",
+  "Menu.NPC": "NPC",
+  "Menu.Background": "Hintergrund",
+  "Menu.NPCFrame": "NPC Frame",
+  "Menu.TileSize": "Kachelgröße",
+
+  "Menu.Export.Painting": "Gemälde"
+}

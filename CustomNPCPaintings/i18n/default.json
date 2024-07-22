@@ -3,7 +3,7 @@
   "DefaultImg.Forest": "Forest",
   "DefaultImg.Castle": "Castle",
   "DefaultImg.Cold Winter Night": "Cold Winter Night",
-  "DefaultImg.Foragables": "Foragables",
+  "DefaultImg.Foragables": "Forageables",
   "DefaultImg.Green Hill": "Green Hill",
   "DefaultImg.Gus' Kegs": "Gus' Kegs",
   "DefaultImg.Holly": "Holly",
@@ -17,6 +17,7 @@
   "DefaultImg.The Fields": "The Fields",
   "DefaultImg.Into The Trees": "Into The Trees",
   "DefaultImg.Ginger Island Volcano": "Ginger Island Volcano",
+  "DefaultImg.Moonrise": "Moonrise",
 
   "DefaultFrame.WoodenFrame": "Wooden Frame",
 
