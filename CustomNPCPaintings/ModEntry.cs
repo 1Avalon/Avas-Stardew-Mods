@@ -57,7 +57,6 @@ namespace DynamicNPCPaintings
 
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             helper.Events.Content.AssetRequested += OnAssetRequested;
-            helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.Display.Rendered += OnRendered;
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
@@ -77,6 +76,13 @@ namespace DynamicNPCPaintings
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
+            button = new Button(I18n.Menu_NPCPaintings(), delegate
+            {
+                Game1.playSound("dwop");
+                Game1.activeClickableMenu = new Customiser();
+            });
+            button.active = false;
+
             translatedBackgroundImageNames.Clear();
             backgroundImages.Clear();
             foreach (var translation in Helper.Translation.GetTranslations())
@@ -177,19 +183,6 @@ namespace DynamicNPCPaintings
             {
                 button.active = false;
             }
-        }
-
-        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
-        {
-            button = new Button("NPC Paintings", delegate
-            {
-                Game1.playSound("dwop");
-                Game1.activeClickableMenu = new Customiser();
-            });
-            button.active = false;
-
-            frames = Helper.GameContent.Load<Dictionary<string, Frame>>(FRAME_KEY);
-            Monitor.Log($"Found {frames.Count} frames");
         }
     }
 }
