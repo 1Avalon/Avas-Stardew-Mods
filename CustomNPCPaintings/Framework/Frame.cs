@@ -25,6 +25,8 @@ namespace DynamicNPCPaintings.Framework
 
         public string textureName;
 
+        public string displayName;
+
         private Texture2D _frameTexture;
 
         public Texture2D frameTexture
@@ -34,11 +36,11 @@ namespace DynamicNPCPaintings.Framework
                 return _frameTexture ?? ModEntry.instance.Helper.GameContent.Load<Texture2D>(textureName);
             }
         }
-        public static Frame GetFrameWithTexture(int startX, int startY, int endX, int endY, Texture2D frameTexture)
+        public static Frame GetFrameWithTexture(string displayName, int startX, int startY, int endX, int endY, Texture2D frameTexture)
         {
-            return new Frame(startX, startY, endX, endY, frameTexture);
+            return new Frame(displayName, startX, startY, endX, endY, frameTexture);
         }
-        private Frame(int startX, int startY, int endX, int endY, Texture2D frameTexture)
+        private Frame(string displayName, int startX, int startY, int endX, int endY, Texture2D frameTexture)
         {
             this.startX = startX;
             this.startY = startY;
@@ -47,8 +49,9 @@ namespace DynamicNPCPaintings.Framework
             _frameTexture = frameTexture;
             spaceWidth = this.endX - startX; 
             spaceHeight = this.endY - startY;
+            this.displayName = displayName;
         }
-        public Frame(int startX, int startY, int endX, int endY, string textureName)
+        public Frame(string displayName, int startX, int startY, int endX, int endY, string textureName)
         {
             this.startX = startX;
             this.startY = startY;
@@ -57,11 +60,12 @@ namespace DynamicNPCPaintings.Framework
             this.textureName = textureName;
             spaceWidth = this.endX - startX;
             spaceHeight = this.endY - startY;
+            this.displayName = displayName;
         }
 
         public static Frame GetDefaultFrame()
         {
-            return new Frame(4, 5, 44, 24, ModEntry.frame);
+            return new Frame(CustomNPCPaintings.I18n.DefaultFrame_WoodenFrame(), 4, 5, 44, 24, ModEntry.frame);
         }
     }
 }
