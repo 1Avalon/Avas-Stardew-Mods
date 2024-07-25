@@ -16,6 +16,7 @@ using StardewValley.BellsAndWhistles;
 using StardewValley.Extensions;
 using StardewValley.Inventories;
 using StardewValley.Menus;
+using StardewValley.Objects;
 using Background = DynamicNPCPaintings.Framework.Background;
 
 namespace DynamicNPCPaintings
@@ -101,8 +102,6 @@ namespace DynamicNPCPaintings
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            Game1.showGlobalMessage("Haha");
-
             button = new Button(I18n.Menu_NPCPaintings(), delegate
             {
                 Game1.playSound("dwop");
@@ -112,7 +111,7 @@ namespace DynamicNPCPaintings
 
             translatedBackgroundImageNames.Clear();
             backgroundImages.Clear();
-            foreach (var translation in Helper.Translation.GetTranslations())
+                foreach (var translation in Helper.Translation.GetTranslations())
             {
                 translatedBackgroundImageNames.Add(translation.Key, translation.ToString());
             }
@@ -227,7 +226,16 @@ namespace DynamicNPCPaintings
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (Game1.activeClickableMenu == null && e.Button == Config.openCustomizerButton)
-                Game1.activeClickableMenu = new Customiser();
+            {
+                foreach (Furniture f in Game1.currentLocation.furniture)
+                {
+                    if (f.QualifiedItemId == "(F)1308")
+                    {
+                        Game1.activeClickableMenu = new Customiser();
+                        break;
+                    }
+                }
+            }
 
             if (button != null && button.active)
             {
