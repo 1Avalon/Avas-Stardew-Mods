@@ -32,5 +32,10 @@
   "Menu.TileSize": "Kachelgroesse",
   "Menu.NPCPaintings": "NPC Gemaelde",
 
-  "Menu.Export.Painting": "Gemaelde"
+  "Menu.Export.Painting": "Gemaelde",
+
+  "Config.OpenCustomiser": "Personalisierer oeffnen",
+  "Config.OpenCustomiserDescription": "Oeffnet den Personalisierer wenn ein Katalog sich in deiner aktuellen Gegend befindet",
+
+  "Misc.WarningMessageHappyHomeDesigner": "Es scheint, als wuerdest du Happy Home Designer verwenden. Custom NPC Paintings kann den Knopf nicht zum Menue hinzufuegen. Bitte fuege einen Hotkey zum oeffnen des Personalisierer hinzu. Er kann geoeffnet werden, nachdem ein Katalog erworben wurde. Die Nachricht wird nicht mehr erscheinen, wenn du einen Hotkey festgelegt hast."
 }

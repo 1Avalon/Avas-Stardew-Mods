@@ -32,5 +32,10 @@
   "Menu.TileSize": "Tile Size",
   "Menu.NPCPaintings": "NPC Paintings",
 
-  "Menu.Export.Painting": "Painting"
+  "Menu.Export.Painting": "Painting",
+
+  "Config.OpenCustomiser": "Open Customiser",
+  "Config.OpenCustomiserDescription": "Opens the customiser if a catalogue is placed in your current location",
+
+  "Misc.WarningMessageHappyHomeDesigner": "It seems like you're using Happy Home Designer. Custom NPC Paintings can't add the button to its menu. Please add a hotkey for opening the painting customizer. It can be opened after obtaining a catalogue. This message will no longer appear after setting a hotkey."
 }
