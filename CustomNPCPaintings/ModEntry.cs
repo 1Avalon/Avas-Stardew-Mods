@@ -48,6 +48,8 @@ namespace DynamicNPCPaintings
 
         private Dictionary<string, string> translatedBackgroundImageNames = new Dictionary<string, string>();
 
+        public static bool hasSeasonalCuteSprites = false;
+
         public override void Entry(IModHelper helper)
         {
             modHelper = helper;
@@ -70,6 +72,16 @@ namespace DynamicNPCPaintings
             backgroundImages.Add("Blue Night Sky", Helper.ModContent.Load<Texture2D>("assets/backgrounds/blue_night_sky.png"));
             backgroundImages.Add("Castle", Helper.ModContent.Load<Texture2D>("assets/backgrounds/castle.png"));
             */
+
+            foreach (IModInfo mod in this.Helper.ModRegistry.GetAll()) 
+            {
+                if (mod.Manifest.UniqueID == "Poltergeister.SeasonalCuteCharacters")
+                {
+                    hasSeasonalCuteSprites = true;
+                    Monitor.Log("Found Seasonal Cute Characters mod by Poltergeister.");
+                    break;
+                }
+            }
 
             frame = Helper.ModContent.Load<Texture2D>("assets/frames/frame1.png");
             instance = this;
@@ -153,7 +165,7 @@ namespace DynamicNPCPaintings
         /// 
         private void OnRendered(object sender, RenderedEventArgs e)
         {
-            if (Game1.activeClickableMenu is ShopMenu menu && menu.ShopId == "Catalogue")
+            if (button != null && button.active)
             {
                 if (button.bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
                     button.textColor = Color.White;
@@ -168,7 +180,7 @@ namespace DynamicNPCPaintings
 
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-            if (Game1.activeClickableMenu is ShopMenu menu && menu.ShopId == "Catalogue")
+            if (button != null && button.active)
             {
                 if (button.bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
                     button.CallEvent();
@@ -177,12 +189,13 @@ namespace DynamicNPCPaintings
         }
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
         {
-            if (e.NewMenu is ShopMenu menu && menu.ShopId == "Catalogue")
+            if (e.NewMenu is ShopMenu menu && menu.ShopId == "Catalogue" || (Game1.isFestival() && e.NewMenu is ShopMenu && hasSeasonalCuteSprites))
             {
+                menu = (ShopMenu)e.NewMenu;
                 button.active = true;
                 button.setPosition(menu.inventory.xPositionOnScreen - button.width - 30, menu.yPositionOnScreen + menu.height - menu.inventory.height - 12 + 80);
             }
-            else if (e.OldMenu is ShopMenu oldMenu && oldMenu.ShopId == "Catalogue")
+            else if (e.OldMenu is ShopMenu oldMenu && oldMenu.ShopId == "Catalogue" || Game1.isFestival())
             {
                 button.active = false;
             }

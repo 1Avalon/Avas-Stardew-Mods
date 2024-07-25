@@ -19,6 +19,19 @@ namespace DynamicNPCPaintings
 {
     public static class TextureHelper
     {
+
+        private static readonly Dictionary<string, string> CUTE_SEASONAL_CHARACTERS_FESTIVAL = new Dictionary<string, string>()
+        {
+            ["festival_winter25"] = "Winter_WinterStar",
+            ["festival_spring24"] = "FlowerDance",
+            ["festival_summer28"] = "Jellies",
+            ["festival_summer11"] = "Luau",
+            ["festival_fall27"] = "SpiritsEve",
+            ["festival_winter8"] = "Winter_IceF",
+            ["festival_spring13"] = "EggF",
+            ["festival_fall16"] = "Fair",
+
+        };
         public static Texture2D FlipTextureHorizontally(Texture2D originalTexture)
         {
             int width = originalTexture.Width;
@@ -74,14 +87,24 @@ namespace DynamicNPCPaintings
         }
         public static Texture2D GetCharacterFrame(NPC npc, int frame, bool flipped = false)
         {
+            Texture2D tex;
+            try
+            {
+                string eventId = Game1.CurrentEvent?.id;
+                string sheetName = CUTE_SEASONAL_CHARACTERS_FESTIVAL[eventId];
+                tex = ModEntry.instance.Helper.GameContent.Load<Texture2D>($"Characters/{npc.Name}_{sheetName}");
+            }
+            catch
+            {
+                tex = npc.Sprite.Texture;
+            }
             int xOffset = (frame % 4) * npc.Sprite.SpriteWidth;
             int yOffset = frame / 4 * npc.Sprite.SpriteHeight;
-
             Rectangle newBounds = new Rectangle(xOffset, yOffset, npc.Sprite.SpriteWidth, npc.Sprite.SpriteHeight);
 
             Texture2D croppedTexture = new Texture2D(Game1.graphics.GraphicsDevice, newBounds.Width, newBounds.Height);
             Color[] data = new Color[newBounds.Width * newBounds.Height];
-            npc.Sprite.Texture.GetData(0, newBounds, data, 0, newBounds.Width * newBounds.Height);
+            tex.GetData(0, newBounds, data, 0, newBounds.Width * newBounds.Height);
             croppedTexture.SetData(data);
             Debug.WriteLine(croppedTexture.Bounds.Size);
             return flipped ? FlipTextureHorizontally(croppedTexture) : croppedTexture;
