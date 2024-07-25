@@ -5,12 +5,15 @@ using CustomNPCPaintings;
 using DynamicNPCPaintings.Framework;
 using DynamicNPCPaintings.UI;
 using DynamicNPCPaintings.UI.UIElements;
+using GenericModConfigMenu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
+using StardewValley.BellsAndWhistles;
+using StardewValley.Extensions;
 using StardewValley.Inventories;
 using StardewValley.Menus;
 using Background = DynamicNPCPaintings.Framework.Background;
@@ -50,18 +53,24 @@ namespace DynamicNPCPaintings
 
         public static bool hasSeasonalCuteSprites = false;
 
+        public static bool hasHappyHomeDesigner = false;
+
+        public static ModConfig Config;
         public override void Entry(IModHelper helper)
         {
             modHelper = helper;
             dataManager = new();
 
             I18n.Init(helper.Translation);
+            Config = Helper.ReadConfig<ModConfig>();
 
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             helper.Events.Content.AssetRequested += OnAssetRequested;
             helper.Events.Display.Rendered += OnRendered;
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
+            helper.Events.Player.Warped += OnWarped;
+            helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             /*
             background = Helper.ModContent.Load<Texture2D>("assets/backgrounds/forest.png");
             Texture2D sunset = Helper.ModContent.Load<Texture2D>("assets/backgrounds/sunset.png");
@@ -78,8 +87,12 @@ namespace DynamicNPCPaintings
                 if (mod.Manifest.UniqueID == "Poltergeister.SeasonalCuteCharacters")
                 {
                     hasSeasonalCuteSprites = true;
-                    Monitor.Log("Found Seasonal Cute Characters mod by Poltergeister.");
-                    break;
+                    Monitor.Log("Found Seasonal Cute Characters mod by Poltergeister. Adding Paintings button to festival shops...");
+                }
+                else if (mod.Manifest.UniqueID == "tlitookilakin.HappyHomeDesigner")
+                {
+                    Monitor.Log("Found Happy Home Designer mod by tlitookilakin. Adding warning message...");
+                    hasHappyHomeDesigner = true;
                 }
             }
 
@@ -88,6 +101,8 @@ namespace DynamicNPCPaintings
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
+            Game1.showGlobalMessage("Haha");
+
             button = new Button(I18n.Menu_NPCPaintings(), delegate
             {
                 Game1.playSound("dwop");
@@ -163,8 +178,39 @@ namespace DynamicNPCPaintings
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
         /// 
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            var configMenu = this.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+            if (configMenu is null)
+                return;
+
+            configMenu.Register(
+                mod: this.ModManifest,
+                reset: () => Config = new ModConfig(),
+                save: () => this.Helper.WriteConfig(Config)
+            );
+
+            configMenu.AddKeybind(
+                mod: this.ModManifest,
+                name: () => I18n.Config_OpenCustomiser(),
+                tooltip: () => I18n.Config_OpenCustomiserDescription(),
+                getValue: () => Config.openCustomizerButton,
+                setValue: value => Config.openCustomizerButton = value
+                );
+        }
+        private void OnWarped(object sender, WarpedEventArgs e)
+        {
+            if (!hasHappyHomeDesigner || Config.openCustomizerButton != SButton.None)
+                return;
+
+            string msg = I18n.Misc_WarningMessageHappyHomeDesigner();
+            Game1.activeClickableMenu = new DialogueBox(msg);
+        }
         private void OnRendered(object sender, RenderedEventArgs e)
         {
+            if (!Context.IsWorldReady)
+                return;
+
             if (button != null && button.active)
             {
                 if (button.bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
@@ -180,6 +226,9 @@ namespace DynamicNPCPaintings
 
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
+            if (Game1.activeClickableMenu == null && e.Button == Config.openCustomizerButton)
+                Game1.activeClickableMenu = new Customiser();
+
             if (button != null && button.active)
             {
                 if (button.bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
