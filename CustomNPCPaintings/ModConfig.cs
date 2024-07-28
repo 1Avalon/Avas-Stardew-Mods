@@ -10,5 +10,7 @@ namespace CustomNPCPaintings
     public class ModConfig
     {
         public SButton openCustomizerButton { get; set; }
+
+        public bool enableAllNPCs = false;
     }
 }
