@@ -29,6 +29,9 @@ This method is recommended if you don't plan to release a content pack for Custo
 1. Go to assets/backgrounds
 1. Place your image file (only png) in the folder. The name of your file will be the display name
 
+![image_here](./imgs/custom_background.png)
+
+This image was actually added by accident to 1.0.1. I tested this method and forgot to remove it.
 
 #### With Content Patcher
 
