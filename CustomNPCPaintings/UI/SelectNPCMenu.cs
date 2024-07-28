@@ -43,7 +43,7 @@ namespace DynamicNPCPaintings.UI
         private int currentScrollIndex;
         public SelectNPCMenu(Customiser customiser)
         {
-            validNPCs = Utility.getAllCharacters().Where(npc => npc.CanSocialize).ToList();
+            validNPCs = ModEntry.Config.enableAllNPCs ? Utility.getAllCharacters().GroupBy(o => o.displayName).Select(g => g.First()).ToList() : Utility.getAllCharacters().Where(npc => npc.CanSocialize).ToList();
 
             maxScrollDownIndex = (int)Math.Ceiling(validNPCs.Count / 14f - 8);
             if (maxScrollDownIndex < 0)
@@ -80,7 +80,6 @@ namespace DynamicNPCPaintings.UI
                 index++;
                 if (index <= startIndex)
                     continue;
-
                 int yOffset = TextureHelper.FindFirstNonTransparentPixelY(npc.Sprite.Texture);
                 ClickableNPCComponent component = new ClickableNPCComponent(new Rectangle(startPositionX, startPositionY, 16 * npcScale, 16 * npcScale), npc, new Rectangle(0, yOffset, 16, 16), npcScale);
                 NPCComponents.Add(component);
