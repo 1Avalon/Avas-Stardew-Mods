@@ -104,7 +104,15 @@ namespace DynamicNPCPaintings
 
             Texture2D croppedTexture = new Texture2D(Game1.graphics.GraphicsDevice, newBounds.Width, newBounds.Height);
             Color[] data = new Color[newBounds.Width * newBounds.Height];
-            tex.GetData(0, newBounds, data, 0, newBounds.Width * newBounds.Height);
+            try
+            {
+                tex.GetData(0, newBounds, data, 0, newBounds.Width * newBounds.Height);
+            }
+            catch 
+            {
+                newBounds = new Rectangle(0, 0, npc.Sprite.SpriteWidth, npc.Sprite.SpriteHeight);
+                tex.GetData(0, newBounds, data, 0, newBounds.Width * newBounds.Height);
+            }
             croppedTexture.SetData(data);
             Debug.WriteLine(croppedTexture.Bounds.Size);
             return flipped ? FlipTextureHorizontally(croppedTexture) : croppedTexture;
