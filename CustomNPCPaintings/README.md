@@ -4,7 +4,19 @@ https://www.nexusmods.com/stardewvalley/mods/26228
 
 ## How to add backgrounds and frames
 
+**Backgrounds**
+
+1. [Without Content Patcher](#without-content-patcher)
+1. [With Content Patcher](#with-content-patcher)
+
+**Frames**
+
+1. [With Content Patcher](#frames)
+
+
 ### Backgrounds
+
+
 
 Backgrounds can be any size and do not have to fit the tile size of Stardew Valley. However, the background must fit in atleast one single frame. Also, please don't super large images. It might mess up the UI.
 
