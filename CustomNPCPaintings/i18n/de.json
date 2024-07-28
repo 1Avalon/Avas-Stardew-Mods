@@ -36,6 +36,8 @@
 
   "Config.OpenCustomiser": "Personalisierer oeffnen",
   "Config.OpenCustomiserDescription": "Oeffnet den Personalisierer wenn ein Katalog sich in deiner aktuellen Gegend befindet",
+  "Config.EnableAllNPCs": "Alle NPCs aktivieren",
+  "Config.EnableAllNPCsDescription": "Erlaubt dir, jeden existierenden NPC auszuwaehlen (Monster, nicht-sozialisierbar, ...)",
 
   "Misc.WarningMessageHappyHomeDesigner": "Es scheint, als wuerdest du Happy Home Designer verwenden. Custom NPC Paintings kann den Knopf nicht zum Menue hinzufuegen. Bitte fuege einen Hotkey zum oeffnen des Personalisierer hinzu. Er kann geoeffnet, wenn bei deiner aktuellen Umgebung ein Katalog steht. Die Nachricht wird nicht mehr erscheinen, wenn du einen Hotkey festgelegt hast."
 }
