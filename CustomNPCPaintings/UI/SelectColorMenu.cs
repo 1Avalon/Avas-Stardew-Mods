@@ -99,6 +99,31 @@ namespace CustomNPCPaintings.UI
             }
         }
 
+        public override void performHoverAction(int x, int y)
+        {
+            base.performHoverAction(x, y);
+            if (randomButton.containsPoint(x, y))
+            {
+                randomButton.scale = 7.4f;
+            }
+            else
+                randomButton.scale = 6.4f;
+
+            if (okButton.containsPoint(x, y))
+            {
+                okButton.scale = 1.1f;
+            }
+            else
+                okButton.scale = 1f;
+
+            if (cancelButton.containsPoint(x, y))
+            {
+                cancelButton.scale = 1.1f;
+            }
+            else
+                cancelButton.scale = 1f;
+        }
+
         public override void leftClickHeld(int x, int y)
         {
             backgroundColor = colorPicker.clickHeld(x, y);
