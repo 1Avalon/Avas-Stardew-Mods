@@ -1,7 +1,7 @@
 {
   "Name": "[CP] Custom NPC Paintings",
   "Author": "AvalonMFX",
-  "Version": "1.0.1",
+  "Version": "1.0.2",
   "Description": "Adds Frames and Backgrounds",
   "UniqueID": "AvalonMFX.CPCustomNPCPaintings",
   "UpdateKeys": [ "Nexus:26228" ],
