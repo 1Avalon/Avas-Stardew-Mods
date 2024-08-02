@@ -186,6 +186,45 @@ namespace DynamicNPCPaintings
 
             return resultTexture;
         }// Texture2D frameTexture, Texture2D backgroundTexture, int startX, int startY, int endX, int endY, int offsetX, int offsetY
+
+        public static Texture2D BackgroundWithFrame(Frame frame, Color backgroundColor)
+        {
+            GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
+
+            // Erstelle eine neue Texture2D mit der gleichen Größe wie der Rahmen
+            Texture2D resultTexture = new Texture2D(graphicsDevice, frame.frameTexture.Width, frame.frameTexture.Height);
+
+            // Lade die Pixel-Daten des Rahmens
+            Color[] frameData = new Color[frame.frameTexture.Width * frame.frameTexture.Height];
+            frame.frameTexture.GetData(frameData);
+
+            // Erstelle ein Array für die Pixel-Daten des Ergebnisses
+            Color[] resultData = new Color[frame.frameTexture.Width * frame.frameTexture.Height];
+
+            // Kopiere den Rahmen in das Ergebnis
+            for (int y = 0; y < frame.frameTexture.Height; y++)
+            {
+                for (int x = 0; x < frame.frameTexture.Width; x++)
+                {
+                    resultData[y * frame.frameTexture.Width + x] = frameData[y * frame.frameTexture.Width + x];
+                }
+            }
+
+            // Zeichne den Hintergrund innerhalb des Rahmens
+            for (int y = frame.startY; y < frame.endY && y < frame.frameTexture.Height; y++)
+            {
+                for (int x = frame.startX; x < frame.endX && x < frame.frameTexture.Width; x++)
+                {
+                    // Setze das Pixel in den Ergebnisdaten auf die Hintergrundfarbe
+                    resultData[y * frame.frameTexture.Width + x] = backgroundColor;
+                }
+            }
+
+            // Setze die Pixel-Daten in die resultierende Textur
+            resultTexture.SetData(resultData);
+
+            return resultTexture;
+        }
         public static Texture2D BackgroundWithFrame(Frame frame, Background background)
         {
             GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
