@@ -1,4 +1,6 @@
-﻿using DynamicNPCPaintings.Framework;
+﻿using CustomNPCPaintings.UI;
+using DynamicNPCPaintings.Framework;
+using DynamicNPCPaintings.UI.UIElements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -27,6 +29,8 @@ namespace DynamicNPCPaintings.UI
         private ClickableTextureComponent downArrow;
 
         private ClickableTextureComponent scrollBar;
+
+        private Button singleColorBackgroundButton;
 
         private Rectangle scrollBarRunner;
 
@@ -64,6 +68,11 @@ namespace DynamicNPCPaintings.UI
             scrollBarRunner = new Rectangle(scrollBar.bounds.X, upArrow.bounds.Y + upArrow.bounds.Height + 4, scrollBar.bounds.Width, height - 128 - upArrow.bounds.Height - 8);
             upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
 
+            singleColorBackgroundButton = new Button("Single Color", delegate
+            {
+                Game1.activeClickableMenu = new SelectColorMenu(customiser);
+            });
+            singleColorBackgroundButton.setPosition(new Vector2(this.xPositionOnScreen + 16, this.yPositionOnScreen + this.height));
 
             InitBackgroundData();
 
@@ -212,13 +221,15 @@ namespace DynamicNPCPaintings.UI
                 downArrowClick();
             else if (upArrow.containsPoint(x, y))
                 upArrowClick();
+            else if (singleColorBackgroundButton.containsPoint(x, y))
+                singleColorBackgroundButton.CallEvent();
             else
             {
                 foreach (ClickableTextureComponent component in validBackgroundComponents)
                 {
                     if (component.containsPoint(x, y))
                     {
-
+                        customiser.picture.backgroundColor.A = 0;
                         customiser.picture.background = Framework.Background.Of(component.name, 0, 0, component.texture);
                         customiser.UpdatePreview();
                         Game1.activeClickableMenu = customiser;
@@ -251,6 +262,7 @@ namespace DynamicNPCPaintings.UI
             downArrow.draw(b);
             drawTextureBox(b, Game1.mouseCursors, new Rectangle(403, 383, 6, 6), scrollBarRunner.X, scrollBarRunner.Y, scrollBarRunner.Width, scrollBarRunner.Height, Color.White, 4f);
             scrollBar.draw(b);
+            singleColorBackgroundButton.draw(b);
             drawHoverText(b, hoverText, Game1.smallFont);
             drawMouse(b);
         }
