@@ -26,6 +26,8 @@ namespace CustomNPCPaintings.UI
         private ClickableTextureComponent randomButton;
 
         private ClickableTextureComponent okButton;
+
+        private ClickableTextureComponent cancelButton;
         public SelectColorMenu(Customiser customiser)
         {
             int width = 960;
@@ -46,7 +48,9 @@ namespace CustomNPCPaintings.UI
             float buttonScale = 6.4f;
             randomButton = new ClickableTextureComponent(new Rectangle(preview.bounds.X + 10, preview.bounds.Y + 280, (int)(10 * buttonScale), (int)(10 * buttonScale)), Game1.mouseCursors, new Rectangle(50, 428, 10, 10), buttonScale);
 
-            okButton = new ClickableTextureComponent(new Rectangle(randomButton.bounds.X + 74, randomButton.bounds.Y, 64, 64), Game1.mouseCursors, new Rectangle(128, 256, 64, 64), 1);
+            cancelButton = new ClickableTextureComponent(new Rectangle(randomButton.bounds.X + 74, randomButton.bounds.Y, 64, 64), Game1.mouseCursors, new Rectangle(192, 256, 64, 64), 1);
+
+            okButton = new ClickableTextureComponent(new Rectangle(cancelButton.bounds.X + 74, cancelButton.bounds.Y, 64, 64), Game1.mouseCursors, new Rectangle(128, 256, 64, 64), 1);
 
             customiser.picture.backgroundColor = colorPicker.getSelectedColor();
             customiser.UpdatePreview();
@@ -83,6 +87,12 @@ namespace CustomNPCPaintings.UI
                 customiser.picture.backgroundColor = backgroundColor;
                 customiser.UpdatePreview();
             }
+            else if (cancelButton.containsPoint(x, y))
+            {
+                customiser.picture.backgroundColor.A = 0;
+                customiser.UpdatePreview();
+                exitThisMenu();
+            }
             else if (okButton.containsPoint(x, y))
             {
                 exitThisMenu();
@@ -113,6 +123,7 @@ namespace CustomNPCPaintings.UI
             colorPicker.draw(b);
             randomButton.draw(b);
             okButton.draw(b);
+            cancelButton.draw(b);
             drawMouse(b);
         }
     }
