@@ -169,13 +169,13 @@ namespace DynamicNPCPaintings
                     int destY = y + offsetY;
                     if (destX >= 0 && destX < backgroundTexture.Width && destY >= 0 && destY < backgroundTexture.Height)
                     {
-                        // Überprüfen, ob der Pixel undurchsichtig ist
+                        // Überprüfen, ob der Pixel nicht vollständig transparent ist
                         int sourceIndex = x + y * characterTexture.Width;
                         if (characterPixels[sourceIndex].A > 0)
                         {
-                            // Kopieren des Pixels von der Figur auf das Ziel-Texturen-Objekt
+                            // Kopieren des Pixels von der Figur auf das Ziel-Texturen-Objekt mit Alpha-Blending
                             int destIndex = destX + destY * backgroundTexture.Width;
-                            resultPixels[destIndex] = characterPixels[sourceIndex];
+                            resultPixels[destIndex] = AlphaBlend(characterPixels[sourceIndex], backgroundPixels[destIndex]);
                         }
                     }
                 }
@@ -185,7 +185,21 @@ namespace DynamicNPCPaintings
             resultTexture.SetData(resultPixels);
 
             return resultTexture;
-        }// Texture2D frameTexture, Texture2D backgroundTexture, int startX, int startY, int endX, int endY, int offsetX, int offsetY
+        }
+
+        private static Color AlphaBlend(Color source, Color destination)
+        {
+            float alpha = source.A / 255f;
+            float inverseAlpha = 1f - alpha;
+
+            byte r = (byte)((source.R * alpha) + (destination.R * inverseAlpha));
+            byte g = (byte)((source.G * alpha) + (destination.G * inverseAlpha));
+            byte b = (byte)((source.B * alpha) + (destination.B * inverseAlpha));
+            byte a = (byte)(source.A + destination.A * inverseAlpha);
+
+            return new Color(r, g, b, a);
+        }
+
 
         public static Texture2D BackgroundWithFrame(Frame frame, Color backgroundColor)
         {
