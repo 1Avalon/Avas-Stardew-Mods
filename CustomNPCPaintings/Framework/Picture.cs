@@ -20,6 +20,8 @@ namespace DynamicNPCPaintings.Framework
 
         public bool npcFlipped = false;
 
+        public Color backgroundColor;
+
         public int tileWidth { get => frame.frameTexture.Width / 16; }
 
         public int tileHeight {  get => frame.frameTexture.Height / 16; }
@@ -42,7 +44,7 @@ namespace DynamicNPCPaintings.Framework
         }
         public Texture2D GetTexture()
         {
-            Texture2D frameAndBackground = TextureHelper.BackgroundWithFrame(frame, background);
+            Texture2D frameAndBackground = backgroundColor.A == 0 ? TextureHelper.BackgroundWithFrame(frame, background) : TextureHelper.BackgroundWithFrame(frame, backgroundColor);
             Texture2D characterTexture = TextureHelper.GetCharacterFrame(target, npcFrame, npcFlipped);
             return TextureHelper.DrawCharacterOnBackground(frameAndBackground, characterTexture, new Vector2(npcOffsetX, npcOffsetY), frame.startX, frame.startY, frame.endX, frame.endY);
         }
