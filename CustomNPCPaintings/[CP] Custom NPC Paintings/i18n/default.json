@@ -1,13 +1,14 @@
 {
-    "frames.wooden_frame": "Wooden Frame",
-    "frames.darK_frame": "Dark Frame",
-    "frames.canvas": "Canvas",
-    "frames.long_wooden_frame": "Long Wooden Frame",
-    "frames.long_dark_frame": "Long Dark Frame",
-    "frames.silver_frame": "Silver Frame",
-    "frames.old_wooden_frame": "Old Wooden Frame",
-    "frames.vertical_wooden_frame": "Vertical Wooden Frame",
-    "frames.vertical_dark_frame": "Vertical Dark Frame",
+  "frames.wooden_frame": "Wooden Frame",
+  "frames.darK_frame": "Dark Frame",
+  "frames.canvas": "Canvas",
+  "frames.long_wooden_frame": "Long Wooden Frame",
+  "frames.long_dark_frame": "Long Dark Frame",
+  "frames.silver_frame": "Silver Frame",
+  "frames.old_wooden_frame": "Old Wooden Frame",
+  "frames.vertical_wooden_frame": "Vertical Wooden Frame",
+  "frames.vertical_dark_frame": "Vertical Dark Frame",
 
-    "backgrounds.cloudy_sky": "Cloudy Sky"
+  "backgrounds.cloudy_sky": "Cloudy Sky",
+  "backgrounds.spooky_pumpkin": "Spooky Pumpkin"
 }
