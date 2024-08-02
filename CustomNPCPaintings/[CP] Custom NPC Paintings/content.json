@@ -92,6 +92,17 @@
       }
     },
     {
+      "LogName": "[CP] Dynamic NPC Pantings Spirits Eve Backgrounds",
+      "Action": "EditData",
+      "Target": "AvalonMFX.CustomNPCPaintings/Backgrounds",
+      "Entries": {
+        "{{ModId}}_SpookyPumpkin": { //Unique Key of your Background to avoid collisions
+          "textureName": "Backgrounds/Spooky_Pumpkin",
+          "displayName": "{{i18n: backgrounds.spooky_pumpkin}}"
+        }
+      }
+    },
+    {
       "Action": "Load",
       "Target": "Frames/Dark_Frame",
       "FromFile": "assets/Dark_Frame.png"
@@ -140,6 +151,11 @@
       "Action": "Load",
       "Target": "Frames/Vertical_Dark_Frame",
       "FromFile": "assets/Vertical_Dark_Frame.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Backgrounds/Spooky_Pumpkin",
+      "FromFile": "assets/Spooky_Pumpkin.png"
     }
   ]
 }
