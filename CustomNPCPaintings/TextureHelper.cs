@@ -14,6 +14,7 @@ using StardewValley.Menus;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 using CustomNPCPaintings;
+using CustomNPCPaintings.Framework;
 
 namespace DynamicNPCPaintings
 {
@@ -294,9 +295,21 @@ namespace DynamicNPCPaintings
             return resultTexture;
         }
 
-        public static void ExportToPainting(Picture picture)
+        public static string ExportToPainting(Picture picture, bool addToInventory = true)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>();
+
+            if (Context.IsMultiplayer && !Context.IsMainPlayer)
+            {
+                Texture2D tex = picture.GetTexture();
+                Color[] color = new Color[tex.Width  * tex.Height];
+                tex.GetData<Color>(color);
+
+                NetworkPictureData networkPictureData = new NetworkPictureData(color, tex.Width, tex.Height, picture.tileWidth, picture.tileHeight);
+
+                ModEntry.instance.Helper.Multiplayer.SendMessage<NetworkPictureData>(networkPictureData, "CustomPaintingData", new string[] { ModEntry.instance.ModManifest.UniqueID });
+                return "";
+            }
+
 
             if (!Directory.Exists(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName)))
                 Directory.CreateDirectory(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName));
@@ -324,15 +337,70 @@ namespace DynamicNPCPaintings
                 string uniqueTextureName = $"{Constants.SaveFolderName}.{uniqueID}_IMG";
                 ModEntry.dataManager.FurnitureData.Add(uniqueID, $"AvalonMFX.Picture_{number}/painting/{picture.tileWidth} {picture.tileHeight}/{picture.tileWidth} {picture.tileHeight}/1/0/-1/{I18n.Menu_Export_Painting()}/0/{uniqueTextureName}");
                 ModEntry.dataManager.TextureData.Add(uniqueTextureName, file);
+                Texture2D tex = picture.GetTexture();
+                Color[] color = new Color[tex.Width * tex.Height];
+                tex.GetData<Color>(color);
+
+                NetworkPictureData networkPictureData = new NetworkPictureData(color, tex.Width, tex.Height, picture.tileWidth, picture.tileHeight);
+
+                ModEntry.dataManager.PictureData.Add(uniqueTextureName, networkPictureData);
             }
             ModEntry.instance.Helper.GameContent.InvalidateCache("Data/Furniture");
-            Item obj = new StardewValley.Object(uniqueID, 1);
-            Furniture furniture = new Furniture(uniqueID, Vector2.Zero);
-            List<Item> items = new List<Item>()
+            if (addToInventory)
             {
-                furniture
-            };
-            Game1.activeClickableMenu = new ItemGrabMenu(items);
+                Furniture furniture = new Furniture(uniqueID, Vector2.Zero);
+                List<Item> items = new List<Item>()
+                {
+                    furniture
+                };
+                Game1.activeClickableMenu = new ItemGrabMenu(items);
+            }
+
+            return uniqueID;
+        }
+
+        public static string ExportToPainting(NetworkPictureData picture, bool addToInventory = true)
+        {
+            if (!Directory.Exists(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName)))
+                Directory.CreateDirectory(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName));
+
+            int number = 1;
+            var file = Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName, $"{Constants.SaveFolderName}_Picture_{number}.png");
+            while (File.Exists(file))
+            {
+                file = Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName, $"{Constants.SaveFolderName}_Picture_{++number}.png");
+            }
+
+
+            Stream stream = File.Create(file);
+
+            picture.GetTexture().SaveAsPng(stream, picture.width, picture.height);
+            stream.Close();
+
+            Game1.addHUDMessage(new HUDMessage("Successfully saved the painting", 1));
+
+
+            string uniqueID = $"AvalonMFX.CustomNPCPaintings.Picture_{number}";
+
+            if (!ModEntry.dataManager.FurnitureData.ContainsKey(uniqueID))
+            {
+                string uniqueTextureName = $"{Constants.SaveFolderName}.{uniqueID}_IMG";
+                ModEntry.dataManager.FurnitureData.Add(uniqueID, $"AvalonMFX.Picture_{number}/painting/{picture.tileWidth} {picture.tileHeight}/{picture.tileWidth} {picture.tileHeight}/1/0/-1/{I18n.Menu_Export_Painting()}/0/{uniqueTextureName}");
+                ModEntry.dataManager.TextureData.Add(uniqueTextureName, file);
+                ModEntry.dataManager.PictureData.Add(uniqueTextureName, picture);
+            }
+            ModEntry.instance.Helper.GameContent.InvalidateCache("Data/Furniture");
+            if (addToInventory)
+            {
+                Furniture furniture = new Furniture(uniqueID, Vector2.Zero);
+                List<Item> items = new List<Item>()
+                {
+                    furniture
+                };
+                Game1.activeClickableMenu = new ItemGrabMenu(items);
+            }
+
+            return uniqueID;
         }
         public static Texture2D DrawTextureOnTexture(GraphicsDevice graphicsDevice, Texture2D backgroundTexture, Texture2D overlayTexture, Vector2 position)
         {
