@@ -344,6 +344,7 @@ namespace DynamicNPCPaintings
                 NetworkPictureData networkPictureData = new NetworkPictureData(color, tex.Width, tex.Height, picture.tileWidth, picture.tileHeight);
 
                 ModEntry.dataManager.PictureData.Add(uniqueTextureName, networkPictureData);
+                ModEntry.modHelper.Multiplayer.SendMessage<SavedDataManager>(ModEntry.dataManager, "DataManager", new string[] { ModEntry.instance.ModManifest.UniqueID });
             }
             ModEntry.instance.Helper.GameContent.InvalidateCache("Data/Furniture");
             if (addToInventory)
