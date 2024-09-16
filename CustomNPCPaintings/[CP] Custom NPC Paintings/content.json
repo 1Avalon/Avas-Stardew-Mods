@@ -77,6 +77,14 @@
           "endY": 25,
           "textureName": "Frames/Vertical_Dark_Frame",
           "displayName": "{{i18n: frames.vertical_darK_frame}}"
+        },
+        "{{ModId}}_Thick_Wooden_Frame": {
+          "startX": 4,
+          "startY": 8,
+          "endX": 27,
+          "endY": 24,
+          "textureName": "Frames/Thick_Wooden_Frame",
+          "displayName": "{{i18n: frames.vertical_darK_frame}}"
         }
       }
     },
@@ -151,6 +159,11 @@
       "Action": "Load",
       "Target": "Frames/Vertical_Dark_Frame",
       "FromFile": "assets/Vertical_Dark_Frame.png"
+    },
+    {
+      "Action": "Load",
+      "Target": "Frames/Vertical_Dark_Frame",
+      "FromFile": "assets/Thick_Wooden_Frame.png"
     },
     {
       "Action": "Load",
