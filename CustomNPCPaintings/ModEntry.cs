@@ -60,7 +60,7 @@ namespace DynamicNPCPaintings
         public override void Entry(IModHelper helper)
         {
             modHelper = helper;
-            dataManager = new();
+            dataManager = SavedDataManager.Create();
 
             I18n.Init(helper.Translation);
             Config = Helper.ReadConfig<ModConfig>();
@@ -156,14 +156,26 @@ namespace DynamicNPCPaintings
                 });
             }
 
-            else if (e.NameWithoutLocale.Name.StartsWith($"{Constants.SaveFolderName}.AvalonMFX.CustomNPCPaintings.Picture_"))
+            else if (e.NameWithoutLocale.Name.StartsWith($"{Constants.SaveFolderName}.AvalonMFX.CustomNPCPaintings.Picture_") || e.NameWithoutLocale.Name.StartsWith($"{dataManager.SaveFolderName}.AvalonMFX.CustomNPCPaintings.Picture_"))
             {
                 foreach(var kvp in dataManager.TextureData)
                 {
                     if (e.NameWithoutLocale.IsEquivalentTo(kvp.Key))
                     {
+
+                        if (Context.IsMultiplayer && !Context.IsMainPlayer)
+                        {
+                            Texture2D dataTexture = dataManager.PictureData[e.NameWithoutLocale.Name].GetTexture();
+                            e.LoadFrom(() => dataTexture, AssetLoadPriority.Exclusive);
+                            break;
+                        }
+
                         var file = dataManager.TextureData[e.NameWithoutLocale.Name];
                         var tex = Texture2D.FromFile(Game1.graphics.GraphicsDevice, file);
+
+                        if (tex == null)
+                            tex = dataManager.PictureData[e.NameWithoutLocale.Name].GetTexture();
+
                         e.LoadFrom(() => tex, AssetLoadPriority.Exclusive);
                         break;
                     }
