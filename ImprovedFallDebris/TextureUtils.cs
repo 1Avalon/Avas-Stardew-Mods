@@ -1,22 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StardewValley;
 using System;
 
 namespace ImprovedFallDebris
 {
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
-    using StardewValley;
-    using System;
-
     public static class TextureUtils
     {
-        // Methode zum Verschieben des Farbtons einer Texture2D
-        public static Texture2D ShiftHueAndSaturation(Texture2D texture, Vector2 values)
+        // Methode zum Verschieben des Farbtons und Anpassen von Sättigung und Helligkeit einer Texture2D
+        public static Texture2D ShiftHueSaturationAndBrightness(Texture2D texture, Vector3 adjustments)
         {
+            float hueShift = adjustments.X; // Hue zwischen 0 und 1 (normalisiert)
+            float saturationPercent = adjustments.Y; // Sättigung (-100 bis 100)
+            float brightnessPercent = adjustments.Z; // Helligkeit (-100 bis 100)
 
-            float hueShift = values.X;
-            float saturationPercent = values.Y;
             // GraphicsDevice wird für die Erstellung der neuen Textur benötigt
             GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
 
@@ -24,10 +21,10 @@ namespace ImprovedFallDebris
             Color[] pixels = new Color[texture.Width * texture.Height];
             texture.GetData(pixels);
 
-            // Verschiebe den Farbton und passe die Sättigung jedes Pixels an
+            // Verschiebe den Farbton, passe die Sättigung und Helligkeit jedes Pixels an
             for (int i = 0; i < pixels.Length; i++)
             {
-                pixels[i] = ShiftHueAndSaturation(pixels[i], hueShift, saturationPercent);
+                pixels[i] = AdjustPixel(pixels[i], hueShift, saturationPercent, brightnessPercent);
             }
 
             // Erstelle eine neue Texture2D und setze die veränderten Pixel
@@ -37,58 +34,53 @@ namespace ImprovedFallDebris
             return shiftedTexture;
         }
 
-        // Methode zum Verschieben des Farbtons und Anpassen der Sättigung eines Pixels
-        private static Color ShiftHueAndSaturation(Color color, float hueShift, float saturationPercent)
+        // Methode zum Verschieben des Farbtons, Anpassen der Sättigung und der Helligkeit eines Pixels
+        private static Color AdjustPixel(Color color, float hueShift, float saturationPercent, float brightnessPercent)
         {
             // RGB zu HSV umwandeln
             float h, s, v;
             RGBToHSV(color, out h, out s, out v);
 
-            // Farbton ändern (h ist im Bereich 0 bis 1)
+            // Farbton ändern (h ist im Bereich 0 bis 1, hueShift ist ebenfalls normalisiert)
             h += hueShift;
             if (h > 1) h -= 1;
             if (h < 0) h += 1;
 
             // Sättigung anpassen
-            float saturationMultiplier;
             if (saturationPercent < 0)
             {
-                // Für negative Werte: Sättigung reduzieren, wobei die Farbe zu Grau geht
-                saturationMultiplier = 1 + saturationPercent / 100f; // z.B. -50% ergibt 0.5
-                s = s * saturationMultiplier;
-                // Für ganz schwarze oder graue Farben: Sättigung auf 0 setzen
-                s = Math.Max(s, 0);
+                // Sättigung reduzieren (in Richtung Grau)
+                float reductionFactor = 1 + saturationPercent / 100f;
+                s *= reductionFactor;
             }
-            else
+            else if (saturationPercent > 0)
             {
-                // Für positive Werte: Sättigung erhöhen
-                saturationMultiplier = 1 + saturationPercent / 100f; // z.B. 50% ergibt 1.5
-                s *= saturationMultiplier;
+                // Sättigung erhöhen
+                float increaseFactor = 1 + saturationPercent / 100f;
+                s *= increaseFactor;
             }
 
             // Sättigung muss im Bereich von 0 bis 1 bleiben
             s = MathHelper.Clamp(s, 0, 1);
 
-            // Zurück zu RGB mit dem neuen Farbton und der angepassten Sättigung
-            Color shiftedColor = HSVToRGB(h, s, v);
-            shiftedColor.A = color.A; // Alpha-Wert beibehalten
+            // Helligkeit (Value) anpassen
+            if (brightnessPercent < 0)
+            {
+                // Helligkeit verringern
+                float reductionFactor = 1 + brightnessPercent / 100f;
+                v *= reductionFactor;
+            }
+            else if (brightnessPercent > 0)
+            {
+                // Helligkeit erhöhen
+                float increaseFactor = 1 + brightnessPercent / 100f;
+                v *= increaseFactor;
+            }
 
-            return shiftedColor;
-        }
+            // Helligkeit (Value) muss im Bereich von 0 bis 1 bleiben
+            v = MathHelper.Clamp(v, 0, 1);
 
-        // Methode zum Verschieben des Farbtons eines einzelnen Pixels
-        private static Color ShiftHue(Color color, float hueShift)
-        {
-            // RGB zu HSV umwandeln
-            float h, s, v;
-            RGBToHSV(color, out h, out s, out v);
-
-            // Farbton verschieben
-            h += hueShift;
-            if (h > 1) h -= 1;
-            if (h < 0) h += 1;
-
-            // Zurück zu RGB umwandeln
+            // Zurück zu RGB mit dem neuen Farbton, der angepassten Sättigung und Helligkeit
             Color shiftedColor = HSVToRGB(h, s, v);
             shiftedColor.A = color.A; // Alpha-Wert beibehalten
 
@@ -112,18 +104,18 @@ namespace ImprovedFallDebris
             if (max == 0)
             {
                 s = 0;
-                h = 0; // undefined, achromatic
+                h = 0; // undefiniert, achromatisch
             }
             else
             {
                 s = delta / max;
 
                 if (r == max)
-                    h = (g - b) / delta; // between yellow & magenta
+                    h = (g - b) / delta; // zwischen Gelb & Magenta
                 else if (g == max)
-                    h = 2 + (b - r) / delta; // between cyan & yellow
+                    h = 2 + (b - r) / delta; // zwischen Cyan & Gelb
                 else
-                    h = 4 + (r - g) / delta; // between magenta & cyan
+                    h = 4 + (r - g) / delta; // zwischen Magenta & Cyan
 
                 h /= 6;
                 if (h < 0)
@@ -149,20 +141,23 @@ namespace ImprovedFallDebris
                 case 3: r = p; g = q; b = v; break;
                 case 4: r = t; g = p; b = v; break;
                 case 5: r = v; g = p; b = q; break;
-                default: r = 1; g = 1; b = 1; break; // fallback case (shouldn't happen)
+                default: r = 1; g = 1; b = 1; break; // fallback case (sollte nie passieren)
             }
 
             return new Color(r, g, b);
         }
+
+        // Methode zum Ausschneiden eines Rechtecks aus einer Texture2D
         public static Texture2D CropTexture(Texture2D texture, Rectangle sourceRectangle)
         {
             GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
-            // Stelle sicher, dass das Rechteck innerhalb der Grenzen der Textur liegt
+
+            // Sicherstellen, dass das Rechteck innerhalb der Grenzen der Textur liegt
             if (sourceRectangle.X < 0 || sourceRectangle.Y < 0 ||
                 sourceRectangle.X + sourceRectangle.Width > texture.Width ||
                 sourceRectangle.Y + sourceRectangle.Height > texture.Height)
             {
-                throw new System.ArgumentException("Das angegebene Rechteck liegt außerhalb der Grenzen der Textur.");
+                throw new ArgumentException("Das angegebene Rechteck liegt außerhalb der Grenzen der Textur.");
             }
 
             // Erstellt ein Array für die Pixel des ausgeschnittenen Bereichs
