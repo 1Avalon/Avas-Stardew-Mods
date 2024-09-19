@@ -1,0 +1,10 @@
+{
+  "Name": "Improved Fall Debris",
+  "Author": "AvalonMFX",
+  "Version": "1.0.0",
+  "Description": "Improves the games' aesthetics by making the fall debris colorfu�",
+  "UniqueID": "AvalonMFX.ImprovedFallDebris",
+  "EntryDll": "ImprovedFallDebris.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
