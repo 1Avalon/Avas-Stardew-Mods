@@ -21,16 +21,16 @@ namespace ImprovedFallDebris
 
         private static Dictionary<WeatherDebris, Texture2D> customDebrisTextures = new Dictionary<WeatherDebris, Texture2D>();
 
-        private static List<Vector2> hueShifts = new List<Vector2>()
+        private static List<Vector3> hueShifts = new List<Vector3>()
         {
-            new Vector2(0.10f, 1),
-            new Vector2(0.8f, 1),
-            new Vector2(0f, 1),
-            new Vector2(0.33f, -0.74f)
+            new Vector3(0.10f, 0, 0),
+            new Vector3(0.8f, 0, 0),
+            new Vector3 (0f, 0, 0),
+            new Vector3(0.33f, -26, -31)
 
         };
 
-        private static Vector2 getRandomShift()
+        private static Vector3 getRandomShift()
         {
             int index = Game1.random.Next(hueShifts.Count);
             return hueShifts[index];
@@ -51,7 +51,7 @@ namespace ImprovedFallDebris
 
 
             if (!customDebrisTextures.ContainsKey(__instance))
-                customDebrisTextures.Add(__instance, TextureUtils.ShiftHueAndSaturation(leafTexture, getRandomShift()));
+                customDebrisTextures.Add(__instance, TextureUtils.ShiftHueSaturationAndBrightness(leafTexture, getRandomShift()));
 
             b.Draw(customDebrisTextures[__instance], __instance.position, alternateSourceRect, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1E-06f);
             debrisCounter++;
