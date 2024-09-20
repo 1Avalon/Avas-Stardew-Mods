@@ -39,7 +39,7 @@ namespace ImprovedFallDebris
         private static int debrisCounter = 0;
         public static bool Prefix_draw(WeatherDebris __instance, SpriteBatch b)
         {
-            if (Game1.Date.Season != Season.Fall || Game1.debrisWeather.Count == 0)
+            if (Game1.Date.Season != Season.Fall || Game1.debrisWeather.Count == 0 || !ModEntry.Config.Enabled)
                 return true;
 
             if (ModEntry.ReloadDebrisTexture)
