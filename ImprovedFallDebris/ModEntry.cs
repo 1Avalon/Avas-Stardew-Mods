@@ -32,14 +32,21 @@ namespace ImprovedFallDebris
 
             Helper.ConsoleCommands.Add("clear_debris_array", "Clears the colored fall leaves debris. Not an interesting command for a player", this.ClearDebrisArray);
             Helper.ConsoleCommands.Add("add_debris_color", "Adds a new color choice to the array. Not an interesting command for a player", this.AddColorToDebrisArray);
+
+            Helper.Events.GameLoop.DayStarted += OnDayStarted;
         }
+
         /*********
-        ** Private methods
-        *********/
+** Private methods
+*********/
         /// <summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        /// 
+        ///
+        private void OnDayStarted(object sender, DayStartedEventArgs e)
+        {
+            Patches.customDebrisTextures.Clear();
+        }
         private void ClearDebrisArray(string command, string[] args)
         {
             Patches.customDebrisTextures.Clear();
