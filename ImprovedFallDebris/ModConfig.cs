@@ -9,5 +9,7 @@ namespace ImprovedFallDebris
     public class ModConfig
     {
         public bool AlwaysExecuteOriginalMethod { get; set; } = false;
+
+        public bool Enabled { get; set; } = true;
     }
 }

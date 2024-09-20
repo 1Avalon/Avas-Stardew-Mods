@@ -71,6 +71,12 @@ namespace ImprovedFallDebris
                 getValue: () => Config.AlwaysExecuteOriginalMethod,
                 setValue: value => Config.AlwaysExecuteOriginalMethod = value
             );
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Colors Enabled",
+                getValue: () => Config.Enabled,
+                setValue: value => Config.Enabled = value
+            );
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
