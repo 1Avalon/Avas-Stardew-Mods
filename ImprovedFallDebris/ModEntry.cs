@@ -33,6 +33,8 @@ namespace ImprovedFallDebris
                 prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_draw))
                 );
 
+            I18n.Init(Helper.Translation);
+
             Helper.ConsoleCommands.Add("clear_debris_array", "Clears the colored fall leaves debris. Not an interesting command for a player", this.ClearDebrisArray);
             Helper.ConsoleCommands.Add("add_debris_color", "Adds a new color choice to the array. Not an interesting command for a player", this.AddColorToDebrisArray);
 
@@ -66,14 +68,14 @@ namespace ImprovedFallDebris
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Always execute original draw method",
-                tooltip: () => "Makes the original draw method of the debris always execute. Might fix compatibility bugs but can slighty affect your games' performance",
+                name: () => I18n.Config_TryFixDebris(),
+                tooltip: () => I18n.Config_TryFixDebris_Description(),
                 getValue: () => Config.AlwaysExecuteOriginalMethod,
                 setValue: value => Config.AlwaysExecuteOriginalMethod = value
             );
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Colors Enabled",
+                name: () => I18n.Config_ColorsEnabled(),
                 getValue: () => Config.Enabled,
                 setValue: value => Config.Enabled = value
             );

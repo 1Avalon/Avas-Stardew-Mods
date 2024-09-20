@@ -1,0 +1,5 @@
+{
+  "Config.ColorsEnabled": "Farben aktivieren",
+  "Config.TryFixDebris": "Versuche Blaetter zu fixen",
+  "Config.TryFixDebris.Description": "Fuehrt die originale draw methode immer aus. Könnte Kompatibilitaetsprobleme beheben aber auch die Performance des Spiels beeintraechtigen"
+}

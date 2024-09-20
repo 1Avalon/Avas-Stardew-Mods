@@ -1,0 +1,5 @@
+{
+  "Config.ColorsEnabled": "Enable Colors",
+  "Config.TryFixDebris": "Try Fix Debris",
+  "Config.TryFixDebris.Description": "Makes the original draw method of the debris always execute. Might fix compatibility bugs but can slighty affect your games' performance"
+}
