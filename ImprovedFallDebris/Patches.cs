@@ -61,6 +61,10 @@ namespace ImprovedFallDebris
 
             b.Draw(customDebrisTextures[__instance], __instance.position, alternateSourceRect, Color.White, 0f, Vector2.Zero, 3f, SpriteEffects.None, 1E-06f);
             debrisCounter++;
+
+            if (ModEntry.Config.AlwaysExecuteOriginalMethod)
+                return true;
+
             return false;
         }
     }
