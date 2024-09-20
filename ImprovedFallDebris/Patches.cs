@@ -42,6 +42,12 @@ namespace ImprovedFallDebris
             if (Game1.Date.Season != Season.Fall || Game1.debrisWeather.Count == 0)
                 return true;
 
+            if (ModEntry.ReloadDebrisTexture)
+            {
+                leafTexture = TextureUtils.CropTexture(Game1.mouseCursors, new Rectangle(352, 1216, 176, 16));
+                ModEntry.ReloadDebrisTexture = false;
+            }
+
             if (debrisCounter == debrisAmount)
                 debrisCounter = 0;
 

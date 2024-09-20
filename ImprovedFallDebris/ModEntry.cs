@@ -20,7 +20,7 @@ namespace ImprovedFallDebris
         /// <summary>The mod entry point, called after the mod is first loaded.</summary>
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
         ///
-
+        public static bool ReloadDebrisTexture = false;
         public override void Entry(IModHelper helper)
         {
             Harmony harmony = new Harmony(ModManifest.UniqueID);
@@ -34,6 +34,7 @@ namespace ImprovedFallDebris
             Helper.ConsoleCommands.Add("add_debris_color", "Adds a new color choice to the array. Not an interesting command for a player", this.AddColorToDebrisArray);
 
             Helper.Events.GameLoop.DayStarted += OnDayStarted;
+            Helper.Events.Content.AssetRequested += OnAssetRequested;
         }
 
         /*********
@@ -46,6 +47,12 @@ namespace ImprovedFallDebris
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
             Patches.customDebrisTextures.Clear();
+        }
+
+        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
+        {
+            if (e.NameWithoutLocale.IsEquivalentTo("LooseSprites\\Cursors"))
+                ReloadDebrisTexture = true;
         }
         private void ClearDebrisArray(string command, string[] args)
         {
