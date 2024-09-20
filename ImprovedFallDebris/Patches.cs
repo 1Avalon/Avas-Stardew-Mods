@@ -19,21 +19,21 @@ namespace ImprovedFallDebris
 
         private static Texture2D leafTexture = TextureUtils.CropTexture(Game1.mouseCursors, new Rectangle(352, 1216, 176, 16));
 
-        private static Dictionary<WeatherDebris, Texture2D> customDebrisTextures = new Dictionary<WeatherDebris, Texture2D>();
+        public static Dictionary<WeatherDebris, Texture2D> customDebrisTextures = new Dictionary<WeatherDebris, Texture2D>();
 
-        private static List<Vector3> hueShifts = new List<Vector3>()
+        public static List<Vector3> Adjustments = new List<Vector3>()
         {
-            new Vector3(0.10f, 0, 0),
-            new Vector3(0.8f, 0, 0),
-            new Vector3 (0f, 0, 0),
-            new Vector3(0.33f, -26, -31)
+            new Vector3(0.10f, 0, 0), // yellow
+            //new Vector3(0.8f, 0, -10),
+            new Vector3 (0f, 0, 0), // red / default
+            new Vector3(0.3f, -10, -15) // green
 
         };
 
         private static Vector3 getRandomShift()
         {
-            int index = Game1.random.Next(hueShifts.Count);
-            return hueShifts[index];
+            int index = Game1.random.Next(Adjustments.Count);
+            return Adjustments[index];
         }
 
         private static int debrisCounter = 0;
