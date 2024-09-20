@@ -8,6 +8,7 @@ using StardewValley;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics.Tracing;
 using System.Runtime.InteropServices;
+using GenericModConfigMenu;
 
 namespace ImprovedFallDebris
 {
@@ -21,6 +22,8 @@ namespace ImprovedFallDebris
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
         ///
         public static bool ReloadDebrisTexture = false;
+
+        public static ModConfig Config;
         public override void Entry(IModHelper helper)
         {
             Harmony harmony = new Harmony(ModManifest.UniqueID);
@@ -35,6 +38,7 @@ namespace ImprovedFallDebris
 
             Helper.Events.GameLoop.DayStarted += OnDayStarted;
             Helper.Events.Content.AssetRequested += OnAssetRequested;
+            Helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
 
         /*********
@@ -44,6 +48,30 @@ namespace ImprovedFallDebris
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
         ///
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            
+            Config = Helper.ReadConfig<ModConfig>();
+
+            var configMenu = this.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+            if (configMenu is null)
+                return;
+
+            // register mod
+            configMenu.Register(
+                mod: this.ModManifest,
+                reset: () => Config = new ModConfig(),
+                save: () => this.Helper.WriteConfig(Config)
+            );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Always execute original draw method",
+                tooltip: () => "Makes the original draw method of the debris always execute. Might fix compatibility bugs but can slighty affect your games' performance",
+                getValue: () => Config.AlwaysExecuteOriginalMethod,
+                setValue: value => Config.AlwaysExecuteOriginalMethod = value
+            );
+        }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
             Patches.customDebrisTextures.Clear();
