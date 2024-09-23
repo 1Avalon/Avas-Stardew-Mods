@@ -1,9 +1,11 @@
 ﻿using System;
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
+using StardewValley.Tools;
 
 namespace NoAccidentalStaminaConsumption
 {
@@ -15,8 +17,18 @@ namespace NoAccidentalStaminaConsumption
         *********/
         /// <summary>The mod entry point, called after the mod is first loaded.</summary>
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
+        /// 
+
+        public static ModEntry instance;
         public override void Entry(IModHelper helper)
         {
+            instance = this;
+            Harmony harmony = new Harmony(ModManifest.UniqueID);
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(WateringCan), nameof(WateringCan.DoFunction)),
+                prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.WateringCan_Prefix_DoFunction))
+                );
         }
 
 
