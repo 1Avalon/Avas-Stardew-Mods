@@ -14,19 +14,34 @@ namespace NoAccidentalStaminaConsumption
     {
         public static void WateringCan_Prefix_DoFunction(WateringCan __instance, GameLocation location, int x , int y, int power, Farmer who)
         {
-            //ModEntry.instance.Helper.Reflection.GetMethod(__instance, "tilesAffected").Invoke(new Vector2(x / 64, y / 64), power, who);
+            if (Game1.currentLocation.CanRefillWateringCanOnTile(x / 64, y / 64))
+                return;
+
+            power = who.toolPower;
             List<Vector2> tileLocations = ModEntry.instance.Helper.Reflection.GetMethod(__instance, "tilesAffected").Invoke<List<Vector2>>(new Vector2(x / 64, y / 64), power, who);
-            Vector2 actionTile = new Vector2(x / 64, y / 64);
+            int wateredCrops = 0;
+            int dirtTiles = 0;
             foreach(Vector2 tileLocation in tileLocations)
             {
                 if (location.terrainFeatures.TryGetValue(tileLocation, out var terrainFeature))
                 {
                     if (terrainFeature is HoeDirt dirt)
                     {
-                        if (dirt.state.Value == 1 && tileLocation == actionTile)
-                            ModEntry.instance.Monitor.Log("crop already watered", StardewModdingAPI.LogLevel.Info);
+                        dirtTiles++;
+
+                        if (dirt.isWatered())
+                        {
+                            wateredCrops++;
+                        }
                     }
                 }
+
+            }
+
+            if (wateredCrops == dirtTiles)
+            {
+                float stamina = (float)(2 * (power + 1)) - (float)who.FarmingLevel * 0.1f;
+                who.Stamina += stamina;
             }
         }
     }
