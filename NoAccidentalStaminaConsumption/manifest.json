@@ -1,0 +1,10 @@
+{
+  "Name": "No Accidental Stamina Consumption",
+  "Author": "AvalonMFX",
+  "Version": "1.0.0",
+  "Description": "Prevents stamina consumption on accidental actions",
+  "UniqueID": "AvalonMFX.NoAccidentalStaminaConsumpion",
+  "EntryDll": "NoAccidentalStaminaConsumption.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
