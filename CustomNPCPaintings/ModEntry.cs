@@ -106,8 +106,8 @@ namespace DynamicNPCPaintings
 
         private void FixSamePainting(string command, string[] args)
         {
-            PaintingIncrementOffset += 100;
-            Monitor.Log("Incremented the Painting number offset by 100. If you created less than 100 paintings, the bug should be fixed. Otherwise, try again", LogLevel.Info);
+            PaintingIncrementOffset += 1000;
+            Monitor.Log("Incremented the Painting number offset by 1000. If you created less than 1000 paintings, the bug should be fixed. Otherwise, try again.\nNow create some paintings.", LogLevel.Info);
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
