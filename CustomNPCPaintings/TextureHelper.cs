@@ -310,33 +310,37 @@ namespace DynamicNPCPaintings
                 return "";
             }
 
-
-            if (!Directory.Exists(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName)))
-                Directory.CreateDirectory(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName));
-
-            int number = 1;
-            var file = Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName, $"{Constants.SaveFolderName}_Picture_{number}.png");
-            while (File.Exists(file))
-            {
-                file = Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName, $"{Constants.SaveFolderName}_Picture_{++number}.png");
-            }
-
-
-            Stream stream = File.Create(file);
-
-            picture.GetTexture().SaveAsPng(stream, picture.frame.frameTexture.Width, picture.frame.frameTexture.Height);
-            stream.Close();
-
-            Game1.addHUDMessage(new HUDMessage("Successfully saved the painting", 1));
+            int number = ModEntry.dataManager.FurnitureData.Count + 1;
 
 
             string uniqueID = $"AvalonMFX.CustomNPCPaintings.Picture_{number}";
+            string uniqueTextureName = $"{Constants.SaveFolderName}.{uniqueID}_IMG";
+
+            if (ModEntry.Config.exportPaintingsLocally)
+            {
+                if (!Directory.Exists(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName)))
+                    Directory.CreateDirectory(Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName));
+
+                int file_number = 1;
+                var file = Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName, $"{Constants.SaveFolderName}_Picture_{file_number}.png");
+                while (File.Exists(file))
+                {
+                    file = Path.Combine(ModEntry.instance.Helper.DirectoryPath, "pictures", Constants.SaveFolderName, $"{Constants.SaveFolderName}_Picture_{++file_number}.png");
+                }
+
+
+                Stream stream = File.Create(file);
+
+                picture.GetTexture().SaveAsPng(stream, picture.frame.frameTexture.Width, picture.frame.frameTexture.Height);
+                stream.Close();
+                ModEntry.dataManager.TextureData.Add(uniqueTextureName, file);
+                Game1.addHUDMessage(new HUDMessage("Successfully saved painting locally", 1));
+            }
 
             if (!ModEntry.dataManager.FurnitureData.ContainsKey(uniqueID))
             {
-                string uniqueTextureName = $"{Constants.SaveFolderName}.{uniqueID}_IMG";
                 ModEntry.dataManager.FurnitureData.Add(uniqueID, $"AvalonMFX.Picture_{number}/painting/{picture.tileWidth} {picture.tileHeight}/{picture.tileWidth} {picture.tileHeight}/1/0/-1/{I18n.Menu_Export_Painting()}/0/{uniqueTextureName}");
-                ModEntry.dataManager.TextureData.Add(uniqueTextureName, file);
+
                 Texture2D tex = picture.GetTexture();
                 Color[] color = new Color[tex.Width * tex.Height];
                 tex.GetData<Color>(color);

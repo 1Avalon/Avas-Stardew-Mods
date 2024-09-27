@@ -158,7 +158,7 @@ namespace DynamicNPCPaintings
 
             else if (e.NameWithoutLocale.Name.StartsWith($"{Constants.SaveFolderName}.AvalonMFX.CustomNPCPaintings.Picture_") || e.NameWithoutLocale.Name.StartsWith($"{dataManager.SaveFolderName}.AvalonMFX.CustomNPCPaintings.Picture_"))
             {
-                foreach(var kvp in dataManager.TextureData)
+                foreach(var kvp in dataManager.PictureData)
                 {
                     if (e.NameWithoutLocale.IsEquivalentTo(kvp.Key))
                     {
@@ -170,11 +170,12 @@ namespace DynamicNPCPaintings
                             break;
                         }
 
-                        var file = dataManager.TextureData[e.NameWithoutLocale.Name];
-                        var tex = Texture2D.FromFile(Game1.graphics.GraphicsDevice, file);
-
+                        var tex = dataManager.PictureData[e.NameWithoutLocale.Name].GetTexture();
                         if (tex == null)
-                            tex = dataManager.PictureData[e.NameWithoutLocale.Name].GetTexture();
+                        {
+                            var file = dataManager.TextureData[e.NameWithoutLocale.Name];
+                            tex = Texture2D.FromFile(Game1.graphics.GraphicsDevice, file);
+                        }
 
                         e.LoadFrom(() => tex, AssetLoadPriority.Exclusive);
                         break;
