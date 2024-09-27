@@ -310,7 +310,7 @@ namespace DynamicNPCPaintings
                 return "";
             }
 
-            int number = ModEntry.dataManager.FurnitureData.Count + 1;
+            int number = ModEntry.dataManager.PictureData.Count + ModEntry.PaintingIncrementOffset + 1;
 
 
             string uniqueID = $"AvalonMFX.CustomNPCPaintings.Picture_{number}";

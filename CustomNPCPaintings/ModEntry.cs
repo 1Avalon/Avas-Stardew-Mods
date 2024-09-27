@@ -57,6 +57,8 @@ namespace DynamicNPCPaintings
         public static bool hasHappyHomeDesigner = false;
 
         public static ModConfig Config;
+
+        public static int PaintingIncrementOffset = 0;
         public override void Entry(IModHelper helper)
         {
             modHelper = helper;
@@ -72,6 +74,7 @@ namespace DynamicNPCPaintings
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.Player.Warped += OnWarped;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.ConsoleCommands.Add("fix_same_painting_bug", "If you started using this mod in 1.1.1 or later, you can ignore this command\nIf you keep getting the same paintings, try running this command", this.FixSamePainting);
             /*
             background = Helper.ModContent.Load<Texture2D>("assets/backgrounds/forest.png");
             Texture2D sunset = Helper.ModContent.Load<Texture2D>("assets/backgrounds/sunset.png");
@@ -99,6 +102,12 @@ namespace DynamicNPCPaintings
 
             frame = Helper.ModContent.Load<Texture2D>("assets/frames/frame1.png");
             instance = this;
+        }
+
+        private void FixSamePainting(string command, string[] args)
+        {
+            PaintingIncrementOffset += 100;
+            Monitor.Log("Incremented the Painting number offset by 100. If you created less than 100 paintings, the bug should be fixed. Otherwise, try again", LogLevel.Info);
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
