@@ -12,5 +12,7 @@ namespace CustomNPCPaintings
         public SButton openCustomizerButton { get; set; }
 
         public bool enableAllNPCs = false;
+
+        public bool exportPaintingsLocally = false;
     }
 }

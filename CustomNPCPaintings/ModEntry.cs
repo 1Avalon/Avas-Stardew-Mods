@@ -217,6 +217,14 @@ namespace DynamicNPCPaintings
                 getValue: () => Config.enableAllNPCs,
                 setValue: value => Config.enableAllNPCs = value
                 );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => I18n.Config_ExportPaintingsLocally(),
+                tooltip: () => I18n.Config_ExportPaintingsLocallyDescription(),
+                getValue: () => Config.enableAllNPCs,
+                setValue: value => Config.enableAllNPCs = value
+                );
         }
         private void OnWarped(object sender, WarpedEventArgs e)
         {
