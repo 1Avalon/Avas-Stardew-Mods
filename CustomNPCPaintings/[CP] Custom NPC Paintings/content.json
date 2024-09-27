@@ -162,7 +162,7 @@
     },
     {
       "Action": "Load",
-      "Target": "Frames/Vertical_Dark_Frame",
+      "Target": "Frames/Thick_Wooden_Frame",
       "FromFile": "assets/Thick_Wooden_Frame.png"
     },
     {
