@@ -43,6 +43,8 @@
   "Config.OpenCustomiserDescription": "Opens the customiser if a catalogue is placed in your current location",
   "Config.EnableAllNPCs": "Enable all NPCs",
   "Config.EnableAllNPCsDescription": "Allows you to select any existing NPC (monsters, non socialiseable, ...)",
+  "Config.ExportPaintingsLocally": "Export paintings locally",
+  "Config.ExportPaintingsLocallyDescription": "Additionally, save your paintings locally in the mod folder",
 
   "Misc.WarningMessageHappyHomeDesigner": "It seems like you're using Happy Home Designer. Custom NPC Paintings can't add the button to its menu. Please add a hotkey for opening the painting customizer. It can be opened when being in a location with a catalogue. This message will no longer appear after setting a hotkey."
 }
