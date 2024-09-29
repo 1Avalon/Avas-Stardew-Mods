@@ -44,5 +44,22 @@ namespace NoAccidentalStaminaConsumption
                 who.Stamina += stamina;
             }
         }
+        
+        public static void Prefix_FishingPole_DoFunction(FishingRod __instance, GameLocation location, int x, int y, int power, Farmer who)
+        {
+            Vector2 bobberTile = ModEntry.instance.Helper.Reflection.GetMethod(__instance, "calculateBobberTile").Invoke<Vector2>();
+            int tileX = (int)bobberTile.X;
+            int tileY = (int)bobberTile.Y;
+            bool canFish = location.canFishHere();
+            bool isTileFishable = location.isTileFishable(tileX, tileY);
+            if (!isTileFishable && !__instance.fishCaught)
+                who.Stamina += 8f - (float)who.FishingLevel * 0.1f;
+        }
+
+        public static void Postfix_FishingPole_DoFunction(FishingRod __instance, GameLocation location, int x, int y, int power, Farmer who)
+        {
+            if (!__instance.fishCaught && __instance.pullingOutOfWater)
+                who.Stamina += 8f - (float)who.FishingLevel * 0.1f;
+        }
     }
 }
