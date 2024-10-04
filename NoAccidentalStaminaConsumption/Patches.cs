@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using StardewValley;
+using StardewValley.Enchantments;
 using StardewValley.TerrainFeatures;
 using StardewValley.Tools;
 using System;
@@ -12,9 +13,13 @@ namespace NoAccidentalStaminaConsumption
 {
     public static class Patches
     {
+
         public static void WateringCan_Prefix_DoFunction(WateringCan __instance, GameLocation location, int x , int y, int power, Farmer who)
         {
             if (Game1.currentLocation.CanRefillWateringCanOnTile(x / 64, y / 64))
+                return;
+
+            if (__instance.hasEnchantmentOfType<EfficientToolEnchantment>())
                 return;
 
             power = who.toolPower;
@@ -47,6 +52,10 @@ namespace NoAccidentalStaminaConsumption
         
         public static void Prefix_FishingPole_DoFunction(FishingRod __instance, GameLocation location, int x, int y, int power, Farmer who)
         {
+
+            if (__instance.hasEnchantmentOfType<EfficientToolEnchantment>())
+                return;
+
             Vector2 bobberTile = ModEntry.instance.Helper.Reflection.GetMethod(__instance, "calculateBobberTile").Invoke<Vector2>();
             int tileX = (int)bobberTile.X;
             int tileY = (int)bobberTile.Y;
@@ -58,6 +67,9 @@ namespace NoAccidentalStaminaConsumption
 
         public static void Postfix_FishingPole_DoFunction(FishingRod __instance, GameLocation location, int x, int y, int power, Farmer who)
         {
+            if (__instance.hasEnchantmentOfType<EfficientToolEnchantment>())
+                return;
+
             if (!__instance.fishCaught && __instance.pullingOutOfWater)
                 who.Stamina += 8f - (float)who.FishingLevel * 0.1f;
         }
