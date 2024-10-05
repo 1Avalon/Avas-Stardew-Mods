@@ -39,6 +39,11 @@ namespace NoAccidentalStaminaConsumption
                 original: AccessTools.Method(typeof(FishingRod), nameof(FishingRod.DoFunction)),
                 postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_FishingPole_DoFunction))
                 );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Pickaxe), nameof(Pickaxe.DoFunction)),
+                prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_Pickaxe_DoFunction))
+                );
         }
 
 
