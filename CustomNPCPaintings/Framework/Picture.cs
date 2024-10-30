@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using Microsoft.Xna.Framework;
+using CustomNPCPaintings.Framework;
 
 namespace DynamicNPCPaintings.Framework
 {
@@ -10,15 +11,7 @@ namespace DynamicNPCPaintings.Framework
 
         public Background background;
 
-        public NPC target;
-
-        public int npcFrame;
-
-        public int npcOffsetX;
-
-        public int npcOffsetY;
-
-        public bool npcFlipped = false;
+        public List<CharacterLayer> characterLayers;
 
         public Color backgroundColor;
 
@@ -26,27 +19,34 @@ namespace DynamicNPCPaintings.Framework
 
         public int tileHeight {  get => frame.frameTexture.Height / 16; }
 
-        public int npcFrameAmount { get => (target.Sprite.Texture.Width / target.Sprite.SpriteWidth) * (target.Sprite.Texture.Height / target.Sprite.SpriteHeight); }
-
-        public Picture(Frame frame, Background background, NPC target, int npcFrame)
+        public Picture(Frame frame, Background background, List<CharacterLayer> characterLayers)
         {
             this.frame = frame;
             this.background = background;
-            this.target = target;
-            this.npcFrame = npcFrame;
-            this.npcOffsetX = background.backgroundImage.Width / 2;
-            this.npcOffsetY = 0;
+            this.characterLayers = characterLayers;
         }
 
         public static Picture GetDefaultPicture()
         {
-            return new Picture(Frame.GetDefaultFrame(), Background.GetDefaultBackground(), Game1.getCharacterFromName("Haley"), 0);
+            List<CharacterLayer> layers = new List<CharacterLayer>()
+            {
+                new CharacterLayer(Game1.getCharacterFromName("Haley"), Background.GetDefaultBackground(), 0)
+            };
+            return new Picture(Frame.GetDefaultFrame(), Background.GetDefaultBackground(), layers);
         }
         public Texture2D GetTexture()
         {
             Texture2D frameAndBackground = backgroundColor.A == 0 ? TextureHelper.BackgroundWithFrame(frame, background) : TextureHelper.BackgroundWithFrame(frame, backgroundColor);
-            Texture2D characterTexture = TextureHelper.GetCharacterFrame(target, npcFrame, npcFlipped);
-            return TextureHelper.DrawCharacterOnBackground(frameAndBackground, characterTexture, new Vector2(npcOffsetX, npcOffsetY), frame.startX, frame.startY, frame.endX, frame.endY);
+
+            List<CharacterLayer> orderedLayerList = characterLayers.OrderBy(o => o.layer).ToList();
+            foreach (CharacterLayer characterLayer in orderedLayerList)
+            {
+                Texture2D characterTexture = TextureHelper.GetCharacterFrame(characterLayer.target, characterLayer.npcFrame, characterLayer.npcFlipped);
+                frameAndBackground = TextureHelper.DrawCharacterOnBackground(frameAndBackground, characterTexture, new Vector2(characterLayer.npcOffsetX, characterLayer.npcOffsetY), frame.startX, frame.startY, frame.endX, frame.endY);
+            }
+            return frameAndBackground;
+            //Texture2D characterTexture = TextureHelper.GetCharacterFrame(target, npcFrame, npcFlipped);
+            //return TextureHelper.DrawCharacterOnBackground(frameAndBackground, characterTexture, new Vector2(npcOffsetX, npcOffsetY), frame.startX, frame.startY, frame.endX, frame.endY);
         }
     }
 }
