@@ -10,6 +10,7 @@ namespace CustomNPCPaintings.Framework
 {
     public class CharacterLayer
     {
+
         public int layer;
 
         public NPC target;
@@ -29,6 +30,7 @@ namespace CustomNPCPaintings.Framework
             this.npcFrame = npcFrame;
             this.npcOffsetX = background.backgroundImage.Width / 2; ;
             this.npcOffsetY = 0;
+            layer = 0;
         }
     }
 }
