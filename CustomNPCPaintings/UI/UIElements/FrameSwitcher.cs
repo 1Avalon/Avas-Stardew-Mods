@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 using Microsoft.Xna.Framework.Graphics;
 using DynamicNPCPaintings.Framework;
+using CustomNPCPaintings.Framework;
+using System.ComponentModel.DataAnnotations;
 
 namespace DynamicNPCPaintings.UI.UIElements
 {
@@ -52,13 +54,21 @@ namespace DynamicNPCPaintings.UI.UIElements
             Utility.drawTextWithShadow(b, Label, Game1.dialogueFont, new Vector2(positionX + 12 * scale, positionY), Game1.textColor);
         }
 
-        public void click(int x, int y, ref Picture picture)
+        public void click(int x, int y, ref CharacterLayer layer)
         {
 
-            if (arrowLeft.containsPoint(x, y) && picture.npcFrame  > 0)
-                picture.npcFrame--;
-            else if (arrowRight.containsPoint(x, y) && picture.npcFrame < picture.npcFrameAmount -1)
-                picture.npcFrame++;
+            if (arrowLeft.containsPoint(x, y) && layer.npcFrame  > 0)
+                layer.npcFrame--;
+            else if (arrowRight.containsPoint(x, y) && layer.npcFrame < layer.npcFrameAmount -1)
+                layer.npcFrame++;
+        }
+
+        public void click(int x, int y, ref int value, int min = 0, int max = 999)
+        {
+            if (arrowLeft.containsPoint(x, y) && value > min)
+                value--;
+            else if (arrowRight.containsPoint(x, y) && value < max)
+                value++;
         }
     }
 }
