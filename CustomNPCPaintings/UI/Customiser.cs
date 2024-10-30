@@ -6,6 +6,7 @@ using DynamicNPCPaintings.Framework;
 using Background = DynamicNPCPaintings.Framework.Background;
 using DynamicNPCPaintings.UI.UIElements;
 using CustomNPCPaintings;
+using CustomNPCPaintings.UI;
 
 namespace DynamicNPCPaintings.UI
 {
@@ -53,7 +54,7 @@ namespace DynamicNPCPaintings.UI
             npcListButton = new Button(I18n.Menu_OpenNPCList(), delegate
             {
                 Game1.playSound("dwop");
-                Game1.activeClickableMenu = new SelectNPCMenu(this);
+                Game1.activeClickableMenu = new NPCModifierMenu(this);
             });
             npcListButton.SetPosition(xPositionOnScreen + width - npcListButton.width - 64, yPositionOnScreen + 150);
 
@@ -113,10 +114,10 @@ namespace DynamicNPCPaintings.UI
             else if (upperRightCloseButton.containsPoint(x, y))
                 exitThisMenu();
 
-            flipCheckbox.click(x, y, ref picture.npcFlipped);
-            npcOffsetWheel.click(x, y, ref picture.npcOffsetX, ref picture.npcOffsetY);
+            //flipCheckbox.click(x, y, ref picture.npcFlipped);
+            //npcOffsetWheel.click(x, y, ref picture.npcOffsetX, ref picture.npcOffsetY);
             backgroundOffsetWheel.click(x, y, ref picture.background.offsetX, ref picture.background.offsetY);
-            switcher.click(x, y, ref picture);
+            //switcher.click(x, y, ref picture);
             preview.texture = picture.GetTexture();
         }
 
@@ -132,13 +133,18 @@ namespace DynamicNPCPaintings.UI
                 }
             }
         }
+
+        public void drawTileSizeText(SpriteBatch b)
+        {
+            Utility.drawTextWithShadow(b, $"{I18n.Menu_TileSize()}: {picture.frame.frameTexture.Width / 16}x{picture.frame.frameTexture.Height / 16}", Game1.smallFont, new Vector2(preview.bounds.X + 16, preview.bounds.Bottom + 150), Game1.textColor, 0.8f);
+        }
         public override void draw(SpriteBatch b)
         {
             b.Draw(Game1.fadeToBlackRect, Game1.graphics.GraphicsDevice.Viewport.Bounds, Color.Black * 0.75f);
             Game1.drawDialogueBox(xPositionOnScreen, yPositionOnScreen, width, height, false, true);
-            Utility.drawTextWithShadow(b, $"{I18n.Menu_TileSize()}: {picture.frame.frameTexture.Width / 16}x{picture.frame.frameTexture.Height / 16}", Game1.smallFont, new Vector2(preview.bounds.X + 16, preview.bounds.Bottom + 150), Game1.textColor, 0.8f);
-            string frameText = $"{picture.npcFrame + 1}/{picture.npcFrameAmount}";
-            Utility.drawTextWithShadow(b, frameText, Game1.smallFont, new Vector2((switcher.positionX + switcher.width / 2 - Game1.smallFont.MeasureString(frameText).X), switcher.positionY + 40), Game1.textColor, 0.8f);
+            drawTileSizeText(b);
+            //string frameText = $"{picture.npcFrame + 1}/{picture.npcFrameAmount}";
+            //Utility.drawTextWithShadow(b, frameText, Game1.smallFont, new Vector2((switcher.positionX + switcher.width / 2 - Game1.smallFont.MeasureString(frameText).X), switcher.positionY + 40), Game1.textColor, 0.8f);
             //Utility.drawTextWithShadow(b, "Frame", Game1.smallFont, new Vector2(increaseFrameArrow.bounds.X + 100, increaseFrameArrow.bounds.Y), Game1.textColor, 1.5f);
             npcListButton.draw(b);
             backgroundListButton.draw(b);
@@ -146,7 +152,7 @@ namespace DynamicNPCPaintings.UI
             exportButton.draw(b);
             //increaseFrameArrow.draw(b);
             preview.draw(b);
-            npcOffsetWheel.draw(b);
+            //npcOffsetWheel.draw(b);
             backgroundOffsetWheel.draw(b);
             flipCheckbox.draw(b);
             switcher.draw(b);

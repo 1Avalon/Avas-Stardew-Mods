@@ -1,4 +1,6 @@
-﻿using DynamicNPCPaintings.UI.UIElements;
+﻿using CustomNPCPaintings.Framework;
+using CustomNPCPaintings.UI;
+using DynamicNPCPaintings.UI.UIElements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -66,7 +68,7 @@ namespace DynamicNPCPaintings.UI
 
             this.customiser = customiser;
             UpdateNPCList(currentIndex);
-            exitFunction = () => { Game1.activeClickableMenu = this.customiser; };
+            exitFunction = () => { Game1.activeClickableMenu = new NPCModifierMenu(this.customiser); };
         }
 
         public void UpdateNPCList(int startIndex)
@@ -154,10 +156,9 @@ namespace DynamicNPCPaintings.UI
                 {
                     if (component.containsPoint(x, y))
                     {
-                        customiser.picture.target = component.npc;
-                        customiser.picture.npcFrame = 0;
+                        customiser.picture.characterLayers.Add(new CharacterLayer(component.npc, customiser.picture.background, 0));
                         customiser.UpdatePreview();
-                        Game1.activeClickableMenu = customiser;
+                        Game1.activeClickableMenu = new NPCModifierMenu(this.customiser);
                         return;
                     }
                 }

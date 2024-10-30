@@ -236,8 +236,8 @@ namespace DynamicNPCPaintings.UI
 
                         Frame targetFrame = frames[uniqueKey];
 
-                        if (customiser.picture.frame.spaceWidth != targetFrame.spaceWidth)
-                            customiser.picture.npcOffsetX = targetFrame.spaceWidth / 2 - 4;
+                        //if (customiser.picture.frame.spaceWidth != targetFrame.spaceWidth)
+                            //customiser.picture.npcOffsetX = targetFrame.spaceWidth / 2 - 4;
 
                         customiser.picture.frame = targetFrame;
 
