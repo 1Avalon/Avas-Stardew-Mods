@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using Microsoft.Xna.Framework.Graphics;
+using CustomNPCPaintings.Framework;
 
 namespace DynamicNPCPaintings.UI.UIElements
 {
     public class ClickableNPCComponent : ClickableTextureComponent
     {
-        public NPC npc;
+        public CharacterLayer layer;
 
         public OptionsButton npcListButton;
-        public ClickableNPCComponent(Rectangle bounds, NPC npc, Rectangle sourceRect, float scale) : base(bounds, null, sourceRect, scale)
+
+    public ClickableNPCComponent(Rectangle bounds, CharacterLayer layer, Rectangle sourceRect, float scale) : base(bounds, null, sourceRect, scale)
         {
-            this.npc = npc;
-            texture = TextureHelper.GetCharacterFrame(npc, 1);
+            this.layer = layer;
+            texture = TextureHelper.GetCharacterFrame(layer, 1);
         }
 
         public void CropTexture(Rectangle cropArea)

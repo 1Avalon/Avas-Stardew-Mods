@@ -18,7 +18,9 @@ namespace DynamicNPCPaintings.UI
 
         List<ClickableNPCComponent> NPCComponents = new List<ClickableNPCComponent>();
 
-        private static List<NPC> validNPCs;
+        private static List<NPC> npcs;
+
+        private static List<CharacterLayer> validNPCs;
 
         private string hoverText;
 
@@ -45,7 +47,16 @@ namespace DynamicNPCPaintings.UI
         private int currentScrollIndex;
         public SelectNPCMenu(Customiser customiser)
         {
-            validNPCs = ModEntry.Config.enableAllNPCs ? Utility.getAllCharacters().GroupBy(o => o.displayName).Select(g => g.First()).ToList() : Utility.getAllCharacters().Where(npc => npc.CanSocialize).ToList();
+            npcs = ModEntry.Config.enableAllNPCs ? Utility.getAllCharacters().GroupBy(o => o.displayName).Select(g => g.First()).ToList() : Utility.getAllCharacters().Where(npc => npc.CanSocialize).ToList();
+            validNPCs = new List<CharacterLayer>();
+
+            validNPCs.Add(new CharacterLayer(Game1.player, customiser.picture.background, 0));
+            
+
+            foreach (NPC npc in npcs)
+            {
+                validNPCs.Add(new CharacterLayer(npc, customiser.picture.background, 0));
+            }
 
             maxScrollDownIndex = (int)Math.Ceiling(validNPCs.Count / 14f - 8);
             if (maxScrollDownIndex < 0)
@@ -82,7 +93,7 @@ namespace DynamicNPCPaintings.UI
                 index++;
                 if (index <= startIndex)
                     continue;
-                int yOffset = TextureHelper.FindFirstNonTransparentPixelY(npc.Sprite.Texture);
+                int yOffset = TextureHelper.FindFirstNonTransparentPixelY(npc.Texture);
                 ClickableNPCComponent component = new ClickableNPCComponent(new Rectangle(startPositionX, startPositionY, 16 * npcScale, 16 * npcScale), npc, new Rectangle(0, yOffset, 16, 16), npcScale);
                 NPCComponents.Add(component);
                 startPositionX += 16 * npcScale;
@@ -105,7 +116,7 @@ namespace DynamicNPCPaintings.UI
             {
                 if (component.containsPoint(x, y))
                 {
-                    hoverText = component.npc.displayName;
+                    hoverText = component.layer.DisplayName;
                 }
             }
         }
@@ -156,7 +167,7 @@ namespace DynamicNPCPaintings.UI
                 {
                     if (component.containsPoint(x, y))
                     {
-                        customiser.picture.characterLayers.Add(new CharacterLayer(component.npc, customiser.picture.background, 0));
+                        customiser.picture.characterLayers.Add(component.layer);
                         customiser.UpdatePreview();
                         Game1.activeClickableMenu = new NPCModifierMenu(this.customiser);
                         return;
