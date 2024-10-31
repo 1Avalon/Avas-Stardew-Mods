@@ -33,6 +33,86 @@ namespace DynamicNPCPaintings
             ["festival_fall16"] = "Fair",
 
         };
+
+        public static Texture2D ScaleTexture(Texture2D originalTexture, float scale)
+        {
+            // Berechne die neue Breite und Höhe basierend auf dem Skalierungsfaktor
+            int newWidth = (int)(originalTexture.Width * scale);
+            int newHeight = (int)(originalTexture.Height * scale);
+
+            // Hole die Pixel-Daten der Original-Textur
+            Color[] originalData = new Color[originalTexture.Width * originalTexture.Height];
+            originalTexture.GetData(originalData);
+
+            // Erstelle ein neues Pixel-Array für die skalierten Pixel
+            Color[] newData = new Color[newWidth * newHeight];
+
+            // Schleife über jedes Pixel der neuen Textur
+            for (int y = 0; y < newHeight; y++)
+            {
+                for (int x = 0; x < newWidth; x++)
+                {
+                    // Berechne die Position im Originalbild
+                    int originalX = (int)(x / scale);
+                    int originalY = (int)(y / scale);
+
+                    // Hole den Farbwert vom Original und weise ihn der neuen Position zu
+                    newData[y * newWidth + x] = originalData[originalY * originalTexture.Width + originalX];
+                }
+            }
+
+            // Erstelle eine neue Texture2D mit den neuen Abmessungen und setze die skalierten Pixel-Daten
+            Texture2D scaledTexture = new Texture2D(Game1.graphics.GraphicsDevice, newWidth, newHeight);
+            scaledTexture.SetData(newData);
+
+            return scaledTexture;
+        }
+
+        public static Texture2D GetFarmerTexture()
+        {
+            // TODO Einfach zum draw hook moven das hier geht sonst nicht 
+
+            int w = Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
+            int h = Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+            //pull the picture from the buffer 
+            int[] backBuffer = new int[w * h];
+            Game1.graphics.GraphicsDevice.GetBackBufferData(backBuffer);
+
+            //copy into a texture 
+            Texture2D texture = new Texture2D(Game1.graphics.GraphicsDevice, w, h, false, Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferFormat);
+            texture.SetData(backBuffer);
+            Texture2D farmerWithBackground = CropTexture(texture, new Rectangle(250, 250, 64, 128));
+            Texture2D farmer = MakeColorTransparent(farmerWithBackground, new Color(0, 255, 0));
+            Texture2D scaledFarmer = ScaleTexture(farmer, 0.25f);
+            return scaledFarmer;
+        }
+
+        public static Texture2D MakeColorTransparent(Texture2D originalTexture, Color targetColor)
+        {
+            // Hole die Pixel-Daten der Original-Textur
+            GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
+            Color[] pixelData = new Color[originalTexture.Width * originalTexture.Height];
+            originalTexture.GetData(pixelData);
+
+            // Kopiere die Pixel-Daten und setze alle Pixel, die der Ziel-Farbe entsprechen, auf transparent
+            for (int i = 0; i < pixelData.Length; i++)
+            {
+                if (pixelData[i] == targetColor)
+                {
+                    pixelData[i] = Color.Transparent;
+                }
+            }
+
+            // Erstelle eine neue Texture2D mit denselben Dimensionen wie die Original-Textur
+            Texture2D newTexture = new Texture2D(graphicsDevice, originalTexture.Width, originalTexture.Height);
+
+            // Setze die modifizierten Pixel-Daten in die neue Textur
+            newTexture.SetData(pixelData);
+
+            // Gib die neue Textur zurück
+            return newTexture;
+        }
         public static Texture2D FlipTextureHorizontally(Texture2D originalTexture)
         {
             int width = originalTexture.Width;
@@ -86,22 +166,22 @@ namespace DynamicNPCPaintings
             // Wenn kein nicht-transparenter Pixel gefunden wird, gib -1 zurück
             return -1;
         }
-        public static Texture2D GetCharacterFrame(NPC npc, int frame, bool flipped = false)
+        public static Texture2D GetCharacterFrame(CharacterLayer layer, int frame, bool flipped = false)
         {
             Texture2D tex;
             try
             {
                 string eventId = Game1.CurrentEvent?.id;
                 string sheetName = CUTE_SEASONAL_CHARACTERS_FESTIVAL[eventId];
-                tex = ModEntry.instance.Helper.GameContent.Load<Texture2D>($"Characters/{npc.Name}_{sheetName}");
+                tex = ModEntry.instance.Helper.GameContent.Load<Texture2D>($"Characters/{layer.Name}_{sheetName}");
             }
             catch
             {
-                tex = npc.Sprite.Texture;
+                tex = layer.Texture;
             }
-            int xOffset = (frame % 4) * npc.Sprite.SpriteWidth;
-            int yOffset = frame / 4 * npc.Sprite.SpriteHeight;
-            Rectangle newBounds = new Rectangle(xOffset, yOffset, npc.Sprite.SpriteWidth, npc.Sprite.SpriteHeight);
+            int xOffset = (frame % 4) * layer.SpriteWidth;
+            int yOffset = frame / 4 * layer.SpriteHeight;
+            Rectangle newBounds = new Rectangle(xOffset, yOffset, layer.SpriteWidth, layer.SpriteHeight);
 
             Texture2D croppedTexture = new Texture2D(Game1.graphics.GraphicsDevice, newBounds.Width, newBounds.Height);
             Color[] data = new Color[newBounds.Width * newBounds.Height];
@@ -111,7 +191,7 @@ namespace DynamicNPCPaintings
             }
             catch 
             {
-                newBounds = new Rectangle(0, 0, npc.Sprite.SpriteWidth, npc.Sprite.SpriteHeight);
+                newBounds = new Rectangle(0, 0, layer.SpriteWidth, layer.SpriteHeight);
                 tex.GetData(0, newBounds, data, 0, newBounds.Width * newBounds.Height);
             }
             croppedTexture.SetData(data);
@@ -454,6 +534,67 @@ namespace DynamicNPCPaintings
             resultTexture.SetData(resultPixels);
 
             return resultTexture;
+        }
+        public static Texture2D CaptureArea(Rectangle area)
+        {
+            // Beschränke den Bereich auf den Backbuffer, falls er außerhalb liegt
+            GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
+            area = Rectangle.Intersect(area, new Rectangle(0, 0,
+                                   graphicsDevice.PresentationParameters.BackBufferWidth,
+                                   graphicsDevice.PresentationParameters.BackBufferHeight));
+
+            // Erstelle ein neues RenderTarget in der Größe des Bereichs
+            using (RenderTarget2D renderTarget = new RenderTarget2D(graphicsDevice, area.Width, area.Height))
+            {
+                // Setze das RenderTarget als Ziel für das Rendering
+                graphicsDevice.SetRenderTarget(renderTarget);
+                graphicsDevice.Clear(Color.Transparent);
+
+                // Erstelle einen SpriteBatch für das Rendering
+                using (SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice))
+                {
+                    spriteBatch.Begin();
+
+                    // Kopiere den Bereich aus dem Backbuffer ins RenderTarget
+                    spriteBatch.Draw(
+                        GetBackBufferAsTexture(), // Texturauszug des Backbuffers
+                        new Rectangle(0, 0, area.Width, area.Height), // Zielgröße (RenderTarget)
+                        area, // Quelle aus dem Backbuffer
+                        Color.White);
+
+                    spriteBatch.End();
+                }
+
+                // Setze das RenderTarget zurück
+                graphicsDevice.SetRenderTarget(null);
+
+                // Erstelle die Texture2D aus den RenderTarget-Daten
+                Texture2D screenshotTexture = new Texture2D(graphicsDevice, area.Width, area.Height);
+                Color[] data = new Color[area.Width * area.Height];
+                renderTarget.GetData(data);
+                screenshotTexture.SetData(data);
+
+                return screenshotTexture; // Rückgabe der aufgenommenen Texture2D
+            }
+        }
+
+        private static Texture2D GetBackBufferAsTexture()
+        {
+            // Erstelle Texture2D mit der Größe des Backbuffers
+            GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
+            Texture2D backBufferTexture = new Texture2D(graphicsDevice,
+                graphicsDevice.PresentationParameters.BackBufferWidth,
+                graphicsDevice.PresentationParameters.BackBufferHeight);
+
+            // Pixel-Daten vom Backbuffer abrufen
+            Color[] backBufferData = new Color[graphicsDevice.PresentationParameters.BackBufferWidth *
+                                               graphicsDevice.PresentationParameters.BackBufferHeight];
+            graphicsDevice.GetBackBufferData(backBufferData);
+
+            // Pixel-Daten in das Texture2D-Objekt setzen
+            backBufferTexture.SetData(backBufferData);
+
+            return backBufferTexture;
         }
     }
 }
