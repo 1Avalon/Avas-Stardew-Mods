@@ -15,6 +15,7 @@ using StardewValley.ItemTypeDefinitions;
 using StardewValley.Objects;
 using CustomNPCPaintings;
 using CustomNPCPaintings.Framework;
+using xTile.Layers;
 
 namespace DynamicNPCPaintings
 {
@@ -33,6 +34,81 @@ namespace DynamicNPCPaintings
             ["festival_fall16"] = "Fair",
 
         };
+        public static void RenderFarmer(SpriteBatch b, Farmer farmer, int frame, Vector2 position)
+        {
+            int xOffset = (frame % 6) * 16;
+            int yOffset = frame / 6 * 32;
+
+            int facingDirection = (frame / 6 + 2) % 4;
+
+            if (facingDirection == 3)
+                facingDirection = 1;
+
+            //Sheet is inconsistent and I have to do it manually... kms
+
+            switch (frame)
+            {
+                case 10:
+                case 16:
+                case 18:
+                case 19:
+                case 42:
+                case 74:
+                case 75:
+                case 78:
+                case 79:
+                case 107:
+                    facingDirection = 2;
+                    break;
+                case 11:
+                case 17:
+                case 20:
+                case 21:
+                case 60:
+                case 61:
+                case 72:
+                case 73:
+                case 89:
+                case 97:
+                case 101:
+                    facingDirection = 1;
+                    break;
+                case 22:
+                case 23:
+                case 44:
+                case 46:
+                case 53:
+                case 71:
+                case 76:
+                case 77:
+                case 82:
+                case 83:
+                    facingDirection = 0;
+                    break;
+            }
+
+            if (frame >= 24 && frame <= 29)
+                facingDirection = 2;
+
+            else if (frame >= 25 && frame <= 30) //zwischen 25 und 30
+                facingDirection = 1;
+            else if (frame >= 48 && frame <= 52) //zwischen 48 und 52
+                facingDirection = 1;
+            else if (frame >= 54 && frame <= 57) //zwischen 54 und 56
+                facingDirection = 2;
+            else if (frame >= 66 && frame <= 70)
+                facingDirection = 2;
+            else if (frame >= 84 && frame <= 88)
+                facingDirection = 2;
+            else if (frame >= 90 && frame <= 96)
+                facingDirection = 2;
+            else if (frame >= 102 && frame <= 105)
+                facingDirection = 2;
+
+            Rectangle sourceRect = new Rectangle(xOffset, yOffset, 16, 32);
+
+            farmer.FarmerRenderer.draw(b, new FarmerSprite.AnimationFrame(0, 0, secondaryArm: false, flip: false), frame, sourceRect, position, Vector2.Zero, 0.8f, facingDirection, Color.White, 0f, 1f, farmer);
+        }
 
         public static Texture2D ScaleTexture(Texture2D originalTexture, float scale)
         {
@@ -68,24 +144,24 @@ namespace DynamicNPCPaintings
             return scaledTexture;
         }
 
-        public static Texture2D GetFarmerTexture()
+        public static void InitFarmerSpriteSheet()
         {
-            // TODO Einfach zum draw hook moven das hier geht sonst nicht 
 
+            // TODO Einfach zum draw hook moven das hier geht sonst nicht 
             int w = Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
             int h = Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
 
-            //pull the picture from the buffer 
+            //pull the picture from the buffer
             int[] backBuffer = new int[w * h];
             Game1.graphics.GraphicsDevice.GetBackBufferData(backBuffer);
 
             //copy into a texture 
             Texture2D texture = new Texture2D(Game1.graphics.GraphicsDevice, w, h, false, Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferFormat);
             texture.SetData(backBuffer);
-            Texture2D farmerWithBackground = CropTexture(texture, new Rectangle(250, 250, 64, 128));
+            Texture2D farmerWithBackground = CropTexture(texture, new Rectangle(125, 125, 1408, (int)ModEntry.greenScreenRectangle.Y + 5));
             Texture2D farmer = MakeColorTransparent(farmerWithBackground, new Color(0, 255, 0));
             Texture2D scaledFarmer = ScaleTexture(farmer, 0.25f);
-            return scaledFarmer;
+            ModEntry.farmerSpriteSheet = scaledFarmer;
         }
 
         public static Texture2D MakeColorTransparent(Texture2D originalTexture, Color targetColor)
@@ -166,7 +242,7 @@ namespace DynamicNPCPaintings
             // Wenn kein nicht-transparenter Pixel gefunden wird, gib -1 zurück
             return -1;
         }
-        public static Texture2D GetCharacterFrame(CharacterLayer layer, int frame, bool flipped = false)
+        public static Texture2D GetCharacterFrame(CharacterLayer layer, int frame, int spritesPerRow, bool flipped = false)
         {
             Texture2D tex;
             try
@@ -179,8 +255,8 @@ namespace DynamicNPCPaintings
             {
                 tex = layer.Texture;
             }
-            int xOffset = (frame % 4) * layer.SpriteWidth;
-            int yOffset = frame / 4 * layer.SpriteHeight;
+            int xOffset = (frame % spritesPerRow) * layer.SpriteWidth;
+            int yOffset = frame / spritesPerRow * layer.SpriteHeight;
             Rectangle newBounds = new Rectangle(xOffset, yOffset, layer.SpriteWidth, layer.SpriteHeight);
 
             Texture2D croppedTexture = new Texture2D(Game1.graphics.GraphicsDevice, newBounds.Width, newBounds.Height);
