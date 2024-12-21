@@ -169,6 +169,7 @@ namespace DynamicNPCPaintings.UI
                     {
                         customiser.picture.characterLayers.Add(component.layer);
                         customiser.UpdatePreview();
+                        NPCModifierMenu.targetLayer = component.layer;
                         Game1.activeClickableMenu = new NPCModifierMenu(this.customiser);
                         return;
                     }
