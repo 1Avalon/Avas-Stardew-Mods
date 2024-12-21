@@ -23,7 +23,7 @@ namespace CustomNPCPaintings.Framework
                 if (target != null)
                     return (target.Sprite.Texture.Width / target.Sprite.SpriteWidth) * (target.Sprite.Texture.Height / target.Sprite.SpriteHeight);
 
-                return 0;
+                return 126;
             } }
 
         public int npcFrame;
@@ -43,7 +43,12 @@ namespace CustomNPCPaintings.Framework
         public int SpriteWidth { get => target == null ? 16 : target.Sprite.SpriteWidth; }
 
         public int SpriteHeight { get => target == null ? 32 : target.Sprite.SpriteHeight; }
-        public Texture2D Texture { get => target == null ? TextureHelper.GetFarmerTexture() : target.Sprite.Texture; }
+        public Texture2D Texture { get => target == null ? FarmerTexture : target.Sprite.Texture; }
+
+        private Texture2D FarmerTexture { get
+            {
+                return ModEntry.farmerSpriteSheet;
+            } }
 
         public CharacterLayer(Farmer farmer, DynamicNPCPaintings.Framework.Background background, int npcFrame) 
         {
