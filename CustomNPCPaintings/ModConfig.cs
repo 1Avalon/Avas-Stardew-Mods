@@ -14,5 +14,7 @@ namespace CustomNPCPaintings
         public bool enableAllNPCs = false;
 
         public bool exportPaintingsLocally = false;
+
+        public bool enableFarmerSprite = true;
     }
 }

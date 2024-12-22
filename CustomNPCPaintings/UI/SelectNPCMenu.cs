@@ -50,7 +50,8 @@ namespace DynamicNPCPaintings.UI
             npcs = ModEntry.Config.enableAllNPCs ? Utility.getAllCharacters().GroupBy(o => o.displayName).Select(g => g.First()).ToList() : Utility.getAllCharacters().Where(npc => npc.CanSocialize).ToList();
             validNPCs = new List<CharacterLayer>();
 
-            validNPCs.Add(new CharacterLayer(Game1.player, customiser.picture.background, 0));
+            if (ModEntry.Config.enableFarmerSprite)
+                validNPCs.Add(new CharacterLayer(Game1.player, customiser.picture.background, 0));
             
 
             foreach (NPC npc in npcs)

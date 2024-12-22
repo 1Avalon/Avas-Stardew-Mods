@@ -242,6 +242,14 @@ namespace DynamicNPCPaintings
                 getValue: () => Config.exportPaintingsLocally,
                 setValue: value => Config.exportPaintingsLocally = value
                 );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => I18n.Config_EnableFarmerSprites(),
+                tooltip: () => I18n.Config_EnableFarmerSpritesDescription(),
+                getValue: () => Config.enableFarmerSprite,
+                setValue: value => Config.enableFarmerSprite = value
+                );
         }
         private void OnWarped(object sender, WarpedEventArgs e)
         {
@@ -274,7 +282,7 @@ namespace DynamicNPCPaintings
                     button.draw(e.SpriteBatch);
                 e.SpriteBatch.Draw(Game1.mouseCursors, new Vector2(Game1.getMouseX(), Game1.getMouseY()), Game1.getSourceRectForStandardTileSheet(Game1.mouseCursors, 0, 16, 16), Color.White, 0f, Vector2.Zero, 4f + Game1.dialogueButtonScale / 150f, SpriteEffects.None, 1f);
             }
-            if (Game1.activeClickableMenu is NPCModifierMenu && snapCounter < 30)
+            if (Game1.activeClickableMenu is NPCModifierMenu && snapCounter < 30 && Config.enableFarmerSprite)
             {
                 Farmer farmer = Game1.player;
 
