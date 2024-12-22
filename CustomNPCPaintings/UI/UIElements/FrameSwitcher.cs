@@ -58,9 +58,17 @@ namespace DynamicNPCPaintings.UI.UIElements
         {
 
             if (arrowLeft.containsPoint(x, y) && layer.npcFrame  > 0)
+            {
+                Game1.playSound("smallSelect");
                 layer.npcFrame--;
+            }
+                
             else if (arrowRight.containsPoint(x, y) && layer.npcFrame < layer.npcFrameAmount -1)
+            {
+                Game1.playSound("smallSelect");
                 layer.npcFrame++;
+            }
+
         }
 
         public void click(int x, int y, ref int value, int min = 0, int max = 999)
