@@ -51,7 +51,7 @@ namespace DynamicNPCPaintings.UI
             previewTexture = picture.GetTexture();
             preview = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + 50, yPositionOnScreen + 120, 48, 32), previewTexture, new Rectangle(0, 0, 48, 32), 6f);
 
-            npcListButton = new Button(I18n.Menu_OpenNPCList(), delegate
+            npcListButton = new Button(I18n.Menu_Customize(), delegate
             {
                 Game1.playSound("dwop");
                 Game1.activeClickableMenu = new NPCModifierMenu(this);
@@ -82,14 +82,9 @@ namespace DynamicNPCPaintings.UI
             buttons = new List<Button>()
             { exportButton, frameListButton,  backgroundListButton, npcListButton};
 
-            npcOffsetWheel = new OffsetWheel(xPositionOnScreen + 100, yPositionOnScreen + 550, I18n.Menu_NPC(), 20, 3);
-            backgroundOffsetWheel = new OffsetWheel(npcOffsetWheel.positionX + 250, npcOffsetWheel.positionY, I18n.Menu_Background(), 20, 3);
+            backgroundOffsetWheel = new OffsetWheel(xPositionOnScreen + 125, yPositionOnScreen + 450, I18n.Menu_Background(), 20, 3);
 
             int arrowScale = 4;
-
-            switcher = new FrameSwitcher(I18n.Menu_NPCFrame(), xPositionOnScreen + 50 + 20, yPositionOnScreen + 350, 20, 4);
-
-            flipCheckbox = new Checkbox("Flip", new Rectangle(switcher.positionX + 8, switcher.positionY + 80, 36, 36), I18n.Menu_FlipNPC());
 
             upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
         }
@@ -154,8 +149,6 @@ namespace DynamicNPCPaintings.UI
             preview.draw(b);
             //npcOffsetWheel.draw(b);
             backgroundOffsetWheel.draw(b);
-            flipCheckbox.draw(b);
-            switcher.draw(b);
             upperRightCloseButton.draw(b);
             drawMouse(b);
         }
