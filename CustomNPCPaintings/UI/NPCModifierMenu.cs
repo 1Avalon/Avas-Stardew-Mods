@@ -106,6 +106,12 @@ namespace CustomNPCPaintings.UI
                 int yOffset = TextureHelper.FindFirstNonTransparentPixelY(layer.Texture);
                 npcComponents.Add(new ClickableNPCComponent(new Rectangle(npcComponentsStartX, npcComponentsStartY, npcScale * 16, npcScale * 16), layer, new Rectangle(0, yOffset, 16, 16), npcScale));
                 npcComponentsStartX += 16 * npcScale;
+
+                if (npcComponentsStartX > AddNPCButton.bounds.X - 16 * npcScale - 30)
+                {
+                    npcComponentsStartY += 16 * npcScale;
+                    npcComponentsStartX = customiser.preview.bounds.X + customiser.preview.bounds.Width * 5 + 64 + 30;
+                }
             }
         }
 
