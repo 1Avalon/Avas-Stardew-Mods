@@ -60,13 +60,13 @@ namespace CustomNPCPaintings.UI
                 targetLayer = customiser.picture.characterLayers[0];
             base.initialize(Game1.viewport.Width / 2 - width / 2, Game1.viewport.Height / 2 - height / 2, width, height);
             npcComponents = new List<ClickableNPCComponent>();
-            AddNPCButton = new Button("Add NPC", delegate
+            AddNPCButton = new Button(I18n.Menu_AddNPC(), delegate
             {
                 Game1.activeClickableMenu = new SelectNPCMenu(this.customiser);
             });
             AddNPCButton.setPosition(xPositionOnScreen + width - AddNPCButton.width - 64, yPositionOnScreen + 150);
 
-            RemoveNPCButton = new Button("Remove NPC", delegate
+            RemoveNPCButton = new Button(I18n.Menu_RemoveNPC(), delegate
             {
                 this.customiser.picture.characterLayers.Remove(targetLayer);
                 int layerAmount = customiser.picture.characterLayers.Count;
