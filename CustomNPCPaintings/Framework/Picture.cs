@@ -41,7 +41,7 @@ namespace DynamicNPCPaintings.Framework
             List<CharacterLayer> orderedLayerList = characterLayers.OrderBy(o => o.layer).ToList();
             foreach (CharacterLayer characterLayer in orderedLayerList)
             {
-                Texture2D characterTexture = TextureHelper.GetCharacterFrame(characterLayer, characterLayer.npcFrame, characterLayer.npcFlipped);
+                Texture2D characterTexture = TextureHelper.GetCharacterFrame(characterLayer, characterLayer.npcFrame, characterLayer.isFarmer ? 22 : 4, characterLayer.npcFlipped);
                 frameAndBackground = TextureHelper.DrawCharacterOnBackground(frameAndBackground, characterTexture, new Vector2(characterLayer.npcOffsetX, characterLayer.npcOffsetY), frame.startX, frame.startY, frame.endX, frame.endY);
             }
             return frameAndBackground;
