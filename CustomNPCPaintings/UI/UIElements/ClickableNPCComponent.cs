@@ -20,7 +20,7 @@ namespace DynamicNPCPaintings.UI.UIElements
     public ClickableNPCComponent(Rectangle bounds, CharacterLayer layer, Rectangle sourceRect, float scale) : base(bounds, null, sourceRect, scale)
         {
             this.layer = layer;
-            texture = TextureHelper.GetCharacterFrame(layer, 1);
+            texture = TextureHelper.GetCharacterFrame(layer, 1, 4);
         }
 
         public void CropTexture(Rectangle cropArea)
