@@ -26,7 +26,7 @@
 
   "DefaultFrame.WoodenFrame": "Wooden Frame",
 
-  "Menu.OpenNPCList": "Open NPC List",
+  "Menu.Customize": "Customize",
   "Menu.OpenBackgroundList": "Open Background List",
   "Menu.OpenFrameList": "Open Frame List",
   "Menu.Export": "Export",
@@ -36,6 +36,8 @@
   "Menu.NPCFrame": "NPC Frame",
   "Menu.TileSize": "Tile Size",
   "Menu.NPCPaintings": "NPC Paintings",
+  "Menu.AddNPC": "Add NPC",
+  "Menu.RemoveNPC": "Remove NPC",
 
   "Menu.Export.Painting": "Painting",
 
@@ -45,6 +47,8 @@
   "Config.EnableAllNPCsDescription": "Allows you to select any existing NPC (monsters, non socialiseable, ...)",
   "Config.ExportPaintingsLocally": "Export paintings locally",
   "Config.ExportPaintingsLocallyDescription": "Additionally, save your paintings locally in the mod folder",
+  "Config.EnableFarmerSprites": "Enable Farmer Sprite",
+  "Config.EnableFarmerSpritesDescription": "Adds the Farmer Sprite to the NPC options. The Farmer sprite sheet will appear for a short time when opening the customizer. This is an experimental feature.",
 
   "Misc.WarningMessageHappyHomeDesigner": "It seems like you're using Happy Home Designer. Custom NPC Paintings can't add the button to its menu. Please add a hotkey for opening the painting customizer. It can be opened when being in a location with a catalogue. This message will no longer appear after setting a hotkey."
 }

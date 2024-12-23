@@ -26,6 +26,7 @@
 
   "DefaultFrame.WoodenFrame": "Holzrahmen",
 
+  "Menu.Customize": "Anpassen",
   "Menu.OpenNPCList": "NPC Liste oeffnen",
   "Menu.OpenBackgroundList": "Hintergroende oeffnen",
   "Menu.OpenFrameList": "Rahmenliste oeffnen",
@@ -36,6 +37,8 @@
   "Menu.NPCFrame": "NPC Frame",
   "Menu.TileSize": "Kachelgroesse",
   "Menu.NPCPaintings": "NPC Gemaelde",
+  "Menu.AddNPC": "NPC Hinzufuegen",
+  "Menu.RemoveNPC": "NPC Entfernen",
 
   "Menu.Export.Painting": "Gemaelde",
 
