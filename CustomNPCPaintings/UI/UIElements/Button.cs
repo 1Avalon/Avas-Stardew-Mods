@@ -45,9 +45,10 @@ namespace DynamicNPCPaintings.UI.UIElements
 
         public void PerformHover(int x, int y)
         {
-            if (bounds.Contains(x, y))
+            if (this.containsPoint(x, y))
                 textColor = Color.White;
-            else textColor = Game1.textColor;
+            else 
+                textColor = Game1.textColor;
         }
         public override void draw(SpriteBatch b)
         {
