@@ -22,8 +22,9 @@ namespace DynamicNPCPaintings.UI.UIElements
             if (containsPoint(x, y))
             {
                 value = !value;
-                sourceRect.X = sourceRect.X == 227 ? 236 : 227;
+                //sourceRect.X = sourceRect.X == 227 ? 236 : 227;
             }
+            sourceRect.X = value == true ? 236 : 227;
         }
         public override void draw(SpriteBatch b)
         {
