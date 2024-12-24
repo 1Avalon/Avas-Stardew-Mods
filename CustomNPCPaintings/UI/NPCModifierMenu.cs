@@ -17,6 +17,7 @@ namespace CustomNPCPaintings.UI
 {
     public class NPCModifierMenu : IClickableMenu
     {
+        private string hoverText = "";
 
         private Customiser customiser;
 
@@ -150,9 +151,18 @@ namespace CustomNPCPaintings.UI
         public override void performHoverAction(int x, int y)
         {
             base.performHoverAction(x, y);
-            AddNPCButton.PerformHover(x, y);
-            RemoveNPCButton.PerformHover(x, y);
-            exportButton.PerformHover(x, y);
+            hoverText = "";
+            foreach (ClickableNPCComponent component in npcComponents)
+            {
+                if (component.containsPoint(x, y))
+                {
+                    hoverText = $"{component.layer.DisplayName}\n{I18n.Menu_NPCDescription()}";
+                }
+
+                AddNPCButton.PerformHover(x, y);
+                RemoveNPCButton.PerformHover(x, y);
+                exportButton.PerformHover(x, y);
+            }
         }
 
         public override void draw(SpriteBatch b)
@@ -182,6 +192,7 @@ namespace CustomNPCPaintings.UI
             string layerText = (targetLayer.layer + 1).ToString();
             Utility.drawTextWithShadow(b, layerText, Game1.smallFont, new Vector2((layerSwitcher.positionX + layerSwitcher.width / 2 - Game1.smallFont.MeasureString(layerText).X), layerSwitcher.positionY + 40), Game1.textColor, 0.8f);
             Utility.drawTextWithShadow(b, frameText, Game1.smallFont, new Vector2((switcher.positionX + switcher.width / 2 - Game1.smallFont.MeasureString(frameText).X), switcher.positionY + 40), Game1.textColor, 0.8f);
+            drawHoverText(b, hoverText, Game1.smallFont);
             drawMouse(b);
         }
     }
