@@ -1,0 +1,10 @@
+{
+  "Name": "More Save Information",
+  "Author": "AvalonMFX",
+  "Version": "1.0.0",
+  "Description": "Displays more information about the saves in the main menu",
+  "UniqueID": "AvalonMFX.MoreSaveInformation",
+  "EntryDll": "MoreSaveInformation.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
