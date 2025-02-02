@@ -35,5 +35,22 @@ namespace MoreSaveInformation
             // Wenn kein nicht-transparenter Pixel gefunden wird, gib -1 zurück
             return -1;
         }
+
+        public static Texture2D CropTexture(Texture2D texture, Rectangle cropArea)
+        {
+            // Erstellen eines Arrays, das die Pixel der zugeschnittenen Textur enthält
+            Color[] data = new Color[cropArea.Width * cropArea.Height];
+
+            // Auslesen der Pixel aus der Ursprungs-Textur
+            texture.GetData(0, cropArea, data, 0, data.Length);
+
+            // Erstellen einer neuen Textur für das zugeschnittene Bild
+            Texture2D croppedTexture = new Texture2D(texture.GraphicsDevice, cropArea.Width, cropArea.Height);
+
+            // Setzen der Pixel auf die neue Textur
+            croppedTexture.SetData(data);
+
+            return croppedTexture;
+        }
     }
 }
