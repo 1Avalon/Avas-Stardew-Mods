@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.BellsAndWhistles;
+using StardewValley.Characters;
+using StardewValley.GameData.Pets;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
@@ -71,6 +73,20 @@ namespace MoreSaveInformation
 
             b.Draw(petTexture, npcHeadPosition + new Vector2 (3 * 16, 0), sourceRect, Color.White, 0, Vector2.Zero, 3f, SpriteEffects.None, 6f);
 
+        }
+
+        public static void DrawAchievementCompletion(Farmer farmer, LoadGameMenu menu, SpriteBatch b, int i)
+        {
+            int completedAchievemnts = farmer.achievements.Count;
+
+            int nameWidth = SpriteText.getWidthOfString(farmer.Name);
+
+            Vector2 pos = new Vector2(menu.slotButtons[i].bounds.X + 128 + 36 + nameWidth + 20, menu.slotButtons[i].bounds.Y + 36) + new Vector2(3 * 16, 0) + new Vector2(3 * 16, 5);
+            b.Draw(Game1.mouseCursors, pos, new Rectangle(294, 392, 16, 16), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 6f);
+
+            string text = $"{completedAchievemnts}/{Game1.achievements.Count}";
+            float textCenter = Game1.smallFont.MeasureString(text).X / 2f * 0.7f;
+            b.DrawString(Game1.smallFont, $"{completedAchievemnts}/{Game1.achievements.Count}", new Vector2((int)pos.X + 16 - textCenter, (int)pos.Y + 30), Color.Black, 0f, Vector2.Zero, 0.7f, SpriteEffects.None, 6f);
         }
         public static void Postfix_DrawSaveFileSlot(SaveFileSlot __instance, SpriteBatch b, int i)
         {
