@@ -1,0 +1,10 @@
+{
+  "Name": "Prismatic Quality",
+  "Author": "AvalonMFX",
+  "Version": "1.0.0",
+  "Description": "Adds a new quality to the game. Better than Iridium",
+  "UniqueID": "AvalonMFX.PrismaticQuality",
+  "EntryDll": "PrismaticQuality.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
