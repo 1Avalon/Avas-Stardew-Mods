@@ -30,7 +30,13 @@ namespace PrismaticQuality
 
         public static void Prefix_addItemToInventory(ref Item item, bool makeActiveObject = false)
         {
-            if (item.Quality == 0)
+            if (item is null) 
+                return;
+
+            if (item.HasBeenInInventory)
+                return;
+
+            if (item.Quality == 4 && Game1.random.NextDouble() >= 0.5f)
                 item.Quality = 5;
         }
 
