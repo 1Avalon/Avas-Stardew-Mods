@@ -6,5 +6,5 @@
   "UniqueID": "AvalonMFX.PrismaticQuality",
   "EntryDll": "PrismaticQuality.dll",
   "MinimumApiVersion": "4.0.0",
-  "UpdateKeys": []
+  "UpdateKeys": [ "Nexus:32512" ]
 }
