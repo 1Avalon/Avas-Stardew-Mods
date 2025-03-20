@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +21,6 @@ namespace PrismaticQuality
             {
                 __result = 5;
             }
-        }
-
-        public static void Prefix_createItemDebris(ref Item item, Vector2 pixelOrigin, int direction, GameLocation location = null, int groundLevel = -1, bool flopFish = false)
-        {
-            if (item.Quality == 0)
-                item.Quality = 5;
         }
 
         public static void Prefix_addItemToInventory(ref Item item, bool makeActiveObject = false)

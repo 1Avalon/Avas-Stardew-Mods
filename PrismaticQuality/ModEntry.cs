@@ -44,11 +44,6 @@ namespace PrismaticQuality
             );
 
             harmony.Patch(
-                original: AccessTools.Method(typeof(Game1), nameof(Game1.createItemDebris)),
-                prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_createItemDebris))
-            );
-
-            harmony.Patch(
                 original: AccessTools.Method(typeof(Farmer), nameof(Farmer.addItemToInventoryBool)),
                 prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_addItemToInventory))
             );
