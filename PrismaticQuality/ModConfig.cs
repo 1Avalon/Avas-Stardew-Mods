@@ -8,6 +8,6 @@ namespace PrismaticQuality
 {
     public class ModConfig
     {
-        public bool AlwaysPrismaticForage { get; set; } = true;
+        public bool AlwaysPrismaticForage { get; set; } = false;
     }
 }
