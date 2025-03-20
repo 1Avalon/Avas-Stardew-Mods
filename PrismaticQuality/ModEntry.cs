@@ -24,6 +24,8 @@ namespace PrismaticQuality
         public static Mod instance;
 
         public static List<Item> flaggedIridiumItems;
+
+        public static ModConfig Config;
         public override void Entry(IModHelper helper)
         {
             instance = this;
@@ -33,6 +35,10 @@ namespace PrismaticQuality
             Helper.Events.World.DebrisListChanged += OnDebrisListChanged;
 
             Helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
+
+            Helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+
+            Config = Helper.ReadConfig<ModConfig>();
 
             Harmony harmony = new Harmony(this.ModManifest.UniqueID);
 
@@ -44,6 +50,11 @@ namespace PrismaticQuality
             harmony.Patch(
                 original: AccessTools.Method(typeof(Farmer), nameof(Farmer.addItemToInventoryBool)),
                 prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_addItemToInventory))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.GetHarvestSpawnedObjectQuality)),
+                postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_GetHarvestObjectQuality))
             );
         }
 
@@ -71,11 +82,28 @@ namespace PrismaticQuality
             }
         }
 
-        /*********
-        ** Private methods
-        *********/
-        /// <summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event data.</param>
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            // get Generic Mod Config Menu's API (if it's installed)
+            var configMenu = this.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+            if (configMenu is null)
+                return;
+
+            // register mod
+            configMenu.Register(
+                mod: this.ModManifest,
+                reset: () => Config = new ModConfig(),
+                save: () => this.Helper.WriteConfig(Config)
+            );
+
+            // add some config options
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Prismatic for Botanist",
+                tooltip: () => "Makes every item affected by the Botanist profession prismatic",
+                getValue: () => Config.AlwaysPrismaticForage,
+                setValue: value => Config.AlwaysPrismaticForage = value
+            );
+        }
     }
 }
