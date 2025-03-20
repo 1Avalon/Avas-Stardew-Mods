@@ -34,11 +34,6 @@ namespace PrismaticQuality
             Harmony harmony = new Harmony(this.ModManifest.UniqueID);
 
             harmony.Patch(
-                original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.GetHarvestSpawnedObjectQuality)),
-                postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_GetHarvestObjectQuality))
-            );
-
-            harmony.Patch(
                 original: AccessTools.Method(typeof(Item), nameof(Item.DrawMenuIcons)),
                 postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.DrawIconsMenu_Postfix))
             );

@@ -15,13 +15,6 @@ namespace PrismaticQuality
 {
     public static class Patches
     {
-        public static void Postfix_GetHarvestObjectQuality(GameLocation __instance, ref int __result, Farmer who, bool isForage, Vector2 tile, Random random = null)
-        {
-            if (who.professions.Contains(16) && isForage)
-            {
-                __result = 5;
-            }
-        }
 
         public static void Prefix_addItemToInventory(ref Item item, bool makeActiveObject = false)
         {
