@@ -27,8 +27,6 @@ namespace PrismaticQuality
         {
             instance = this;
 
-            helper.Events.Display.Rendered += this.OnRendered;
-
             PrismaticStarTexture = Helper.ModContent.Load<Texture2D>("assets/PrismaticStarTexture.png");
 
             Harmony harmony = new Harmony(this.ModManifest.UniqueID);
@@ -51,9 +49,5 @@ namespace PrismaticQuality
         /// <summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        private void OnRendered(object sender, RenderedEventArgs e)
-        {
-            e.SpriteBatch.Draw(PrismaticStarTexture, new Rectangle(0, 0, 8, 8), Color.White);
-        }
     }
 }
