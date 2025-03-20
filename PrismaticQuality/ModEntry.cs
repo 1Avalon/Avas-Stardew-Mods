@@ -23,11 +23,16 @@ namespace PrismaticQuality
 
         public static Mod instance;
 
+        public static List<Item> flaggedIridiumItems;
         public override void Entry(IModHelper helper)
         {
             instance = this;
 
             PrismaticStarTexture = Helper.ModContent.Load<Texture2D>("assets/PrismaticStarTexture.png");
+
+            Helper.Events.World.DebrisListChanged += OnDebrisListChanged;
+
+            Helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
 
             Harmony harmony = new Harmony(this.ModManifest.UniqueID);
 
@@ -42,6 +47,29 @@ namespace PrismaticQuality
             );
         }
 
+        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        {
+            flaggedIridiumItems = new List<Item>();
+        }
+        private void OnDebrisListChanged(object sender, DebrisListChangedEventArgs e)
+        {
+            if (!Context.IsMultiplayer)
+                return;
+
+            foreach (Debris debris in e.Added)
+            {
+                if (debris.DroppedByPlayerID.Value == 0)
+                    continue;
+
+                long authorId = debris.DroppedByPlayerID.Value;
+
+                if (authorId == Game1.player.UniqueMultiplayerID)
+                    continue;
+
+                Item item = debris.item;
+                flaggedIridiumItems.Add(item);
+            }
+        }
 
         /*********
         ** Private methods

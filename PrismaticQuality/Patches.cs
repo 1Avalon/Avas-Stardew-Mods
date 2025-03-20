@@ -24,6 +24,12 @@ namespace PrismaticQuality
             if (item.HasBeenInInventory)
                 return;
 
+            if(ModEntry.flaggedIridiumItems.Contains(item))
+            {
+                ModEntry.flaggedIridiumItems.Remove(item);
+                return; //executes original function -> will be marked as HasBeenInInventory; setting it to true here could result in unforeseen consequences
+            }
+
             if (item.Quality == 4 && Game1.random.NextDouble() >= 0.5f)
                 item.Quality = 5;
         }
