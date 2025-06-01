@@ -56,7 +56,8 @@ namespace DynamicNPCPaintings.UI
             int width = 960;
             int height = 720;
             this.customiser = customiser;
-            base.initialize(Game1.viewport.Width / 2 - width / 2, Game1.viewport.Height / 2 - height / 2, width, height);
+            Vector2 center = Utility.getTopLeftPositionForCenteringOnScreen(width, height);
+            base.initialize((int)center.X, (int)center.Y, width, height);
             backgroundScale = 4;
             keepAddingToElementsInRow = true;
             rowIndex = 0;

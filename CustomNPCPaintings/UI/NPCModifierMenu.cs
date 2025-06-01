@@ -53,13 +53,16 @@ namespace CustomNPCPaintings.UI
         {
             int width = 960;
             int height = 720;
+
+            Vector2 center = Utility.getTopLeftPositionForCenteringOnScreen(width, height);
+
             this.customiser = customiser;
             npcComponentsStartX = customiser.preview.bounds.X + customiser.preview.bounds.Width * 5 + 64 + 30;
             npcComponentsStartY = customiser.preview.bounds.Y;
 
             if (customiser.picture.characterLayers.Count == 1)
                 targetLayer = customiser.picture.characterLayers[0];
-            base.initialize(Game1.viewport.Width / 2 - width / 2, Game1.viewport.Height / 2 - height / 2, width, height);
+            base.initialize((int)center.X, (int)center.Y, width, height);
             npcComponents = new List<ClickableNPCComponent>();
             AddNPCButton = new Button(I18n.Menu_AddNPC(), delegate
             {
