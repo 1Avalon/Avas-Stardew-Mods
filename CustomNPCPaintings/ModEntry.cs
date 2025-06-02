@@ -287,28 +287,30 @@ namespace DynamicNPCPaintings
                 Farmer farmer = Game1.player;
 
                 if (greenScreenRectangle.X != 0)
-                    e.SpriteBatch.Draw(Game1.staminaRect, new Rectangle(125, 125, 1408, (int)greenScreenRectangle.Y + 5), new Color(0, 255, 0));
+                    e.SpriteBatch.Draw(Game1.staminaRect, new Rectangle((int)(125 / Game1.options.uiScale), (int)(125 / Game1.options.uiScale), 1408, (int)((greenScreenRectangle.Y + 5) / Game1.options.uiScale)), new Color(0, 255, 0));
+
+                int maxWidth = (int) (1533 / Game1.options.uiScale);
 
                 for (int i = 0; i < 126; i++)
                 {
-                    if (farmerOffset.X >= 1533)
+                    if (farmerOffset.X >= 1533 * Game1.options.uiScale)
                     {
-                        farmerOffset.Y += 128;
+                        farmerOffset.Y += 128 * Game1.options.uiScale;
                         farmerOffset.X = 125;
                     }
 
                     if (i == 101)
                     {
-                        TextureHelper.RenderFarmer(e.SpriteBatch, farmer, i, new Vector2(farmerOffset.X - 15, farmerOffset.Y));
-                        farmerOffset.X += 64;
+                        TextureHelper.RenderFarmer(e.SpriteBatch, farmer, i, new Vector2((int)((farmerOffset.X - 15) / Game1.options.uiScale), (int)(farmerOffset.Y / Game1.options.uiScale)));
+                        farmerOffset.X += 64 * Game1.options.uiScale;
                         continue;
                     }
 
-                    TextureHelper.RenderFarmer(e.SpriteBatch, farmer, i, farmerOffset);
-                    farmerOffset.X += 64;
+                    TextureHelper.RenderFarmer(e.SpriteBatch, farmer, i, new Vector2((int)(farmerOffset.X / Game1.options.uiScale), (int)(farmerOffset.Y / Game1.options.uiScale)));
+                    farmerOffset.X += 64 * Game1.options.uiScale; //das ist für die screenshot area, also nicht anfassen
                 }
                 snapCounter++;
-                greenScreenRectangle = new Vector2(farmerOffset.X, farmerOffset.Y);
+                greenScreenRectangle = new Vector2(farmerOffset.X * Game1.options.uiScale, farmerOffset.Y);
                 farmerOffset = new Vector2(125, 125);
                 /*
                 if (NPCModifierMenu.targetLayer.isFarmer)

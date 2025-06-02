@@ -160,7 +160,7 @@ namespace DynamicNPCPaintings
             texture.SetData(backBuffer);
             Texture2D farmerWithBackground = CropTexture(texture, new Rectangle(125, 125, 1408, (int)ModEntry.greenScreenRectangle.Y + 5));
             Texture2D farmer = MakeColorTransparent(farmerWithBackground, new Color(0, 255, 0));
-            Texture2D scaledFarmer = ScaleTexture(farmer, 0.25f);
+            Texture2D scaledFarmer = ScaleTexture(farmer, 0.25f / Game1.options.uiScale);
             ModEntry.farmerSpriteSheet = scaledFarmer;
         }
 
