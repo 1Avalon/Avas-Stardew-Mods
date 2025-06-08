@@ -1,0 +1,15 @@
+{
+  "frames.wooden_frame": "Cadre en bois",
+  "frames.darK_frame": "Cadre sombre",
+  "frames.canvas": "Toile",
+  "frames.long_wooden_frame": "Cadre en bois long",
+  "frames.long_dark_frame": "Cadre sombre long",
+  "frames.silver_frame": "Cadre en argent",
+  "frames.old_wooden_frame": "Ancien cadre en bois",
+  "frames.vertical_wooden_frame": "Cadre en bois vertical",
+  "frames.vertical_dark_frame": "Cadre sombre vertical",
+  "frames.thick_wooden_frame": "Cadre en bois épais",
+
+  "backgrounds.cloudy_sky": "Ciel nuageux",
+  "backgrounds.spooky_pumpkin": "Citrouille effrayante"
+}
