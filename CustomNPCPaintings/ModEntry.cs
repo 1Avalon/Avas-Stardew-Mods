@@ -345,7 +345,7 @@ namespace DynamicNPCPaintings
 
             if (button != null && button.active)
             {
-                if (button.bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
+                if (button.bounds.Contains(Game1.getMouseX() * Game1.options.zoomLevel / Game1.options.uiScale, Game1.getMouseY() * Game1.options.zoomLevel / Game1.options.uiScale))
                     button.CallEvent();
                     
             }
