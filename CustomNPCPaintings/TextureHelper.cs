@@ -159,35 +159,38 @@ namespace DynamicNPCPaintings
             Texture2D texture = new Texture2D(Game1.graphics.GraphicsDevice, w, h, false, Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferFormat);
             texture.SetData(backBuffer);
             Texture2D farmerWithBackground = CropTexture(texture, new Rectangle(125, 125, 1408, (int)ModEntry.greenScreenRectangle.Y + 5));
-            Texture2D farmer = MakeColorTransparent(farmerWithBackground, new Color(0, 255, 0));
+            Texture2D farmer = MakeColorTransparent(farmerWithBackground, new Color(0, 255, 0), 5);
             Texture2D scaledFarmer = ScaleTexture(farmer, 0.25f / Game1.options.uiScale);
             ModEntry.farmerSpriteSheet = scaledFarmer;
         }
 
-        public static Texture2D MakeColorTransparent(Texture2D originalTexture, Color targetColor)
+        public static Texture2D MakeColorTransparent(Texture2D originalTexture, Color targetColor, int tolerance)
         {
-            // Hole die Pixel-Daten der Original-Textur
             GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
             Color[] pixelData = new Color[originalTexture.Width * originalTexture.Height];
             originalTexture.GetData(pixelData);
 
-            // Kopiere die Pixel-Daten und setze alle Pixel, die der Ziel-Farbe entsprechen, auf transparent
             for (int i = 0; i < pixelData.Length; i++)
             {
-                if (pixelData[i] == targetColor)
+                Color pixel = pixelData[i];
+
+                // Prüfe, ob der Pixel innerhalb der Toleranz liegt
+                if (IsColorWithinTolerance(pixel, targetColor, tolerance))
                 {
                     pixelData[i] = Color.Transparent;
                 }
             }
 
-            // Erstelle eine neue Texture2D mit denselben Dimensionen wie die Original-Textur
             Texture2D newTexture = new Texture2D(graphicsDevice, originalTexture.Width, originalTexture.Height);
-
-            // Setze die modifizierten Pixel-Daten in die neue Textur
             newTexture.SetData(pixelData);
-
-            // Gib die neue Textur zurück
             return newTexture;
+        }
+
+        private static bool IsColorWithinTolerance(Color c1, Color c2, int tolerance)
+        {
+            return Math.Abs(c1.R - c2.R) <= tolerance &&
+                   Math.Abs(c1.G - c2.G) <= tolerance &&
+                   Math.Abs(c1.B - c2.B) <= tolerance;
         }
         public static Texture2D FlipTextureHorizontally(Texture2D originalTexture)
         {
