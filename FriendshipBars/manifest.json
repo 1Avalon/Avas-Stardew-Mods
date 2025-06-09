@@ -1,0 +1,10 @@
+{
+  "Name": "Friendship Bars",
+  "Author": "AvalonMFX",
+  "Version": "1.0.0",
+  "Description": "Adds bars to NPCs showing the progress needed for the next heart",
+  "UniqueID": "AvalonMFX.FriendshipBars",
+  "EntryDll": "FriendshipBars.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
