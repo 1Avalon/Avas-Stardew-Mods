@@ -36,6 +36,11 @@ namespace FriendshipBars
                 postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_updateSlots))
                 );
 
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SocialPage), nameof(SocialPage.performHoverAction)),
+                postfix: new HarmonyMethod(typeof(Patches), nameof(Patches.Postfix_performHoverAction))
+                );
+
 
             progressBar = Helper.ModContent.Load<Texture2D>("assets\\progress_bar.png");
         }

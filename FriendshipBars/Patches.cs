@@ -10,16 +10,20 @@ namespace FriendshipBars
     {
         private static Texture2D rectText;
 
-        private static List<ClickableTextureComponent> progressBars = new List<ClickableTextureComponent>();
+        private static Dictionary<SocialEntryWrapper, ClickableTextureComponent> progressLinks = new Dictionary<SocialEntryWrapper, ClickableTextureComponent>();
         public static void Postfix_drawNPCSlot(SocialPage __instance, SpriteBatch b, int i)
         {
-            SocialEntry entry = __instance.GetSocialEntry(i);
+            SocialEntryWrapper wrapper = null;
 
-            if (entry.Friendship == null)
-                return;
-
-            float currentPoints = entry.Friendship.Points % 250;
-            float requiredPoints = 250;
+            foreach (var kvp in progressLinks)
+            {
+                SocialEntry entry = __instance.GetSocialEntry(i);
+                if (entry == kvp.Key.entry)
+                {
+                    wrapper = kvp.Key;
+                    break;
+                }
+            }
 
             if (rectText ==  null)
             {
@@ -28,27 +32,39 @@ namespace FriendshipBars
             }
             //b.Draw(ModEntry.progressBar, new Vector2(__instance.xPositionOnScreen + 320 - 4 + 32 * 5 - 46, __instance.sprites[i].bounds.Y), null, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 5f);
 
-            progressBars[i].draw(b);
+            progressLinks[wrapper].draw(b);
 
-            float completion = currentPoints / requiredPoints;
-
-            int progressBarWidth = (int)Math.Floor(completion * 42 * 2);
+            int progressBarWidth = (int)Math.Floor(wrapper.Completion * 42 * 2);
 
             b.Draw(rectText, new Rectangle(__instance.xPositionOnScreen + 320 - 4 + 32 * 5 - 46 + 4, __instance.sprites[i].bounds.Y + 4, progressBarWidth, 16), Color.White);
         }
 
+        public static void Postfix_performHoverAction(SocialPage __instance, int x, int y)
+        {
+            foreach (var kvp in progressLinks)
+            {
+                if (kvp.Value.containsPoint(x, y))
+                {
+                    __instance.hoverText = $"Current Points: {kvp.Key.TotalProgressPoints}\nRequired for next heart: {250 - kvp.Key.CurrentProgressPoints}\nCompletion: {kvp.Key.Completion * 100}% ";
+                }
+            }
+        }
+
         public static void Postfix_updateSlots(SocialPage __instance)
         {
-            progressBars = new List<ClickableTextureComponent>();
+            progressLinks = new Dictionary<SocialEntryWrapper, ClickableTextureComponent> ();
             for (int i = 0; i < __instance.SocialEntries.Count; i++)
             {
-                ClickableTextureComponent component = new ClickableTextureComponent(new Rectangle(__instance.xPositionOnScreen + 320 - 4 + 32 * 5 - 46, __instance.sprites[i].bounds.Y, 0, __instance.rowPosition(1) - __instance.rowPosition(0)), ModEntry.progressBar, new Rectangle(0, 0, 46, 12), 2f)
+                ClickableTextureComponent component = new ClickableTextureComponent(new Rectangle(__instance.xPositionOnScreen + 320 - 4 + 32 * 5 - 46, __instance.sprites[i].bounds.Y, 46 * 2, 12 * 2), ModEntry.progressBar, new Rectangle(0, 0, 46, 12), 2f)
                 {
                     myID = i,
                     downNeighborID = i + 1,
-                    upNeighborID = i - 1
+                    upNeighborID = i - 1,
                 };
-                progressBars.Add(component);
+
+                SocialEntryWrapper entry = new SocialEntryWrapper(__instance.GetSocialEntry(i));
+
+                progressLinks.Add(entry, component);
             }
         }
     }
