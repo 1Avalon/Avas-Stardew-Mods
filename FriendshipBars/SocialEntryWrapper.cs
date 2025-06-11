@@ -55,7 +55,7 @@ namespace FriendshipBars
                 s += $"Required for next heart: { RequiredForNextHeart - CurrentProgressPoints}\n";
 
             if (c.CompletionHover)
-                s += $"Completion: {Completion * 100}%\n";
+                s += $"Completion: {(Completion * 100).ToString("0.0")}%\n";
 
             return s.Substring(0, s.Length - 1);
         }
