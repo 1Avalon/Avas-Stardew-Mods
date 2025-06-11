@@ -13,6 +13,10 @@ namespace FriendshipBars
         private static Dictionary<SocialEntryWrapper, ClickableTextureComponent> progressLinks = new Dictionary<SocialEntryWrapper, ClickableTextureComponent>();
         public static void Postfix_drawNPCSlot(SocialPage __instance, SpriteBatch b, int i)
         {
+
+            if (!ModEntry.Config.Enabled)
+                return;
+
             SocialEntryWrapper wrapper = null;
 
             foreach (var kvp in progressLinks)
@@ -45,7 +49,7 @@ namespace FriendshipBars
             {
                 if (kvp.Value.containsPoint(x, y))
                 {
-                    __instance.hoverText = $"Current Points: {kvp.Key.TotalProgressPoints}\nRequired for next heart: {250 - kvp.Key.CurrentProgressPoints}\nCompletion: {kvp.Key.Completion * 100}% ";
+                    __instance.hoverText = kvp.Key.HoverText;
                 }
             }
         }

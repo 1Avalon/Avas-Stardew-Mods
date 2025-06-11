@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static StardewValley.Menus.SocialPage;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FriendshipBars
 {
@@ -20,6 +21,8 @@ namespace FriendshipBars
         public const int RequiredForNextHeart = 250;
 
         public float Completion;
+
+        public string HoverText;
         public SocialEntryWrapper(SocialEntry e) 
         {
             entry = e;
@@ -36,6 +39,25 @@ namespace FriendshipBars
             }
 
             Completion = (float) CurrentProgressPoints / (float) RequiredForNextHeart;
+            HoverText = getHoverText();
+        }
+
+        private string getHoverText()
+        {
+            ModConfig c = ModEntry.Config;
+
+            string s = "";
+
+            if (c.CurrentPointsHover)
+                s += $"Current Points: {TotalProgressPoints}\n";
+
+            if (c.RequiredPointsHover)
+                s += $"Required for next heart: { RequiredForNextHeart - CurrentProgressPoints}\n";
+
+            if (c.CompletionHover)
+                s += $"Completion: {Completion * 100}%\n";
+
+            return s.Substring(0, s.Length - 1);
         }
     }
 }
