@@ -6,5 +6,5 @@
   "UniqueID": "AvalonMFX.FriendshipBars",
   "EntryDll": "FriendshipBars.dll",
   "MinimumApiVersion": "4.0.0",
-  "UpdateKeys": []
+  "UpdateKeys": [ "Nexus:34774" ]
 }
