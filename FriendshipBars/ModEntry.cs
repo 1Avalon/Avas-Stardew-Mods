@@ -48,6 +48,8 @@ namespace FriendshipBars
 
             Helper.Events.GameLoop.GameLaunched += OnGameLaunched;
 
+            I18n.Init(helper.Translation);
+
 
             progressBar = Helper.ModContent.Load<Texture2D>("assets\\progress_bar.png");
         }
@@ -69,37 +71,37 @@ namespace FriendshipBars
             // add some config options
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Enabled",
-                tooltip: () => "Enable or disable the bars",
+                name: () => I18n.Config_Enabled(),
+                tooltip: () => I18n.Config_Enabled_Description(),
                 getValue: () => Config.Enabled,
                 setValue: value => Config.Enabled = value
             );
 
             configMenu.AddSectionTitle(
                 mod: this.ModManifest,
-                text: () => "Hover Settings"
+                text: () => I18n.Config_HoverSettings()
             );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Show Current Points",
-                tooltip: () => "Shows your current Points",
+                name: () => I18n.Config_CurrentPoints(),
+                tooltip: () => I18n.Config_CurrentPoints_Description(),
                 getValue: () => Config.CurrentPointsHover,
                 setValue: value => Config.CurrentPointsHover = value
             );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Show Required Points",
-                tooltip: () => "Shows Points required for the next Heart",
+                name: () => I18n.Config_ShowRequiredPoints(),
+                tooltip: () => I18n.Config_ShowRequiredPoints_Description(),
                 getValue: () => Config.RequiredPointsHover,
                 setValue: value => Config.RequiredPointsHover = value
             );
 
             configMenu.AddBoolOption(
                 mod: this.ModManifest,
-                name: () => "Show Completion",
-                tooltip: () => "Shows the Progress for the next heart in %",
+                name: () => I18n.Config_ShowCompletion(),
+                tooltip: () => I18n.Config_ShowCompletion_Description(),
                 getValue: () => Config.CompletionHover,
                 setValue: value => Config.CompletionHover = value
             );

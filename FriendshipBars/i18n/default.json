@@ -1,0 +1,16 @@
+{
+  "Config.Enabled": "Enabled",
+  "Config.Enabled.Description": "Enable or disable the bars",
+  "Config.HoverSettings": "Hover Settings",
+  "Config.CurrentPoints": "Show Current Points",
+  "Config.CurrentPoints.Description": "Shows your current Points",
+  "Config.ShowRequiredPoints": "Show Required Points",
+  "Config.ShowRequiredPoints.Description": "Shows Points required for the next Heart",
+  "Config.ShowCompletion": "Show Completion",
+  "Config.ShowCompletion.Description": "Shows the Progress for the next heart in %",
+
+  "Display.CurrentPoints": "Current Points: {{Points}}",
+  "Display.ForNextHeart": "Required for next Heart: {{Points}}",
+  "Display.Completion": "Completion: {{Progress}}"
+
+}

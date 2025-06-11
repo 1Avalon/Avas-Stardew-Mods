@@ -1,0 +1,16 @@
+{
+  "Config.Enabled": "Aktiviert",
+  "Config.Enabled.Description": "Balken de- oder aktivieren",
+  "Config.HoverSettings": "Hover-Einstellungen",
+  "Config.CurrentPoints": "Aktuelle Punkte",
+  "Config.CurrentPoints.Description": "Zeigt die aktuellen Punkte an",
+  "Config.ShowRequiredPoints": "Benoetigte Punkte",
+  "Config.ShowRequiredPoints.Description": "Zeigt die benoetigten Punkte bis zum naechsten Herz",
+  "Config.ShowCompletion": "Fortschritt",
+  "Config.ShowCompletion.Description": "Zeigt den aktuellen Fortschritt bis zum naechsten Herz in %",
+
+  "Display.CurrentPoints": "Aktuelle Punkte: {{Points}}",
+  "Display.ForNextHeart": "Benoetigt fuer naechste Herz: {{Points}}",
+  "Display.Completion": "Fortschritt: {{Progress}}"
+
+}

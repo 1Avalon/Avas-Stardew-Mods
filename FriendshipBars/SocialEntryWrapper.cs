@@ -49,13 +49,13 @@ namespace FriendshipBars
             string s = "";
 
             if (c.CurrentPointsHover)
-                s += $"Current Points: {TotalProgressPoints}\n";
+                s += $"{I18n.Display_CurrentPoints(TotalProgressPoints)}\n";
 
             if (c.RequiredPointsHover)
-                s += $"Required for next heart: { RequiredForNextHeart - CurrentProgressPoints}\n";
+                s += $"{I18n.Display_ForNextHeart(RequiredForNextHeart - CurrentProgressPoints)}\n";
 
             if (c.CompletionHover)
-                s += $"Completion: {(Completion * 100).ToString("0.0")}%\n";
+                s += $"{I18n.Display_Completion((Completion * 100).ToString("0.0"))}%\n";
 
             return s.Substring(0, s.Length - 1);
         }
