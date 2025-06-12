@@ -57,6 +57,9 @@ namespace FriendshipBars
             if (c.CompletionHover)
                 s += $"{I18n.Display_Completion((Completion * 100).ToString("0.0"))}%\n";
 
+            if (s == "")
+                return s;
+
             return s.Substring(0, s.Length - 1);
         }
     }
