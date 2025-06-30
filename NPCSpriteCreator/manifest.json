@@ -1,0 +1,10 @@
+{
+  "Name": "NPC Sprite Creator",
+  "Author": "AvalonMFX",
+  "Version": "1.0.0",
+  "Description": "Exports the current Farmer as an NPC spritesheet",
+  "UniqueID": "AvalonMFX.NPCSpriteCreator",
+  "EntryDll": "NPCSpriteCreator.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
