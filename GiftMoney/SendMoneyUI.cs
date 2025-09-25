@@ -50,16 +50,22 @@ public class SendMoneyUI : IClickableMenu
 
         npcName = NpcName;
 
-		lovedButton = new Button("Loved", delegate
+		lovedButton = new Button(I18n.Loved(), delegate
 		{
 			triggerGift(npcName, GiftType.Loved);
 		}, GiftType.Loved, 10000);
 		lovedButton.SetPosition(xPositionOnScreen + this.width / 2 - lovedButton.width / 2, yPositionOnScreen + height / 4 + 15);
 
-		likedButton = new Button("Liked", null, GiftType.Liked, 1000);
+		likedButton = new Button(I18n.Liked(), delegate
+		{
+			triggerGift(npcName, GiftType.Liked);
+		}, GiftType.Liked, 1000);
 		likedButton.SetPosition(xPositionOnScreen + this.width / 2 - likedButton.width / 2, lovedButton.bounds.Y + 80);
 
-        neutralButton = new Button("Neutral", null, GiftType.Neutral, 100);
+        neutralButton = new Button(I18n.Neutral(), delegate
+		{
+			triggerGift(npcName, GiftType.Neutral);
+		}, GiftType.Neutral, 100);
         neutralButton.SetPosition(xPositionOnScreen + this.width / 2 - neutralButton.width / 2, likedButton.bounds.Y + 80);
 
 	}
@@ -115,7 +121,7 @@ public class SendMoneyUI : IClickableMenu
 
 		if (!Game1.player.friendshipData.ContainsKey(npc.Name))
 		{
-			Game1.activeClickableMenu = new DialogueBox("You haven't met the NPC yet.");
+			Game1.activeClickableMenu = new DialogueBox(I18n.Misc_NPCNotMet());
 			return;
 		}
 		Friendship friendship = Game1.player.friendshipData[npc.Name];

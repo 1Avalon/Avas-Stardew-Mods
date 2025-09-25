@@ -1,0 +1,12 @@
+{
+  "Loved": "Loved",
+  "Liked": "Liked",
+  "Neutral": "Neutral",
+
+  "Config.MinAmountLoved": "Minimum Loved Gift Amount",
+  "Config.MinAmountLiked": "Minimum Liked Gift Amount",
+  "Config.MinAmountNeutral": "Minimum Neutral Gift Amount",
+  "Config.ToggleUI": "Toggle Send Money UI",
+
+  "Misc.NPCNotMet": "You haven't met the NPC yet."
+}

@@ -41,6 +41,9 @@ internal sealed class ModEntry : Mod
 		helper.Events.GameLoop.UpdateTicking += OnUpdateTicking;
 		icons = helper.ModContent.Load<Texture2D>("assets\\icons.png");
 		instance = this;
+
+		I18n.Init(Helper.Translation);
+
 		Harmony harmony = new Harmony(this.ModManifest.UniqueID);
 
         harmony.Patch(
@@ -64,23 +67,19 @@ internal sealed class ModEntry : Mod
 			configMenu.AddNumberOption(((Mod)this).ModManifest, () => Config.minLovedGiftAmount, delegate(int value)
 			{
 				Config.minLovedGiftAmount = value;
-			}, () => "Minimum Loved Gift Amount");
+			}, () => I18n.Config_MinAmountLoved());
 			configMenu.AddNumberOption(((Mod)this).ModManifest, () => Config.minLikedGiftAmount, delegate(int value)
 			{
 				Config.minLikedGiftAmount = value;
-			}, () => "Minimum Liked Gift Amount");
+			}, () => I18n.Config_MinAmountLiked());
 			configMenu.AddNumberOption(((Mod)this).ModManifest, () => Config.minNeutralGiftAmount, delegate(int value)
 			{
 				Config.minNeutralGiftAmount = value;
-			}, () => "Minimum Neutral Gift Amount");
-			configMenu.AddNumberOption(((Mod)this).ModManifest, () => Config.minDislikedGiftAmount, delegate(int value)
-			{
-				Config.minDislikedGiftAmount = value;
-			}, () => "Minimum Disliked Gift Amount");
+			}, () => I18n.Config_MinAmountNeutral());
 			configMenu.AddKeybindList(((Mod)this).ModManifest, () => Config.sendMoneyKey, delegate(KeybindList value)
 			{
 				Config.sendMoneyKey = value;
-			}, () => "Toggle Send Money UI");
+			}, () => I18n.Config_ToggleUI());
 		}
 	}
 
