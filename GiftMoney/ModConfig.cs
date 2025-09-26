@@ -5,6 +5,8 @@ namespace GiftMoney;
 
 public sealed class ModConfig
 {
+	public bool scaleLimitsWithProgress { get; set; } = true;
+
 	public int minLovedGiftAmount { get; set; } = 10000;
 
 
@@ -15,7 +17,6 @@ public sealed class ModConfig
 
 
 	public int minDislikedGiftAmount { get; set; } = 2500;
-
 
 	public KeybindList sendMoneyKey { get; set; } = new KeybindList((SButton)116);
 
