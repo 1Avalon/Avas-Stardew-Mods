@@ -52,20 +52,20 @@ public class SendMoneyUI : IClickableMenu
 
 		lovedButton = new Button(I18n.Loved(), delegate
 		{
-			triggerGift(npcName, GiftType.Loved);
-		}, GiftType.Loved, 10000);
+			triggerGift(npcName, GiftType.Loved, AmountManager.LovedAmount);
+		}, GiftType.Loved, AmountManager.LovedAmount);
 		lovedButton.SetPosition(xPositionOnScreen + this.width / 2 - lovedButton.width / 2, yPositionOnScreen + height / 4 + 15);
 
 		likedButton = new Button(I18n.Liked(), delegate
 		{
-			triggerGift(npcName, GiftType.Liked);
-		}, GiftType.Liked, 1000);
+			triggerGift(npcName, GiftType.Liked, AmountManager.LikedAmount);
+		}, GiftType.Liked, AmountManager.LikedAmount);
 		likedButton.SetPosition(xPositionOnScreen + this.width / 2 - likedButton.width / 2, lovedButton.bounds.Y + 80);
 
         neutralButton = new Button(I18n.Neutral(), delegate
 		{
-			triggerGift(npcName, GiftType.Neutral);
-		}, GiftType.Neutral, 100);
+			triggerGift(npcName, GiftType.Neutral, AmountManager.NeutralAmount);
+		}, GiftType.Neutral, AmountManager.NeutralAmount);
         neutralButton.SetPosition(xPositionOnScreen + this.width / 2 - neutralButton.width / 2, likedButton.bounds.Y + 80);
 
 	}
@@ -88,6 +88,12 @@ public class SendMoneyUI : IClickableMenu
 
 		if (lovedButton.containsPoint(x, y))
 			lovedButton.CallEvent();
+
+		if (likedButton.containsPoint(x, y))
+			likedButton.CallEvent();
+
+		if (neutralButton.containsPoint(x, y))
+			neutralButton.CallEvent();
 
 		Debug.WriteLine("HEllo");
 	}
@@ -114,7 +120,7 @@ public class SendMoneyUI : IClickableMenu
 		drawMouse(b);
 	}
 
-	private void triggerGift(string npcName, GiftType type)
+	private void triggerGift(string npcName, GiftType type, int price)
 	{
 
 		NPC npc = Game1.getCharacterFromName(npcName);
@@ -163,6 +169,7 @@ public class SendMoneyUI : IClickableMenu
 				break;
 		}
 		npc.receiveGift(targetItem, Game1.player);
-		Game1.player.Money -= amount;
+		AmountManager.UpdateAmount();
+		Game1.player.Money -= price;
 	}
 }
