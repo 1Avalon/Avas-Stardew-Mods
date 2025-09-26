@@ -1,7 +1,7 @@
 {
   "Name": "Gift Money",
   "Author": "AvalonMFX",
-  "Version": "1.0.0",
+  "Version": "1.1.0",
   "Description": "Allows you to give money as a gift",
   "UniqueID": "AvalonMFX.GiftMoney",
   "EntryDll": "GiftMoney.dll",
