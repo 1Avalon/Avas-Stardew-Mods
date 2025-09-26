@@ -7,6 +7,7 @@
   "Config.MinAmountLiked": "Minimum Liked Gift Amount",
   "Config.MinAmountNeutral": "Minimum Neutral Gift Amount",
   "Config.ToggleUI": "Toggle Send Money UI",
+  "Config.Scale": "Scale limits with progress",
 
   "Misc.NPCNotMet": "You haven't met the NPC yet."
 }

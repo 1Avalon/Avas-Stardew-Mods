@@ -38,11 +38,12 @@ internal sealed class ModEntry : Mod
 		helper.Events.Input.ButtonPressed += OnButtonPressed;
 		helper.Events.GameLoop.GameLaunched += OnGameLaunched;
 		helper.Events.GameLoop.DayStarted += OnDayStarted;
-		helper.Events.GameLoop.UpdateTicking += OnUpdateTicking;
 		icons = helper.ModContent.Load<Texture2D>("assets\\icons.png");
 		instance = this;
 
 		I18n.Init(Helper.Translation);
+
+		AmountManager.InitEvents();
 
 		Harmony harmony = new Harmony(this.ModManifest.UniqueID);
 
@@ -64,11 +65,15 @@ internal sealed class ModEntry : Mod
 			{
 				((Mod)this).Helper.WriteConfig<ModConfig>(Config);
 			});
-			configMenu.AddNumberOption(((Mod)this).ModManifest, () => Config.minLovedGiftAmount, delegate(int value)
+            configMenu.AddBoolOption(((Mod)this).ModManifest, () => Config.scaleLimitsWithProgress, delegate (bool value)
+            {
+                Config.scaleLimitsWithProgress = value;
+            }, () => I18n.Config_Scale());
+            configMenu.AddNumberOption(((Mod)this).ModManifest, () => Config.minLovedGiftAmount, delegate(int value)
 			{
 				Config.minLovedGiftAmount = value;
 			}, () => I18n.Config_MinAmountLoved());
-			configMenu.AddNumberOption(((Mod)this).ModManifest, () => Config.minLikedGiftAmount, delegate(int value)
+            configMenu.AddNumberOption(((Mod)this).ModManifest, () => Config.minLikedGiftAmount, delegate(int value)
 			{
 				Config.minLikedGiftAmount = value;
 			}, () => I18n.Config_MinAmountLiked());
@@ -80,14 +85,6 @@ internal sealed class ModEntry : Mod
 			{
 				Config.sendMoneyKey = value;
 			}, () => I18n.Config_ToggleUI());
-		}
-	}
-
-	private void OnUpdateTicking(object sender, EventArgs e)
-	{
-		if (Game1.isFestival() && Game1.activeClickableMenu is ItemGrabMenu)
-		{
-			Game1.activeClickableMenu = new CustomItemGrabMenu(null, reverseGrab: false, showReceivingMenu: false, Utility.highlightSantaObjects, Game1.currentLocation.currentEvent.chooseSecretSantaGift, Game1.content.LoadString("Strings\\StringsFromCSFiles:Event.cs.1788", Game1.currentLocation.currentEvent.secretSantaRecipient.displayName));
 		}
 	}
 
@@ -105,6 +102,9 @@ internal sealed class ModEntry : Mod
 		}
 		foreach (NPC npc in Game1.currentLocation.characters)
 		{
+			if (!npc.CanReceiveGifts())
+				continue;
+
 			Vector2 npcPos = npc.Position;
 			Vector2 playerPos = Game1.player.Position;
 			float distance = Vector2.Distance(npcPos, playerPos);
