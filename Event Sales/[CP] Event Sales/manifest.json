@@ -1,0 +1,17 @@
+{
+  "Name": "[CP] Event Sales",
+  "Author": "AvalonMFX",
+  "Version": "%ProjectVersion%",
+  "Description": "Adds discounts for shops",
+  "UniqueID": "AvalonMFX.CPEventSales",
+  "UpdateKeys": [ "" ],
+  "ContentPackFor": {
+    "UniqueID": "Pathoschild.ContentPatcher"
+  },
+  "Dependencies": [
+    {
+      "UniqueID": "AvalonMFX.EventSales",
+      "isRequired": true
+    }
+  ]
+}

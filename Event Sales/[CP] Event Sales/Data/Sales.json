@@ -1,0 +1,18 @@
+{
+  "Changes": [
+    {
+      "Action": "EditData",
+      "Target": "AvalonMFX.EventSales/Sales",
+      "Entries": {
+        "{{ModId}}_CropSeasonStart": {
+          "Day": 1,
+          "Season": "Spring",
+          "TargetCategory": -74,
+          "targetShopId": "SeedShop",
+          "LetterId": "{{ModId}}_PierreNewYearSale",
+          "LetterContent": "Dear neighbor, ^Happy new year, the planting seasons return! ONLY today, Pierre's General Store is offering a 10% discount on ALL SEEDS to get perfectly started into the new year.^See you soon!"
+        }
+      }
+    }
+  ]
+}
