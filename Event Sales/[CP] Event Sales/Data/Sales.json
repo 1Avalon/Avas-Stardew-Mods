@@ -10,6 +10,7 @@
           "TargetCategory": -74,
           "targetShopId": "SeedShop",
           "LetterId": "{{ModId}}_PierreNewYearSale",
+          "Discount": "10", // 10% discount -> 20g will become 18g
           "LetterContent": "Dear neighbor, ^Happy new year, the planting seasons return! ONLY today, Pierre's General Store is offering a 10% discount on ALL SEEDS to get perfectly started into the new year.^See you soon!"
         }
       }

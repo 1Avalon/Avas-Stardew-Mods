@@ -1,5 +1,8 @@
 ﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using HarmonyLib;
+using StardewValley;
+using StardewValley.Menus;
 
 namespace Event_Sales
 {
@@ -10,6 +13,8 @@ namespace Event_Sales
 
         public static string SALE_KEY;
 
+        public static List<Sale> TodaySales = new List<Sale>();
+
         public override void Entry(IModHelper helper)
         {
             Helper.Events.Content.AssetRequested += OnAssetRequested;
@@ -17,6 +22,14 @@ namespace Event_Sales
             Helper.Events.GameLoop.DayStarted += OnDayStarted;
             SALE_KEY = $"{this.ModManifest.UniqueID}/Sales";
             Instance = this;
+
+            Harmony harmony = new Harmony(ModManifest.UniqueID);
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(ShopMenu), nameof(ShopMenu.PlayOpenSound)),
+                prefix: new HarmonyMethod(typeof(Patches), nameof(Patches.Prefix_PlayOpenSound))
+            );
+
         }
 
         private void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
@@ -53,7 +66,10 @@ namespace Event_Sales
             foreach (Sale sale in SaleManager.Sales)
             {
                 if (sale.isSaleDay())
+                {
                     sale.SendLetter();
+                    TodaySales.Add(sale);
+                }
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Event_Sales
 
         public int Day;
 
-        public float Multiplier;
+        public float Discount;
 
         public int TargetCategory;
 
@@ -31,7 +31,7 @@ namespace Event_Sales
             ["spring"] = Season.Spring
         };
 
-        public Sale(string Season, float Multiplier, string TargetShopId, string LetterContent, string LetterId, int targetCategory = 0)
+        public Sale(string Season, float Discount, string TargetShopId, string LetterContent, string LetterId, int targetCategory = 0)
         {
 
             if (seasons.TryGetValue(Season.ToLower(), out Season targetSeason))
@@ -40,7 +40,7 @@ namespace Event_Sales
             else
                 ModEntry.Instance.Monitor.Log($"Season '{Season}' couldn't be parsed for targetshop '{TargetShopId}.", StardewModdingAPI.LogLevel.Error);
 
-            this.Multiplier = Multiplier;
+            this.Discount = Discount;
             this.TargetCategory = targetCategory;
             TargetCategory = targetCategory;
             targetShopId = TargetShopId;
@@ -56,6 +56,11 @@ namespace Event_Sales
         public void SendLetter()
         {
             Game1.mailbox.Add(LetterId);
+        }
+
+        public int CalculateNewPrice(int oldPrice)
+        {
+            return (int)((float)oldPrice * ( 1 - Discount / 100));
         }
     }
 }
