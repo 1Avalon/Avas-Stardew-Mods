@@ -18,6 +18,8 @@ namespace CustomNPCPaintings.Framework
         private NPC target;
 
         private Farmer farmer;
+
+        public HSVPair hsvPair;
         public int npcFrameAmount { get
             {
                 if (target != null)
@@ -43,12 +45,18 @@ namespace CustomNPCPaintings.Framework
         public int SpriteWidth { get => target == null ? 16 : target.Sprite.SpriteWidth; }
 
         public int SpriteHeight { get => target == null ? 32 : target.Sprite.SpriteHeight; }
-        public Texture2D Texture { get => target == null ? FarmerTexture : target.Sprite.Texture; }
+        public Texture2D Texture { 
+            get => hsvTexture == null ? targetTexture : hsvTexture; 
+        }
+
+        public Texture2D targetTexture { get => target == null ? FarmerTexture : target.Sprite.Texture; }
 
         private Texture2D FarmerTexture { get
             {
                 return ModEntry.farmerSpriteSheet;
             } }
+
+        private Texture2D hsvTexture;
 
         public CharacterLayer(Farmer farmer, DynamicNPCPaintings.Framework.Background background, int npcFrame) 
         {
@@ -56,6 +64,7 @@ namespace CustomNPCPaintings.Framework
             this.npcFrame = npcFrame;
             this.npcOffsetX = background.backgroundImage.Width / 2; ;
             this.npcOffsetY = 0;
+            hsvPair = new HSVPair(49, 49, 49);
             layer = 0;
         }
         public CharacterLayer(NPC target, DynamicNPCPaintings.Framework.Background background, int npcFrame) 
@@ -64,7 +73,14 @@ namespace CustomNPCPaintings.Framework
             this.npcFrame = npcFrame;
             this.npcOffsetX = background.backgroundImage.Width / 2; ;
             this.npcOffsetY = 0;
+            hsvPair = new HSVPair(49,49, 49);
             layer = 0;
+        }
+
+        public void ShiftColor(HSVPair shift)
+        {
+            hsvPair = shift;
+            hsvTexture = TextureHelper.ShiftHSV_Range(targetTexture, shift);
         }
     }
 }

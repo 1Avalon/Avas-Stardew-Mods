@@ -1,4 +1,5 @@
 ﻿using CustomNPCPaintings.Framework;
+using CustomNPCPaintings.UI.UIElements;
 using DynamicNPCPaintings;
 using DynamicNPCPaintings.Framework;
 using DynamicNPCPaintings.UI;
@@ -49,6 +50,8 @@ namespace CustomNPCPaintings.UI
 
         public ClickableTextureComponent test;
 
+        public HSVPicker hsvPicker;
+
         public NPCModifierMenu(Customiser customiser) 
         {
             int width = 960;
@@ -56,13 +59,12 @@ namespace CustomNPCPaintings.UI
 
             Vector2 center = Utility.getTopLeftPositionForCenteringOnScreen(width, height);
 
+            base.initialize((int)center.X, (int)center.Y, width, height);
+
             this.customiser = customiser;
             npcComponentsStartX = customiser.preview.bounds.X + customiser.preview.bounds.Width * 5 + 64 + 30;
             npcComponentsStartY = customiser.preview.bounds.Y;
 
-            if (customiser.picture.characterLayers.Count == 1)
-                targetLayer = customiser.picture.characterLayers[0];
-            base.initialize((int)center.X, (int)center.Y, width, height);
             npcComponents = new List<ClickableNPCComponent>();
             AddNPCButton = new Button(I18n.Menu_AddNPC(), delegate
             {
@@ -77,7 +79,7 @@ namespace CustomNPCPaintings.UI
                 if (layerAmount > 0)
                     targetLayer = customiser.picture.characterLayers[layerAmount - 1];
                 UpdateCharacterLayers();
-                
+
             });
             RemoveNPCButton.setPosition(AddNPCButton.bounds.X - (RemoveNPCButton.width - AddNPCButton.width), AddNPCButton.bounds.Y + 100);
 
@@ -88,15 +90,25 @@ namespace CustomNPCPaintings.UI
             });
             exportButton.setPosition(AddNPCButton.bounds.X - (exportButton.width - AddNPCButton.width), RemoveNPCButton.bounds.Y + 100);
 
-            UpdateCharacterLayers();
-
-            upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
-
             npcOffsetWheel = new OffsetWheel(xPositionOnScreen + 100, yPositionOnScreen + 550, I18n.Menu_NPC(), 20, 3);
             backgroundOffsetWheel = new OffsetWheel(npcOffsetWheel.positionX + 200, npcOffsetWheel.positionY, I18n.Menu_Background(), 20, 3);
             switcher = new FrameSwitcher(I18n.Menu_NPCFrame(), xPositionOnScreen + 50 + 20, yPositionOnScreen + 350, 20, 4);
             layerSwitcher = new FrameSwitcher("Layer", switcher.positionX + 550, switcher.positionY + 20 + exportButton.height, 20, 4);
             flipCheckbox = new Checkbox("Flip", new Rectangle(switcher.positionX + 8, switcher.positionY + 80, 36, 36), I18n.Menu_FlipNPC());
+
+            hsvPicker = new HSVPicker("HSV Picker", layerSwitcher.positionX, layerSwitcher.positionY + 80);
+
+            if (customiser.picture.characterLayers.Count == 1)
+            {
+                targetLayer = customiser.picture.characterLayers[0];
+                hsvPicker.SetValues(targetLayer.hsvPair);
+            }
+
+            UpdateCharacterLayers();
+
+            upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
+
+
 
             exitFunction = () => Game1.activeClickableMenu = this.customiser;
         }
@@ -130,7 +142,12 @@ namespace CustomNPCPaintings.UI
                 { 
                     foreach(CharacterLayer layer in customiser.picture.characterLayers)
                         if (layer == component.layer)
+                        {
                             targetLayer = layer;
+                            hsvPicker.SetValues(targetLayer.hsvPair);
+                            break;
+                        }
+
                 }
             }
 
@@ -142,6 +159,12 @@ namespace CustomNPCPaintings.UI
 
             if(exportButton.containsPoint(x, y))
                 exportButton.CallEvent();
+
+            if (hsvPicker.containsPoint(x, y))
+            {
+                targetLayer.ShiftColor(hsvPicker.click(x, y));
+                
+            }
 
             switcher.click(x, y, ref targetLayer);
             npcOffsetWheel.click(x, y, ref targetLayer.npcOffsetX, ref targetLayer.npcOffsetY);
@@ -191,6 +214,7 @@ namespace CustomNPCPaintings.UI
             layerSwitcher.draw(b);
             RemoveNPCButton.draw(b);
             exportButton.draw(b);
+            hsvPicker.draw(b);
             string frameText = $"{targetLayer.npcFrame + 1}/{targetLayer.npcFrameAmount}";
             string layerText = (targetLayer.layer + 1).ToString();
             Utility.drawTextWithShadow(b, layerText, Game1.smallFont, new Vector2((layerSwitcher.positionX + layerSwitcher.width / 2 - Game1.smallFont.MeasureString(layerText).X), layerSwitcher.positionY + 40), Game1.textColor, 0.8f);

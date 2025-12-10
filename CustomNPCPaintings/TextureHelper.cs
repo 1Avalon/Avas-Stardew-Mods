@@ -110,6 +110,112 @@ namespace DynamicNPCPaintings
             farmer.FarmerRenderer.draw(b, new FarmerSprite.AnimationFrame(0, 0, secondaryArm: false, flip: false), frame, sourceRect, position, Vector2.Zero, 0.8f, facingDirection, Color.White, 0f, 1f, farmer);
         }
 
+        public static Texture2D ShiftHSV_Range(Texture2D input, HSVPair hsv,
+            float maxHueShiftDegrees = 180f,
+            float maxSaturationShift = 1f,
+            float maxValueShift = 1f)
+        {
+            // Parameter 0–99 → -1 bis +1 → auf Max Shift
+            float hueShift = ConvertSlider(hsv.hue) * maxHueShiftDegrees;
+            float saturationShift = ConvertSlider(hsv.saturation) * maxSaturationShift;
+            float valueShift = ConvertSlider(hsv.value) * maxValueShift;
+
+            return ShiftHSV(input, hueShift, saturationShift, valueShift);
+        }
+        private static float ConvertSlider(int v)
+        {
+            return ((v / 99f) * 2f) - 1f;
+        }
+
+        public static Texture2D ShiftHSV(Texture2D input, float hueShift, float saturationShift, float valueShift)
+        {
+            // Pixelarray auslesen
+            Color[] data = new Color[input.Width * input.Height];
+            input.GetData(data);
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                Color c = data[i];
+
+                // Transparente Pixel ignorieren
+                if (c.A == 0)
+                    continue;
+
+                // RGB → HSV
+                float h, s, v;
+                ColorToHSV(c, out h, out s, out v);
+
+                // Shifts anwenden
+                h = (h + hueShift) % 360f;
+                if (h < 0) h += 360f;
+
+                s = Math.Clamp(s + saturationShift, 0f, 1f);
+                v = Math.Clamp(v + valueShift, 0f, 1f);
+
+                // HSV → RGB
+                Color newColor = ColorFromHSV(h, s, v);
+                newColor.A = c.A;
+
+                data[i] = newColor;
+            }
+
+            // Neue Textur mit verschobenen Pixeln erzeugen
+            Texture2D result = new Texture2D(Game1.graphics.GraphicsDevice, input.Width, input.Height);
+            result.SetData(data);
+            return result;
+        }
+
+        public static void ColorToHSV(Color color, out float hue, out float saturation, out float value)
+        {
+            float r = color.R / 255f;
+            float g = color.G / 255f;
+            float b = color.B / 255f;
+
+            float max = Math.Max(r, Math.Max(g, b));
+            float min = Math.Min(r, Math.Min(g, b));
+            float delta = max - min;
+
+            // Hue
+            if (delta == 0)
+                hue = 0;
+            else if (max == r)
+                hue = 60f * (((g - b) / delta) % 6f);
+            else if (max == g)
+                hue = 60f * (((b - r) / delta) + 2f);
+            else
+                hue = 60f * (((r - g) / delta) + 4f);
+
+            if (hue < 0) hue += 360f;
+
+            // Saturation
+            saturation = (max == 0) ? 0 : delta / max;
+
+            // Value
+            value = max;
+        }
+
+        public static Color ColorFromHSV(float hue, float saturation, float value)
+        {
+            float c = value * saturation;
+            float x = c * (1 - Math.Abs(((hue / 60f) % 2) - 1));
+            float m = value - c;
+
+            float r, g, b;
+
+            if (hue < 60) { r = c; g = x; b = 0; }
+            else if (hue < 120) { r = x; g = c; b = 0; }
+            else if (hue < 180) { r = 0; g = c; b = x; }
+            else if (hue < 240) { r = 0; g = x; b = c; }
+            else if (hue < 300) { r = x; g = 0; b = c; }
+            else { r = c; g = 0; b = x; }
+
+            return new Color(
+                (byte)((r + m) * 255),
+                (byte)((g + m) * 255),
+                (byte)((b + m) * 255)
+            );
+        }
+
         public static Texture2D ScaleTexture(Texture2D originalTexture, float scale)
         {
             // Berechne die neue Breite und Höhe basierend auf dem Skalierungsfaktor
