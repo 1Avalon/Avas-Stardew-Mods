@@ -79,7 +79,6 @@ namespace DynamicNPCPaintings
             helper.Events.Display.RenderedActiveMenu += OnRenderedActiveMenu;
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
-            helper.Events.Player.Warped += OnWarped;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.ConsoleCommands.Add("fix_same_painting_bug", "If you started using this mod in 1.1.1 or later, you can ignore this command\nIf you keep getting the same paintings, try running this command", this.FixSamePainting);
@@ -250,14 +249,6 @@ namespace DynamicNPCPaintings
                 getValue: () => Config.enableFarmerSprite,
                 setValue: value => Config.enableFarmerSprite = value
                 );
-        }
-        private void OnWarped(object sender, WarpedEventArgs e)
-        {
-            if (!hasHappyHomeDesigner || Config.openCustomizerButton != SButton.None)
-                return;
-
-            string msg = I18n.Misc_WarningMessageHappyHomeDesigner();
-            Game1.activeClickableMenu = new DialogueBox(msg);
         }
 
         Vector2 farmerOffset = new Vector2(125, 125);
