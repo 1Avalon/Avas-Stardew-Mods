@@ -35,6 +35,8 @@ namespace DynamicNPCPaintings
 
         public static Texture2D background;
 
+        public static Texture2D ResetButton;
+
         public static ModEntry instance;
 
         public static Dictionary<string, Background> backgroundImages = new Dictionary<string, Background>();
@@ -108,6 +110,7 @@ namespace DynamicNPCPaintings
             }
 
             frame = Helper.ModContent.Load<Texture2D>("assets/frames/frame1.png");
+            ResetButton = Helper.ModContent.Load<Texture2D>("assets/UI/undo.png");
             instance = this;
         }
 
