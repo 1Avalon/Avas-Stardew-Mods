@@ -77,7 +77,11 @@ namespace CustomNPCPaintings.UI
                 this.customiser.picture.characterLayers.Remove(targetLayer);
                 int layerAmount = customiser.picture.characterLayers.Count;
                 if (layerAmount > 0)
+                {
                     targetLayer = customiser.picture.characterLayers[layerAmount - 1];
+                    hsvPicker.SetValues(targetLayer.hsvPair);
+                }
+
                 UpdateCharacterLayers();
 
             });
