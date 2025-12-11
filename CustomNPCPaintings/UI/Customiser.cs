@@ -33,6 +33,8 @@ namespace DynamicNPCPaintings.UI
 
         public Texture2D backgroundTexture;
 
+        public ClickableTextureComponent resetHSVButton;
+
         private Texture2D looseSprites = Game1.content.Load<Texture2D>("LooseSprites/Cursors");
 
         public Picture picture = Picture.GetDefaultPicture();
@@ -96,6 +98,7 @@ namespace DynamicNPCPaintings.UI
             upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
 
             hsvPicker = new HSVPicker("HSV Picker", backgroundOffsetWheel.positionX + 35, backgroundOffsetWheel.positionY + 120);
+            resetHSVButton = new ClickableTextureComponent(new Rectangle(hsvPicker.saturationBar.bounds.X, backgroundOffsetWheel.positionY + 120, 16 * arrowScale, height * arrowScale), ModEntry.ResetButton, Rectangle.Empty, 4f);
         }
         public void UpdatePreview()
         {
@@ -123,6 +126,12 @@ namespace DynamicNPCPaintings.UI
                 HSVPair p = hsvPicker.click(x, y);
                 picture.background.ShiftColor(p);
 
+            }
+            else if (resetHSVButton.containsPoint(x, y))
+            {
+                HSVPair p = new HSVPair(49, 49, 49);
+                hsvPicker.SetValues(p);
+                picture.background.ShiftColor(p);
             }
 
                 //flipCheckbox.click(x, y, ref picture.npcFlipped);
@@ -167,6 +176,7 @@ namespace DynamicNPCPaintings.UI
             backgroundOffsetWheel.draw(b);
             upperRightCloseButton.draw(b);
             hsvPicker.draw(b);
+            resetHSVButton.draw(b);
             drawMouse(b);
         }
     }

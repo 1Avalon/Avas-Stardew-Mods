@@ -52,6 +52,8 @@ namespace CustomNPCPaintings.UI
 
         public HSVPicker hsvPicker;
 
+        public ClickableTextureComponent resetHSVButton;
+
         public NPCModifierMenu(Customiser customiser) 
         {
             int width = 960;
@@ -107,6 +109,8 @@ namespace CustomNPCPaintings.UI
                 targetLayer = customiser.picture.characterLayers[0];
                 hsvPicker.SetValues(targetLayer.hsvPair);
             }
+
+            resetHSVButton = new ClickableTextureComponent(new Rectangle(layerSwitcher.positionX + 175, layerSwitcher.positionY + 80, 16 * npcScale, 16 * npcScale), ModEntry.ResetButton, Rectangle.Empty, 4f);
 
             UpdateCharacterLayers();
 
@@ -170,6 +174,14 @@ namespace CustomNPCPaintings.UI
                 
             }
 
+            if (resetHSVButton.containsPoint(x, y))
+            {
+                HSVPair p = new HSVPair(49, 49, 49);
+                targetLayer.hsvPair = p;
+                targetLayer.ShiftColor(p);
+                hsvPicker.SetValues(p);
+            }
+
             switcher.click(x, y, ref targetLayer);
             npcOffsetWheel.click(x, y, ref targetLayer.npcOffsetX, ref targetLayer.npcOffsetY);
             backgroundOffsetWheel.click(x, y, ref this.customiser.picture.background.offsetX, ref this.customiser.picture.background.offsetY);
@@ -223,6 +235,7 @@ namespace CustomNPCPaintings.UI
             string layerText = (targetLayer.layer + 1).ToString();
             Utility.drawTextWithShadow(b, layerText, Game1.smallFont, new Vector2((layerSwitcher.positionX + layerSwitcher.width / 2 - Game1.smallFont.MeasureString(layerText).X), layerSwitcher.positionY + 40), Game1.textColor, 0.8f);
             Utility.drawTextWithShadow(b, frameText, Game1.smallFont, new Vector2((switcher.positionX + switcher.width / 2 - Game1.smallFont.MeasureString(frameText).X), switcher.positionY + 40), Game1.textColor, 0.8f);
+            resetHSVButton.draw(b);
             drawHoverText(b, hoverText, Game1.smallFont);
             drawMouse(b);
         }
