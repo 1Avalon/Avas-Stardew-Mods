@@ -190,6 +190,16 @@ namespace CustomNPCPaintings.UI
             customiser.UpdatePreview();
         }
 
+        public override void leftClickHeld(int x, int y)
+        {
+            if (hsvPicker.containsPoint(x, y))
+            {
+                targetLayer.ShiftColor(hsvPicker.click(x, y));
+                customiser.UpdatePreview();
+
+            }
+        }
+
         public override void performHoverAction(int x, int y)
         {
             base.performHoverAction(x, y);

@@ -98,7 +98,7 @@ namespace DynamicNPCPaintings.UI
             upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
 
             hsvPicker = new HSVPicker("HSV Picker", backgroundOffsetWheel.positionX + 35, backgroundOffsetWheel.positionY + 120);
-            resetHSVButton = new ClickableTextureComponent(new Rectangle(hsvPicker.saturationBar.bounds.X, backgroundOffsetWheel.positionY + 120, 16 * arrowScale, height * arrowScale), ModEntry.ResetButton, Rectangle.Empty, 4f);
+            resetHSVButton = new ClickableTextureComponent(new Rectangle(backgroundOffsetWheel.positionX + 210, backgroundOffsetWheel.positionY + 120, 16 * arrowScale, height * arrowScale), ModEntry.ResetButton, Rectangle.Empty, 4f);
         }
         public void UpdatePreview()
         {
@@ -141,6 +141,15 @@ namespace DynamicNPCPaintings.UI
             preview.texture = picture.GetTexture();
         }
 
+        public override void leftClickHeld(int x, int y)
+        {
+            if (hsvPicker.containsPoint(x, y))
+            {
+                picture.background.ShiftColor(hsvPicker.click(x, y));
+                preview.texture = picture.GetTexture();
+
+            }
+        }
         public override void performHoverAction(int x, int y)
         {
             foreach (Button button in buttons)
