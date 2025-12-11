@@ -7,6 +7,8 @@ using Background = DynamicNPCPaintings.Framework.Background;
 using DynamicNPCPaintings.UI.UIElements;
 using CustomNPCPaintings;
 using CustomNPCPaintings.UI;
+using CustomNPCPaintings.UI.UIElements;
+using CustomNPCPaintings.Framework;
 
 namespace DynamicNPCPaintings.UI
 {
@@ -38,6 +40,8 @@ namespace DynamicNPCPaintings.UI
         private OffsetWheel npcOffsetWheel;
 
         private OffsetWheel backgroundOffsetWheel;
+
+        private HSVPicker hsvPicker;
 
         public FrameSwitcher switcher;
 
@@ -90,6 +94,8 @@ namespace DynamicNPCPaintings.UI
             int arrowScale = 4;
 
             upperRightCloseButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width - 50, yPositionOnScreen + 69, 48, 48), Game1.mouseCursors, new Rectangle(337, 494, 12, 12), 4f);
+
+            hsvPicker = new HSVPicker("HSV Picker", backgroundOffsetWheel.positionX + 35, backgroundOffsetWheel.positionY + 120);
         }
         public void UpdatePreview()
         {
@@ -112,9 +118,16 @@ namespace DynamicNPCPaintings.UI
             else if (upperRightCloseButton.containsPoint(x, y))
                 exitThisMenu();
 
-            //flipCheckbox.click(x, y, ref picture.npcFlipped);
-            //npcOffsetWheel.click(x, y, ref picture.npcOffsetX, ref picture.npcOffsetY);
-            backgroundOffsetWheel.click(x, y, ref picture.background.offsetX, ref picture.background.offsetY);
+            else if (hsvPicker.containsPoint(x, y))
+            {
+                HSVPair p = hsvPicker.click(x, y);
+                picture.background.ShiftColor(p);
+
+            }
+
+                //flipCheckbox.click(x, y, ref picture.npcFlipped);
+                //npcOffsetWheel.click(x, y, ref picture.npcOffsetX, ref picture.npcOffsetY);
+                backgroundOffsetWheel.click(x, y, ref picture.background.offsetX, ref picture.background.offsetY);
             //switcher.click(x, y, ref picture);
             preview.texture = picture.GetTexture();
         }
@@ -153,6 +166,7 @@ namespace DynamicNPCPaintings.UI
             //npcOffsetWheel.draw(b);
             backgroundOffsetWheel.draw(b);
             upperRightCloseButton.draw(b);
+            hsvPicker.draw(b);
             drawMouse(b);
         }
     }

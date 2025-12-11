@@ -522,7 +522,7 @@ namespace DynamicNPCPaintings
 
             // Lade die Pixel-Daten des Hintergrunds
             Color[] backgroundData = new Color[background.backgroundImage.Width * background.backgroundImage.Height];
-            background.backgroundImage.GetData(backgroundData);
+            background.Texture.GetData(backgroundData);
 
             // Erstelle ein Array für die Pixel-Daten des Ergebnisses
             Color[] resultData = new Color[frame.frameTexture.Width * frame.frameTexture.Height];
