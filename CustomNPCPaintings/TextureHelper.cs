@@ -250,12 +250,16 @@ namespace DynamicNPCPaintings
             return scaledTexture;
         }
 
-        // Layout muss zu CharacterLayer/GetCharacterFrame passen: 22 Sprites pro Zeile, Zellgröße 16x32 im Ergebnis
+        // Layout muss zu CharacterLayer/GetCharacterFrame passen: 22 Sprites pro Zeile, Zellgröße 32x48 im Ergebnis
+        // (16x32 Charakter mittig platziert + 8px Puffer links/rechts + 16px Kopfraum oben, damit Hüte/Frisuren/
+        // breite Werkzeug-Animationen nicht ins Nachbar-Frame bluten)
         private const int FarmerSpritesPerRow = 22;
         private const int FarmerFrameCount = 126;
-        private const int FarmerCellWidth = 64;
-        private const int FarmerCellHeight = 128;
-        private const float FarmerOutputScale = 0.25f; // 64x128 Zelle -> 16x32 Sprite
+        private const int FarmerWidthHeadroom = 64; // Puffer links+rechts vom Charakter (pre-scale), 64px -> 16px im Endergebnis
+        private const int FarmerCellWidth = 64 + FarmerWidthHeadroom;
+        private const int FarmerHeadroom = 64; // Puffer oberhalb des Charakters (pre-scale), 64px -> 16px im Endergebnis
+        private const int FarmerCellHeight = 128 + FarmerHeadroom;
+        private const float FarmerOutputScale = 0.25f; // pre-scale Zelle -> Sprite im Endergebnis
         private const int FarmerCaptureMargin = 32; // Puffer, falls ein Frame über seine Zelle hinausragt (z.B. Werkzeug-Schwung)
 
         public static void InitFarmerSpriteSheet()
@@ -293,7 +297,7 @@ namespace DynamicNPCPaintings
                     int column = i % FarmerSpritesPerRow;
                     int row = i / FarmerSpritesPerRow;
                     int xOffset = i == 101 ? -15 : 0; // Sheet ist an dieser Stelle inkonsistent, siehe RenderFarmer
-                    Vector2 position = new Vector2(FarmerCaptureMargin + column * FarmerCellWidth + xOffset, FarmerCaptureMargin + row * FarmerCellHeight);
+                    Vector2 position = new Vector2(FarmerCaptureMargin + column * FarmerCellWidth + FarmerWidthHeadroom / 2 + xOffset, FarmerCaptureMargin + row * FarmerCellHeight + FarmerHeadroom);
                     RenderFarmer(spriteBatch, farmer, i, position);
                 }
                 spriteBatch.End();

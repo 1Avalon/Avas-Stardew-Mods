@@ -96,7 +96,8 @@ namespace DynamicNPCPaintings.UI
                 if (index <= startIndex)
                     continue;
                 int yOffset = TextureHelper.FindFirstNonTransparentPixelY(npc.Texture);
-                ClickableNPCComponent component = new ClickableNPCComponent(new Rectangle(startPositionX, startPositionY, 16 * npcScale, 16 * npcScale), npc, new Rectangle(0, yOffset, 16, 16), npcScale);
+                int xOffset = (npc.SpriteWidth - 16) / 2; // zentriert den 16px-Icon-Ausschnitt, falls der Charakter (z.B. Farmer) breiter als 16px ist
+                ClickableNPCComponent component = new ClickableNPCComponent(new Rectangle(startPositionX, startPositionY, 16 * npcScale, 16 * npcScale), npc, new Rectangle(xOffset, yOffset, 16, 16), npcScale);
                 NPCComponents.Add(component);
                 startPositionX += 16 * npcScale;
                 if (startPositionX > xPositionOnScreen + this.width - 16 * npcScale)

@@ -128,7 +128,8 @@ namespace CustomNPCPaintings.UI
             foreach (CharacterLayer layer in customiser.picture.characterLayers)
             {
                 int yOffset = TextureHelper.FindFirstNonTransparentPixelY(layer.Texture);
-                npcComponents.Add(new ClickableNPCComponent(new Rectangle(npcComponentsStartX, npcComponentsStartY, npcScale * 16, npcScale * 16), layer, new Rectangle(0, yOffset, 16, 16), npcScale));
+                int xOffset = (layer.SpriteWidth - 16) / 2; // zentriert den 16px-Icon-Ausschnitt, falls der Charakter (z.B. Farmer) breiter als 16px ist
+                npcComponents.Add(new ClickableNPCComponent(new Rectangle(npcComponentsStartX, npcComponentsStartY, npcScale * 16, npcScale * 16), layer, new Rectangle(xOffset, yOffset, 16, 16), npcScale));
                 npcComponentsStartX += 16 * npcScale;
 
                 if (npcComponentsStartX > AddNPCButton.bounds.X - 16 * npcScale - 30)

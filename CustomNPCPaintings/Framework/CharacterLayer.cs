@@ -42,9 +42,9 @@ namespace CustomNPCPaintings.Framework
 
         public string DisplayName { get => target == null ? farmer.displayName : target.displayName; }
 
-        public int SpriteWidth { get => target == null ? 16 : target.Sprite.SpriteWidth; }
+        public int SpriteWidth { get => target == null ? 32 : target.Sprite.SpriteWidth; }
 
-        public int SpriteHeight { get => target == null ? 32 : target.Sprite.SpriteHeight; }
+        public int SpriteHeight { get => target == null ? 48 : target.Sprite.SpriteHeight; }
         public Texture2D Texture { 
             get => hsvTexture == null ? targetTexture : hsvTexture; 
         }
