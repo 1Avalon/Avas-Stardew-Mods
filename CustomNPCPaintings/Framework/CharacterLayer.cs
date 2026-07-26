@@ -62,8 +62,8 @@ namespace CustomNPCPaintings.Framework
         {
             this.farmer = farmer;
             this.npcFrame = npcFrame;
-            this.npcOffsetX = background.backgroundImage.Width / 2; ;
-            this.npcOffsetY = 0;
+            this.npcOffsetX = background.backgroundImage.Width / 4; ;
+            this.npcOffsetY = 0 - background.backgroundImage.Height / 2;
             hsvPair = new HSVPair(49, 49, 49);
             layer = 0;
         }
