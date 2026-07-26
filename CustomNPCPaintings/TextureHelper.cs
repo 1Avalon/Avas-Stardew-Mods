@@ -250,24 +250,64 @@ namespace DynamicNPCPaintings
             return scaledTexture;
         }
 
+        // Layout muss zu CharacterLayer/GetCharacterFrame passen: 22 Sprites pro Zeile, Zellgröße 16x32 im Ergebnis
+        private const int FarmerSpritesPerRow = 22;
+        private const int FarmerFrameCount = 126;
+        private const int FarmerCellWidth = 64;
+        private const int FarmerCellHeight = 128;
+        private const float FarmerOutputScale = 0.25f; // 64x128 Zelle -> 16x32 Sprite
+        private const int FarmerCaptureMargin = 32; // Puffer, falls ein Frame über seine Zelle hinausragt (z.B. Werkzeug-Schwung)
+
         public static void InitFarmerSpriteSheet()
         {
+            ModEntry.farmerSpriteSheet = CaptureFarmerSpriteSheet(Game1.player);
+        }
 
-            // TODO Einfach zum draw hook moven das hier geht sonst nicht 
-            int w = Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
-            int h = Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
+        /// <summary>
+        /// Rendert alle Farmer-Frames in ein eigenes, transparent geleertes RenderTarget2D und liest es direkt aus.
+        /// Kein Greenscreen/Chroma-Keying nötig: Bei einem transparenten Ziel liefert SpriteBatchs Standard-AlphaBlend
+        /// (ColorSourceBlend=One, ColorDestinationBlend=InverseSourceAlpha) exakt die Quellfarbe und den Quell-Alphawert
+        /// zurück, auch für halbtransparente Randpixel. Die Größe ist zudem unabhängig von Bildschirm/Fenstergröße.
+        /// </summary>
+        public static Texture2D CaptureFarmerSpriteSheet(Farmer farmer)
+        {
+            GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
 
-            //pull the picture from the buffer
-            int[] backBuffer = new int[w * h];
-            Game1.graphics.GraphicsDevice.GetBackBufferData(backBuffer);
+            int rows = (int)Math.Ceiling(FarmerFrameCount / (float)FarmerSpritesPerRow);
+            int gridWidth = FarmerSpritesPerRow * FarmerCellWidth;
+            int gridHeight = rows * FarmerCellHeight;
+            int targetWidth = gridWidth + FarmerCaptureMargin * 2;
+            int targetHeight = gridHeight + FarmerCaptureMargin * 2;
 
-            //copy into a texture 
-            Texture2D texture = new Texture2D(Game1.graphics.GraphicsDevice, w, h, false, Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferFormat);
-            texture.SetData(backBuffer);
-            Texture2D farmerWithBackground = CropTexture(texture, new Rectangle(125, 125, 1408, (int)ModEntry.greenScreenRectangle.Y + 5));
-            Texture2D farmer = MakeColorTransparent(farmerWithBackground, new Color(0, 255, 0), 5);
-            Texture2D scaledFarmer = ScaleTexture(farmer, 0.25f / Game1.options.uiScale);
-            ModEntry.farmerSpriteSheet = scaledFarmer;
+            RenderTargetBinding[] previousTargets = graphicsDevice.GetRenderTargets();
+
+            using RenderTarget2D renderTarget = new RenderTarget2D(graphicsDevice, targetWidth, targetHeight);
+            graphicsDevice.SetRenderTarget(renderTarget);
+            graphicsDevice.Clear(Color.Transparent);
+
+            using (SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice))
+            {
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+                for (int i = 0; i < FarmerFrameCount; i++)
+                {
+                    int column = i % FarmerSpritesPerRow;
+                    int row = i / FarmerSpritesPerRow;
+                    int xOffset = i == 101 ? -15 : 0; // Sheet ist an dieser Stelle inkonsistent, siehe RenderFarmer
+                    Vector2 position = new Vector2(FarmerCaptureMargin + column * FarmerCellWidth + xOffset, FarmerCaptureMargin + row * FarmerCellHeight);
+                    RenderFarmer(spriteBatch, farmer, i, position);
+                }
+                spriteBatch.End();
+            }
+
+            graphicsDevice.SetRenderTargets(previousTargets);
+
+            Color[] pixels = new Color[targetWidth * targetHeight];
+            renderTarget.GetData(pixels);
+            Texture2D captured = new Texture2D(graphicsDevice, targetWidth, targetHeight);
+            captured.SetData(pixels);
+
+            Texture2D cropped = CropTexture(captured, new Rectangle(FarmerCaptureMargin, FarmerCaptureMargin, gridWidth, gridHeight));
+            return ScaleTexture(cropped, FarmerOutputScale);
         }
 
         public static Texture2D MakeColorTransparent(Texture2D originalTexture, Color targetColor, int tolerance)

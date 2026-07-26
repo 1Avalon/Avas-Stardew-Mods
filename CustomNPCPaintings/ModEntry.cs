@@ -63,11 +63,8 @@ namespace DynamicNPCPaintings
 
         public static int PaintingIncrementOffset = 0;
 
-        public static Vector2 greenScreenRectangle = new Vector2(0,0);
-
         public static Texture2D farmerSpriteSheet;
 
-        private int snapCounter = 0;
         public override void Entry(IModHelper helper)
         {
             modHelper = helper;
@@ -82,7 +79,6 @@ namespace DynamicNPCPaintings
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
-            helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.ConsoleCommands.Add("fix_same_painting_bug", "If you started using this mod in 1.1.1 or later, you can ignore this command\nIf you keep getting the same paintings, try running this command", this.FixSamePainting);
             /*
             background = Helper.ModContent.Load<Texture2D>("assets/backgrounds/forest.png");
@@ -254,13 +250,6 @@ namespace DynamicNPCPaintings
                 );
         }
 
-        Vector2 farmerOffset = new Vector2(125, 125);
-
-        private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
-        {
-            if (snapCounter == 15)
-                TextureHelper.InitFarmerSpriteSheet();
-        }
         private void OnRenderedActiveMenu(object sender, RenderedActiveMenuEventArgs e)
         {
             if (!Context.IsWorldReady)
@@ -276,57 +265,14 @@ namespace DynamicNPCPaintings
                     button.draw(e.SpriteBatch);
                 e.SpriteBatch.Draw(Game1.mouseCursors, new Vector2(Game1.getMouseX(), Game1.getMouseY()), Game1.getSourceRectForStandardTileSheet(Game1.mouseCursors, 0, 16, 16), Color.White, 0f, Vector2.Zero, 4f + Game1.dialogueButtonScale / 150f, SpriteEffects.None, 1f);
             }
-            if (Game1.activeClickableMenu is NPCModifierMenu && snapCounter < 30 && Config.enableFarmerSprite)
-            {
-                Farmer farmer = Game1.player;
-
-                if (greenScreenRectangle.X != 0)
-                    e.SpriteBatch.Draw(Game1.staminaRect, new Rectangle((int)(125 / Game1.options.uiScale), (int)(125 / Game1.options.uiScale), 1408, (int)((greenScreenRectangle.Y + 5) / Game1.options.uiScale)), new Color(0, 255, 0));
-
-                int maxWidth = (int) (1533 / Game1.options.uiScale);
-
-                for (int i = 0; i < 126; i++)
-                {
-                    if (farmerOffset.X >= 1533 * Game1.options.uiScale)
-                    {
-                        farmerOffset.Y += 128 * Game1.options.uiScale;
-                        farmerOffset.X = 125;
-                    }
-
-                    if (i == 101)
-                    {
-                        TextureHelper.RenderFarmer(e.SpriteBatch, farmer, i, new Vector2((int)((farmerOffset.X - 15) / Game1.options.uiScale), (int)(farmerOffset.Y / Game1.options.uiScale)));
-                        farmerOffset.X += 64 * Game1.options.uiScale;
-                        continue;
-                    }
-
-                    TextureHelper.RenderFarmer(e.SpriteBatch, farmer, i, new Vector2((int)(farmerOffset.X / Game1.options.uiScale), (int)(farmerOffset.Y / Game1.options.uiScale)));
-                    farmerOffset.X += 64 * Game1.options.uiScale; //das ist für die screenshot area, also nicht anfassen
-                }
-                snapCounter++;
-                greenScreenRectangle = new Vector2(farmerOffset.X * Game1.options.uiScale, farmerOffset.Y);
-                farmerOffset = new Vector2(125, 125);
-                /*
-                if (NPCModifierMenu.targetLayer.isFarmer)
-                {
-                    TextureHelper.RenderFarmer(e.SpriteBatch, farmer, NPCModifierMenu.targetLayer.npcFrame);
-                    e.SpriteBatch.DrawString(Game1.smallFont, NPCModifierMenu.targetLayer.npcFrame.ToString(), new Vector2(250, 400), Color.White);
-                }
-
-                else
-                    TextureHelper.RenderFarmer(e.SpriteBatch, farmer, 0);
-                */
-            }
-            //if (farmerSpriteSheet != null)
-              //  e.SpriteBatch.Draw(farmerSpriteSheet, new Rectangle(0, 0, 500, 500), Color.White);
-
         }
 
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (e.Button == Config.openCustomizerButton)
             {
-                TextureHelper.InitFarmerSpriteSheet();
+                if (Config.enableFarmerSprite)
+                    TextureHelper.InitFarmerSpriteSheet();
                 foreach (Furniture f in Game1.currentLocation.furniture)
                 {
                     if (f.QualifiedItemId == "(F)1308" || f.QualifiedItemId == "(F)tlitookilakin.HappyHomeDesigner_Catalogue")
@@ -346,13 +292,6 @@ namespace DynamicNPCPaintings
         }
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
         {
-            if (e.NewMenu is Customiser && (e.OldMenu == null || e.OldMenu is ShopMenu))
-            {
-                farmerSpriteSheet = null;
-                snapCounter = 0;
-            }
-
-
             if (e.NewMenu is ShopMenu menu && menu.ShopId == "Catalogue" || (Game1.isFestival() && e.NewMenu is ShopMenu && hasSeasonalCuteSprites))
             {
                 menu = (ShopMenu)e.NewMenu;
