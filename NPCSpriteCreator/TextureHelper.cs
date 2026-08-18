@@ -174,6 +174,103 @@ namespace NPCSpriteCreator
             destinationSheet.SetData(destinationData);
         }
 
+
+        private const int FarmerSpritesPerRow = 22;
+        private const int FarmerFrameCount = 126;
+        private const int FarmerDrawWidth = 64; // tatsächliche Zeichengröße des Farmers (16 * scaledPixelZoom 4), pre-scale
+        private const int FarmerDrawHeight = 128; // tatsächliche Zeichengröße des Farmers (32 * scaledPixelZoom 4), pre-scale
+        private const int FarmerWidthHeadroom = 64; // Puffer links+rechts vom Charakter beim Zeichnen (z.B. Werkzeug-Schwung), fliegt vor dem finalen Packen wieder raus
+        private const int FarmerCellWidth = FarmerDrawWidth + FarmerWidthHeadroom;
+        private const int FarmerHeadroom = 64; // Puffer oberhalb des Charakters beim Zeichnen (z.B. Hut/Frisur), fliegt vor dem finalen Packen wieder raus
+        private const int FarmerCellHeight = FarmerDrawHeight + FarmerHeadroom;
+        private const float FarmerOutputScale = 0.25f; // 64x128 (nativ gezeichnet) -> 16x32 im Endergebnis
+        private const int FarmerCaptureMargin = 32; // Puffer, falls ein Frame über seine Zelle hinausragt (z.B. Werkzeug-Schwung)
+
+        public static Texture2D CaptureFarmerSpriteSheet(Farmer farmer)
+        {
+            GraphicsDevice graphicsDevice = Game1.graphics.GraphicsDevice;
+
+            int rows = (int)Math.Ceiling(FarmerFrameCount / (float)FarmerSpritesPerRow);
+            int gridWidth = FarmerSpritesPerRow * FarmerCellWidth;
+            int gridHeight = rows * FarmerCellHeight;
+            int targetWidth = gridWidth + FarmerCaptureMargin * 2;
+            int targetHeight = gridHeight + FarmerCaptureMargin * 2;
+
+            RenderTargetBinding[] previousTargets = graphicsDevice.GetRenderTargets();
+
+            using RenderTarget2D renderTarget = new RenderTarget2D(graphicsDevice, targetWidth, targetHeight);
+            graphicsDevice.SetRenderTarget(renderTarget);
+            graphicsDevice.Clear(Color.Transparent);
+
+            using (SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice))
+            {
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+                for (int i = 0; i < FarmerFrameCount; i++)
+                {
+                    int column = i % FarmerSpritesPerRow;
+                    int row = i / FarmerSpritesPerRow;
+                    int xOffset = i == 101 ? -15 : 0; // Sheet ist an dieser Stelle inkonsistent, siehe RenderFarmer
+                    Vector2 position = new Vector2(FarmerCaptureMargin + column * FarmerCellWidth + FarmerWidthHeadroom / 2 + xOffset, FarmerCaptureMargin + row * FarmerCellHeight + FarmerHeadroom);
+                    RenderFarmer(spriteBatch, farmer, i, position);
+                }
+                spriteBatch.End();
+            }
+
+            graphicsDevice.SetRenderTargets(previousTargets);
+
+            Color[] pixels = new Color[targetWidth * targetHeight];
+            renderTarget.GetData(pixels);
+            Texture2D captured = new Texture2D(graphicsDevice, targetWidth, targetHeight);
+            captured.SetData(pixels);
+
+            // Statt das ganze gepolsterte Raster in einem Rutsch zu croppen+skalieren (wodurch der
+            // Puffer mitskaliert wird und der Charakter nicht mehr bei (0,0) jeder Zelle landet),
+            // wird jeder Frame einzeln eng um den Charakter (FarmerDrawWidth x FarmerDrawHeight, ohne
+            // Puffer) zugeschnitten, auf 16x32 runterskaliert und danach lückenlos in ein neues
+            // 22-Spalten-Raster gepackt. So bleibt es konsistent mit den Annahmen von
+            // CopyFrameToNewSpritesheet (16x32-Zellen, 22 Spalten, Charakter bei (0,0) jeder Zelle).
+            int outputFrameWidth = (int)(FarmerDrawWidth * FarmerOutputScale);
+            int outputFrameHeight = (int)(FarmerDrawHeight * FarmerOutputScale);
+            int outputGridWidth = FarmerSpritesPerRow * outputFrameWidth;
+            int outputGridHeight = rows * outputFrameHeight;
+
+            Color[] packedData = new Color[outputGridWidth * outputGridHeight];
+
+            for (int i = 0; i < FarmerFrameCount; i++)
+            {
+                int column = i % FarmerSpritesPerRow;
+                int row = i / FarmerSpritesPerRow;
+                int xOffset = i == 101 ? -15 : 0;
+
+                Rectangle tightRect = new Rectangle(
+                    FarmerCaptureMargin + column * FarmerCellWidth + FarmerWidthHeadroom / 2 + xOffset,
+                    FarmerCaptureMargin + row * FarmerCellHeight + FarmerHeadroom,
+                    FarmerDrawWidth,
+                    FarmerDrawHeight);
+
+                using Texture2D frameTex = CropTexture(captured, tightRect);
+                using Texture2D scaledFrameTex = ScaleTexture(frameTex, FarmerOutputScale);
+
+                Color[] frameData = new Color[outputFrameWidth * outputFrameHeight];
+                scaledFrameTex.GetData(frameData);
+
+                int targetX = column * outputFrameWidth;
+                int targetY = row * outputFrameHeight;
+                for (int y = 0; y < outputFrameHeight; y++)
+                {
+                    for (int x = 0; x < outputFrameWidth; x++)
+                    {
+                        packedData[(targetY + y) * outputGridWidth + (targetX + x)] = frameData[y * outputFrameWidth + x];
+                    }
+                }
+            }
+
+            Texture2D packed = new Texture2D(graphicsDevice, outputGridWidth, outputGridHeight);
+            packed.SetData(packedData);
+            return packed;
+        }
+
+
         public static Texture2D ScaleTexture(Texture2D originalTexture, float scale)
         {
             // Berechne die neue Breite und Höhe basierend auf dem Skalierungsfaktor
@@ -210,23 +307,40 @@ namespace NPCSpriteCreator
 
         public static void InitFarmerSpriteSheet()
         {
+            ModEntry.farmerSpriteSheet = CaptureFarmerSpriteSheet(Game1.player);
 
-            // TODO Einfach zum draw hook moven das hier geht sonst nicht 
-            int w = Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
-            int h = Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            // Ausgewählte Frames aus dem vollen Farmer-Sheet (22 Spalten) in das
+            // resultTexture (4 Spalten, NPC-Layout) übertragen, das im Menü als
+            // farmerPreview angezeigt und beim Export gespeichert wird.
 
-            //pull the picture from the buffer
-            int[] backBuffer = new int[w * h];
-            Game1.graphics.GraphicsDevice.GetBackBufferData(backBuffer);
+            //Walking Front
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 0, 0);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 2, 1);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 0, 2);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 1, 3);
 
-            //copy into a texture 
-            Texture2D texture = new Texture2D(Game1.graphics.GraphicsDevice, w, h, false, Game1.graphics.GraphicsDevice.PresentationParameters.BackBufferFormat);
-            texture.SetData(backBuffer);
-            Texture2D farmerWithBackground = CropTexture(texture, new Rectangle(125, 125, 1408, (int)ModEntry.greenScreenRectangle.Y + 5));
-            Texture2D farmer = MakeColorTransparent(farmerWithBackground, new Color(0, 255, 0), 5);
-            Texture2D scaledFarmer = ScaleTexture(farmer, 0.25f / Game1.options.uiScale);
-            ModEntry.farmerSpriteSheet = scaledFarmer;
+            //Walking Right
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 6, 4);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 7, 5);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 6, 6);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 8, 7);
+
+            //Walking Back
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 12, 8);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 14, 9);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 12, 10);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 13, 11);
+
+            //Walking Left
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 6, 12, true);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 7, 13, true);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 6, 14, true);
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 8, 15, true);
+
+            //Kiss
+            CopyFrameToNewSpritesheet(ModEntry.farmerSpriteSheet, ModEntry.resultTexture, 101, 28);
         }
+
 
         public static Texture2D MakeColorTransparent(Texture2D originalTexture, Color targetColor, int tolerance)
         {
@@ -248,6 +362,54 @@ namespace NPCSpriteCreator
             Texture2D newTexture = new Texture2D(graphicsDevice, originalTexture.Width, originalTexture.Height);
             newTexture.SetData(pixelData);
             return newTexture;
+        }
+        
+
+        public static Texture2D RemoveGreenScreen(Texture2D input, float tolerance = 0.1f)
+        {
+            Color[] pixels = new Color[input.Width * input.Height];
+            input.GetData(pixels);
+
+            Color chromaKey = new Color(127, 127, 127); // z. B. Greenscreen
+
+            float chromaR = chromaKey.R / 255f;
+            float chromaG = chromaKey.G / 255f;
+            float chromaB = chromaKey.B / 255f;
+
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                Color px = pixels[i];
+
+                float a = px.A / 255f;
+                float r = px.R / 255f;
+                float g = px.G / 255f;
+                float b = px.B / 255f;
+
+                float diff = Math.Abs(r - chromaR) + Math.Abs(g - chromaG) + Math.Abs(b - chromaB);
+
+                // 1. Harte Entfernung des Chroma-Key-Hintergrunds
+                if (diff < tolerance)
+                {
+                    pixels[i] = Color.Transparent;
+                }
+                // 2. Korrektur halbtransparenter Pixel
+                else if (a < 1.0f && a > 0f)
+                {
+                    float r0 = (r - (1 - a) * chromaR) / a;
+                    float g0 = (g - (1 - a) * chromaG) / a;
+                    float b0 = (b - (1 - a) * chromaB) / a;
+
+                    r0 = Math.Clamp(r0, 0f, 1f);
+                    g0 = Math.Clamp(g0, 0f, 1f);
+                    b0 = Math.Clamp(b0, 0f, 1f);
+
+                    pixels[i] = new Color(r0, g0, b0, a);
+                }
+            }
+
+            Texture2D result = new Texture2D(Game1.graphics.GraphicsDevice, input.Width, input.Height);
+            result.SetData(pixels);
+            return result;
         }
 
         private static bool IsColorWithinTolerance(Color c1, Color c2, int tolerance)
