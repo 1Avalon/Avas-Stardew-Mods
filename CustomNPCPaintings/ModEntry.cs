@@ -271,8 +271,6 @@ namespace DynamicNPCPaintings
         {
             if (e.Button == Config.openCustomizerButton)
             {
-                if (Config.enableFarmerSprite)
-                    TextureHelper.InitFarmerSpriteSheet();
                 foreach (Furniture f in Game1.currentLocation.furniture)
                 {
                     if (f.QualifiedItemId == "(F)1308" || f.QualifiedItemId == "(F)tlitookilakin.HappyHomeDesigner_Catalogue")

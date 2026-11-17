@@ -47,7 +47,9 @@ namespace DynamicNPCPaintings.UI
         private int currentScrollIndex;
         public SelectNPCMenu(Customiser customiser)
         {
-            npcs = ModEntry.Config.enableAllNPCs ? Utility.getAllCharacters().GroupBy(o => o.displayName).Select(g => g.First()).ToList() : Utility.getAllCharacters().Where(npc => npc.CanSocialize).ToList();
+
+            TextureHelper.InitFarmerSpriteSheet();
+            npcs = ModEntry.Config.enableAllNPCs ? Utility.getAllCharacters().GroupBy(o => o.displayName).Select(g => g.First()).ToList() : Utility.getAllVillagers().ToList();
             validNPCs = new List<CharacterLayer>();
 
             if (ModEntry.Config.enableFarmerSprite)
