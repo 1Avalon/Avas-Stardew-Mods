@@ -311,7 +311,10 @@ namespace DynamicNPCPaintings
             captured.SetData(pixels);
 
             Texture2D cropped = CropTexture(captured, new Rectangle(FarmerCaptureMargin, FarmerCaptureMargin, gridWidth, gridHeight));
-            return ScaleTexture(cropped, FarmerOutputScale);
+            captured.Dispose();
+            Texture2D result = ScaleTexture(cropped, FarmerOutputScale);
+            cropped.Dispose();
+            return result;
         }
 
         public static Texture2D MakeColorTransparent(Texture2D originalTexture, Color targetColor, int tolerance)
